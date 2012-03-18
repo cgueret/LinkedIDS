@@ -14,10 +14,9 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 public class ConfigResource extends ServerResource {
-	private final static String PARAM_ENTITY ="Parameter";
-	private final static String KEY_NAME ="API_KEY";
-	
-	
+	public final static String PARAM_ENTITY = "Parameter";
+	public final static String KEY_NAME = "API_KEY";
+
 	/**
 	 * @return
 	 */

@@ -32,7 +32,7 @@ public class Main extends Application {
 		// Handler for requests to vocabulary resources
 		router.attach("/{DB}/vocabulary/{id}", VocabularyResource.class);
 
-		// Handler for requests to vocabulary resources
+		// Handler for requests to parameters setting
 		router.attach("/config", ConfigResource.class);
 		
 		// Say Hello if any other resource is requested
