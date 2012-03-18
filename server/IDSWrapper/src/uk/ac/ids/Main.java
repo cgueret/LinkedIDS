@@ -6,6 +6,7 @@ import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
+import uk.ac.ids.resources.ConfigResource;
 import uk.ac.ids.resources.GenericResource;
 import uk.ac.ids.resources.HelloWorldResource;
 import uk.ac.ids.resources.VocabularyResource;
@@ -31,6 +32,9 @@ public class Main extends Application {
 		// Handler for requests to vocabulary resources
 		router.attach("/{DB}/vocabulary/{id}", VocabularyResource.class);
 
+		// Handler for requests to vocabulary resources
+		router.attach("/config", ConfigResource.class);
+		
 		// Say Hello if any other resource is requested
 		router.attachDefault(HelloWorldResource.class);
 

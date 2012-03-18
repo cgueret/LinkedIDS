@@ -7,6 +7,11 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
+// http://code.google.com/p/google-http-java-client/
+// http://code.google.com/p/google-gson/
+// http://code.google.com/appengine/docs/java/urlfetch/overview.html
+
+
 public class GenericResource extends ServerResource {
 	protected static final Logger logger = Logger.getLogger(GenericResource.class.getName());
 
