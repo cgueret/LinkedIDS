@@ -27,6 +27,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 // http://wiki.restlet.org/docs_2.1/13-restlet/28-restlet/270-restlet/245-restlet.html
 
@@ -41,6 +42,13 @@ public class GenericResource extends ServerResource {
 	static final Map<String, String> PLURAL = new HashMap<String, String>() {
 		{
 			put("country", "countries");
+		}
+	};
+
+	@SuppressWarnings("serial")
+	static final Map<String, Reference> MAP = new HashMap<String, Reference>() {
+		{
+			put("object_type", new Reference("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"));
 		}
 	};
 
@@ -79,7 +87,7 @@ public class GenericResource extends ServerResource {
 		URL url = new URL(urlString.toString());
 
 		// Get the API key
-		// TODO: Fix this hugly reference to statics in ConfigResource
+		// TODO: Fix this ugly reference to statics in ConfigResource
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Key k = KeyFactory.createKey(ConfigResource.PARAM_ENTITY, ConfigResource.KEY_NAME);
 		String api_key = (String) datastore.get(k).getProperty("value");
@@ -100,11 +108,31 @@ public class GenericResource extends ServerResource {
 		JsonParser parser = new JsonParser();
 		JsonObject results = (JsonObject) ((JsonObject) parser.parse(response.toString())).get("results");
 		Reference resource = new Reference(getRequest().getOriginalRef().toUri());
-		Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier());
+		Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary/");
 		for (Entry<String, JsonElement> entry : results.entrySet()) {
-			Reference predicate = new Reference(ns, dataSource + "." + entry.getKey());
-			Literal object = new Literal(entry.getValue().toString());
-			graph.add(resource, predicate, object);
+			// By default, use the internal vocabulary. Replace with a mapped
+			// value when applicable
+			Reference predicate = new Reference(ns, resourceType + "." + entry.getKey());
+			if (MAP.containsKey(entry.getKey()))
+				predicate = MAP.get(entry.getKey());
+
+			JsonElement value = entry.getValue();
+			if (value.isJsonPrimitive()) {
+
+				// In the specific case of an object type, change it
+				if (entry.getKey().equals("object_type")) {
+					Reference object = new Reference(ns, entry.getValue().getAsString());
+					graph.add(resource, predicate, object);
+				} else {
+					// Interpret the literal
+					Literal object = null;
+					if (((JsonPrimitive) value).isNumber()) // TODO data types
+						object = new Literal(entry.getValue().getAsString());
+					if (((JsonPrimitive) value).isString())
+						object = new Literal(entry.getValue().getAsString());
+					graph.add(resource, predicate, object);
+				}
+			}
 		}
 
 		return graph.getRdfXmlRepresentation();
