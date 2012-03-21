@@ -1,27 +1,120 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
-<!-- above set at the top of the file will set     -->
-<!-- the browser's rendering engine into           -->
-<!-- "Quirks Mode". Replacing this declaration     -->
-<!-- with a "Standards Mode" doctype is supported, -->
-<!-- but may lead to some differences in layout.   -->
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>IDS Wrapper</title>
 
-<html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>IDS Wrapper</title>
-  </head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="stylesheet"
+	href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+</style>
+<link
+	href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css"
+	rel="stylesheet">
+<link rel="shortcut icon" href="favicon.ico" />
 
-  <body>
-    <h1>Welcome on the IDS Wrapper</h1>
-	
-    <table>
-      <tr>
-        <td colspan="2" style="font-weight:bold;">Test resources</td>        
-      </tr>
-      <tr>
-        <td><a href="eldis/resource/country/A1078">Country A1078 in Eldis</a></td>
-      </tr>
-    </table>
-  </body>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- fav and touch icons -->
+<link rel="shortcut icon"
+	href="http://twitter.github.com/bootstrap/assets/images/favicon.ico">
+<link rel="apple-touch-icon"
+	href="http://twitter.github.com/bootstrap/assets/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72"
+	href="http://twitter.github.com/bootstrap/assets/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114"
+	href="http://twitter.github.com/bootstrap/assets/images/apple-touch-icon-114x114.png">
+</head>
+
+<body>
+	<div class='navbar navbar-fixed-top' style='z-index: -1;'>
+		<div class='navbar-inner'>
+			<div class='container'>
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <a class="brand" href="/">IDS Wrapper</a>
+				<div class="nav-collapse">
+					<ul class='nav'>
+						<li class='active'><a href='/'>Home</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class='container'>
+		<div class='well'>
+			<h1>IDS Knowledge Services RDF API</h1>
+			<p>
+				This server hosts a <a
+					href="http://www.w3.org/standards/semanticweb/data">Linked Data</a>
+				version of the API from the <a href='http://ids.ac.uk/'>Institute
+					for Development Studies</a>.
+			</p>
+		</div>
+		<div class="row">
+			<div class="span6">
+				<div class="well">
+					<h2>Example resources</h2>
+					<p>There are a number of resources available for testing:</p>
+					<ul>
+						<li><a href="eldis/resource/country/A1078">Country
+								'Gambia' (Eldis)</a></li>
+					</ul>
+					<p>
+				</div>
+			</div>
+			<div class="span6">
+				<div class="alert alert-error">
+					<strong>IDSWrapper is work in progress</strong> We currently cover
+					only a small part of the <a href=http://api.ids.ac.uk/">IDS API</a>.
+					Vocabularies used may change without notice.
+				</div>
+			</div>
+		</div>
+	</div>
+	<a href="https://github.com/cgueret/LinkedIDS"><img
+		style="position: absolute; top: 0; right: 0; border: 0; z-index: 100;"
+		src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67"
+		alt="Fork me on GitHub"></a>
+
+	<!-- Javascript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="http://twitter.github.com/bootstrap/assets/js/jquery.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-transition.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-alert.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-scrollspy.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tab.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tooltip.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-button.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-collapse.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-carousel.js"></script>
+	<script
+		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-typeahead.js"></script>
+</body>
 </html>
