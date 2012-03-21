@@ -44,14 +44,20 @@ body {
 					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 					class="icon-bar"></span> <span class="icon-bar"></span>
 				</a> <a class="brand" href="/">IDS Wrapper</a>
+				<div class="nav-collapse">
+					<ul class='nav'>
+						<li class='active'><a href='${resource}'>${resource}</a></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
 	<div class='container'>
-		<div class='well'>
-			<h1>${resource}</h1>
-			<p>HTML-based description, for an RDF version ask for RDF/XML
-				content</p>
+		<div class="alert alert-info">
+			<a class="close" data-dismiss="alert">×</a> <strong>Tip:</strong> If you are a machine, or if you attend to
+					feed this information to one, check out the <a
+					href='http://inspector.sindice.com/inspect?url=${resource}'>RDF
+						representation of this resource</a> ;-) 
 		</div>
 		<div class='well'>
 			<table class="table">

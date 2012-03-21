@@ -1,7 +1,6 @@
 package uk.ac.ids.resources;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -21,7 +20,6 @@ import org.restlet.ext.rdf.Graph;
 import org.restlet.ext.rdf.Link;
 import org.restlet.ext.rdf.Literal;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
@@ -30,7 +28,6 @@ import uk.ac.ids.Main;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.JsonElement;

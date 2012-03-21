@@ -3,9 +3,7 @@ package uk.ac.ids;
 import java.util.logging.Logger;
 
 import org.restlet.Application;
-import org.restlet.Component;
 import org.restlet.Restlet;
-import org.restlet.data.Protocol;
 import org.restlet.ext.freemarker.ContextTemplateLoader;
 import org.restlet.routing.Router;
 
