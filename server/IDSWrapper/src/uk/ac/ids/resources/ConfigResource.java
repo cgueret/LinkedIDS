@@ -6,19 +6,19 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
+import uk.ac.ids.data.Parameters;
 
+/**
+ * @author Christophe Guéret <christophe.gueret@gmail.com>
+ * 
+ */
 public class ConfigResource extends ServerResource {
-	public final static String PARAM_ENTITY = "Parameter";
-	public final static String KEY_NAME = "API_KEY";
 
 	/**
-	 * @return
+	 * Set the value of a parameter
+	 * 
+	 * @return a StringRepresentation that acknowledges the update of the
+	 *         parameter
 	 */
 	@Get
 	public Representation setParameter() {
@@ -30,16 +30,7 @@ public class ConfigResource extends ServerResource {
 			return new StringRepresentation("Use config?key=XXXXX to set the API key");
 
 		// Update or create the key if we got a value for it
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Entity api_key = null;
-		try {
-			Key k = KeyFactory.createKey(PARAM_ENTITY, KEY_NAME);
-			api_key = datastore.get(k);
-		} catch (EntityNotFoundException e) {
-			api_key = new Entity(PARAM_ENTITY, KEY_NAME);
-		}
-		api_key.setProperty("value", value);
-		datastore.put(api_key);
+		Parameters.getInstance().set(Parameters.API_KEY, value);
 
 		return new StringRepresentation("Key set to " + value + " !");
 	}

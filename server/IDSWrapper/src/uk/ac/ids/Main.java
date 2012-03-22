@@ -9,13 +9,14 @@ import org.restlet.routing.Router;
 
 import uk.ac.ids.resources.ConfigResource;
 import uk.ac.ids.resources.GenericResource;
-import uk.ac.ids.resources.HelloWorldResource;
 import uk.ac.ids.resources.VocabularyResource;
 
 import freemarker.template.Configuration;
 
+//http://wiki.restlet.org/docs_2.1/13-restlet/275-restlet/252-restlet.html
+
 /**
- * @author cgueret
+ * @author Christophe Guéret <christophe.gueret@gmail.com>
  * 
  */
 public class Main extends Application {
@@ -45,9 +46,6 @@ public class Main extends Application {
 
 		// Handler for requests to parameters setting
 		router.attach("/config", ConfigResource.class);
-
-		// Say Hello if any other resource is requested
-		router.attachDefault(HelloWorldResource.class);
 
 		// Activate content filtering based on extensions
 		getTunnelService().setExtensionsTunnel(true);

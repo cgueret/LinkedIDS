@@ -25,11 +25,8 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import uk.ac.ids.Main;
+import uk.ac.ids.data.Parameters;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -37,6 +34,10 @@ import com.google.gson.JsonPrimitive;
 
 // http://wiki.restlet.org/docs_2.1/13-restlet/28-restlet/270-restlet/245-restlet.html
 
+/**
+ * @author Christophe Guéret <christophe.gueret@gmail.com>
+ *
+ */
 public class GenericResource extends ServerResource {
 	// Logger instance
 	protected static final Logger logger = Logger.getLogger(GenericResource.class.getName());
@@ -55,7 +56,7 @@ public class GenericResource extends ServerResource {
 
 	// The name of the resource;
 	private Reference resource = null;
-	
+
 	@SuppressWarnings("serial")
 	public static final Map<String, String> PLURAL = new HashMap<String, String>() {
 		{
@@ -87,11 +88,11 @@ public class GenericResource extends ServerResource {
 			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 			setExisting(false);
 		}
-		
+
 		// Define the URI for this resource
 		resource = new Reference(getRequest().getOriginalRef().toUri());
 
-		try {	
+		try {
 			// Compose the URL
 			StringBuffer urlString = new StringBuffer("http://api.ids.ac.uk/openapi/");
 			urlString.append(dataSource).append("/");
@@ -100,10 +101,7 @@ public class GenericResource extends ServerResource {
 			URL url = new URL(urlString.toString());
 
 			// Get the API key
-			// TODO: Fix this ugly reference to statics in ConfigResource
-			DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-			Key k = KeyFactory.createKey(ConfigResource.PARAM_ENTITY, ConfigResource.KEY_NAME);
-			String api_key = (String) datastore.get(k).getProperty("value");
+			String api_key = Parameters.getInstance().get(Parameters.API_KEY);
 
 			// Issue the API request
 			StringBuffer response = new StringBuffer();
@@ -172,15 +170,15 @@ public class GenericResource extends ServerResource {
 	public Representation toHTML() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("resource", resource);
-		
+
 		Set<Link> triples = new HashSet<Link>();
 		Iterator<Link> it = graph.iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			Link link = it.next();
 			triples.add(link);
 		}
 		map.put("triples", triples);
-		
+
 		return new TemplateRepresentation("resource.html", getApplication().getConfiguration(), map,
 				MediaType.TEXT_HTML);
 

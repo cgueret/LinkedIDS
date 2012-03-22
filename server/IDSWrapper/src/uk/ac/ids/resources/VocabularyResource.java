@@ -4,6 +4,10 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
+/**
+ * @author Christophe Guéret <christophe.gueret@gmail.com>
+ *
+ */
 public class VocabularyResource extends ServerResource {
 	private String resourceID = null;
 	private String dataSource = null;
