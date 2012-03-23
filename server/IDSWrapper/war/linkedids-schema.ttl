@@ -1,0 +1,156 @@
+﻿###
+#  LinkedIDS Schema / Mappings
+#
+#  V. de Boer and C. Gueret March 2012
+###
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdf:	 <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix	skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix ens:	 <http://www.europeana.eu/schemas/edm/> .
+@prefix  ontology: <http://www.geonames.org/ontology#> .
+
+
+# --------------------------- IDSResource -----------------------
+:IDSResource
+	a rdfs:Class ;
+	rdfs:label "Generic IDS Resource" ;
+	rdfs:subClassOf rdfs:Resource.
+
+:title	
+	a rdf:Property ;
+	rdfs:domain :IDSResource ; 
+	rdfs:label "title" ; 
+	rdfs:subPropertyOf rdfs:label ; 
+	dcterms:description "title of the Resource (IDS-generic)".
+	
+:object_id	
+	a rdf:Property ;
+	rdfs:domain :IDSResource ; 
+	rdfs:label "object id" ; 
+	dcterms:description "object id of the Resource (IDS-generic)".
+	
+:object_type
+	a rdf:Property ;
+	rdfs:domain :IDSResource ; 
+	rdfs:label "title" ; 
+	rdfs:subPropertyOf rdf:type;
+	dcterms:description "type of the Resource (IDS-generic)".
+	
+:metadata_url
+	a rdf:Property ;
+	rdfs:domain :IDSResource ; 
+	rdfs:label "metadata url" ; 
+	rdfs:subPropertyOf rdfs:seeAlso ;
+	dcterms:description "url of the metadata for the Resource (IDS-generic)".
+
+:timestamp
+	a rdf:Property ;
+	rdfs:domain :IDSResource ;
+	rdfs:label "timestamp" ;
+	rdfs:range rdfs:Literal ;
+	dcterms:description "Indicates when record was indexed in the API. Used to determine updates to the index for synchronisation. Timestamp is in ISO 8601 format: YYYY-MM-DD hh:mm:ss." .
+	
+:website_url
+	a rdf:Property ;
+	rdfs:domain :IDSResource ;
+	rdfs:label "website url" ;
+	rdfs:range rdfs:Resource ;
+	dcterms:description "URL for the asset on the collection website";
+	rdfs:subPropertyOf rdfs:seeAlso.	
+	
+# ---------------------------  Country --------------------------------
+
+:Country
+	a rdfs:Class ;
+	rdfs:label "Country" ;
+	rdfs:subClassOf ontology:Feature.
+
+:alternative_name
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:label "alternative_name" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf ontology:alternateName.
+
+:asset_id
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:label "asset_id" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf dcterms:identifier.
+
+:country_name
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:label "country name" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf ontology:name.
+
+:iso_number
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:label "iso number" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf dcterms:identifier.
+	
+:iso_three_letter_code
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:label "iso three letter code" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf dcterms:identifier.
+
+:iso_two_letter_code
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:label "ISO two letter code" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf ontology:countryCode.
+
+
+	
+	
+# ---------------------------  Regions --------------------------------
+
+:Region
+	a rdfs:Class ;
+	rdfs:label "Region" ;
+	rdfs:subClassOf ontology:Feature.
+
+:region.cat_first_parent
+	a rdf:Property .
+:region.cat_level
+	a rdf:Property .
+:region.cat_superparent
+	a rdf:Property .
+:region.category_id
+	a rdf:Property .
+:region.category_path	
+	a rdf:Property .
+:region.metadata_url
+	a rdf:Property ;
+	rdfs:subPropertyOf rdfs:seeAlso.
+:region.name
+	rdfs:subPropertyOf ontology:name ;
+	a rdf:Property .
+:region.object_id
+	a rdf:Property .
+:region.object_type
+	a rdf:Property .
+:region.site
+	a rdf:Property .
+:region.object_id
+	a rdf:Property .
+:region.object_type
+	a rdf:Property .
+:region.site
+	a rdf:Property .
+:region.timestamp
+	a rdf:Property .
+:region.title
+	a rdf:Property .
+:region.website_url
+	a rdf:Property ;
+	rdfs:subPropertyOf rdfs:seeAlso.
+ 
