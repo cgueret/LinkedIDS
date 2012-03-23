@@ -34,6 +34,8 @@ import com.google.gson.JsonPrimitive;
 
 // http://wiki.restlet.org/docs_2.1/13-restlet/28-restlet/270-restlet/245-restlet.html
 
+// Git test from Victor, please ignore this line
+
 /**
  * @author Christophe Guéret <christophe.gueret@gmail.com>
  *
