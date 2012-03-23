@@ -22,41 +22,41 @@
 	rdfs:domain :IDSResource ; 
 	rdfs:label "title" ; 
 	rdfs:subPropertyOf rdfs:label ; 
-	dcterms:description "title of the Resource (IDS-generic)".
+	rdfs:comment "title of the Resource (IDS-generic)".
 	
 :object_id	
 	a rdf:Property ;
 	rdfs:domain :IDSResource ; 
 	rdfs:label "object id" ; 
-	dcterms:description "object id of the Resource (IDS-generic)".
+	rdfs:comment "object id of the Resource (IDS-generic)".
 	
 :object_type
 	a rdf:Property ;
 	rdfs:domain :IDSResource ; 
 	rdfs:label "title" ; 
 	rdfs:subPropertyOf rdf:type;
-	dcterms:description "type of the Resource (IDS-generic)".
+	rdfs:comment "type of the Resource (IDS-generic)".
 	
 :metadata_url
 	a rdf:Property ;
 	rdfs:domain :IDSResource ; 
 	rdfs:label "metadata url" ; 
 	rdfs:subPropertyOf rdfs:seeAlso ;
-	dcterms:description "url of the metadata for the Resource (IDS-generic)".
+	rdfs:comment "url of the metadata for the Resource (IDS-generic)".
 
 :timestamp
 	a rdf:Property ;
 	rdfs:domain :IDSResource ;
 	rdfs:label "timestamp" ;
 	rdfs:range rdfs:Literal ;
-	dcterms:description "Indicates when record was indexed in the API. Used to determine updates to the index for synchronisation. Timestamp is in ISO 8601 format: YYYY-MM-DD hh:mm:ss." .
+	rdfs:comment "Indicates when record was indexed in the API. Used to determine updates to the index for synchronisation. Timestamp is in ISO 8601 format: YYYY-MM-DD hh:mm:ss." .
 	
 :website_url
 	a rdf:Property ;
 	rdfs:domain :IDSResource ;
 	rdfs:label "website url" ;
 	rdfs:range rdfs:Resource ;
-	dcterms:description "URL for the asset on the collection website";
+	rdfs:comment "URL for the asset on the collection website";
 	rdfs:subPropertyOf rdfs:seeAlso.	
 	
 # ---------------------------  Country --------------------------------
@@ -109,7 +109,12 @@
 	rdfs:subPropertyOf ontology:countryCode.
 
 
-	
+:region
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:range :Region ;
+	rdfs:label "region of the country" ;
+	rdfs:subPropertyOf ontology:parentFeature.
 	
 # ---------------------------  Regions --------------------------------
 
@@ -128,29 +133,6 @@
 	a rdf:Property .
 :region.category_path	
 	a rdf:Property .
-:region.metadata_url
-	a rdf:Property ;
-	rdfs:subPropertyOf rdfs:seeAlso.
-:region.name
-	rdfs:subPropertyOf ontology:name ;
-	a rdf:Property .
-:region.object_id
-	a rdf:Property .
-:region.object_type
-	a rdf:Property .
-:region.site
-	a rdf:Property .
-:region.object_id
-	a rdf:Property .
-:region.object_type
-	a rdf:Property .
-:region.site
-	a rdf:Property .
-:region.timestamp
-	a rdf:Property .
-:region.title
-	a rdf:Property .
-:region.website_url
-	a rdf:Property ;
-	rdfs:subPropertyOf rdfs:seeAlso.
+
+
  
