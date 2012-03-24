@@ -34,11 +34,10 @@ import com.google.gson.JsonPrimitive;
 
 // http://wiki.restlet.org/docs_2.1/13-restlet/28-restlet/270-restlet/245-restlet.html
 
-// Git test from Victor, please ignore this line
-
 /**
- * @author Christophe Guéret <christophe.gueret@gmail.com>
- *
+ * @author Christophe Gueret <christophe.gueret@gmail.com>
+ * @author Victor de Boer <v.de.boer@vu.nl>
+ * 
  */
 public class GenericResource extends ServerResource {
 	// Logger instance
@@ -119,12 +118,13 @@ public class GenericResource extends ServerResource {
 			// Parse the response
 			JsonParser parser = new JsonParser();
 			JsonObject results = (JsonObject) ((JsonObject) parser.parse(response.toString())).get("results");
-			Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary/");
+			Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary");
 			for (Entry<String, JsonElement> entry : results.entrySet()) {
 				// By default, use the internal vocabulary. Replace with a
 				// mapped
 				// value when applicable
-				Reference predicate = new Reference(ns, resourceType + "." + entry.getKey());
+				Reference predicate = new Reference(ns);
+				ns.setFragment(entry.getKey());
 				if (MAP.containsKey(entry.getKey()))
 					predicate = MAP.get(entry.getKey());
 
@@ -133,13 +133,14 @@ public class GenericResource extends ServerResource {
 
 					// In the specific case of an object type, change it
 					if (entry.getKey().equals("object_type")) {
+						
 						Reference object = new Reference(ns, entry.getValue().getAsString());
 						graph.add(resource, predicate, object);
 					} else {
 						// Interpret the literal
 						Literal object = null;
-						if (((JsonPrimitive) value).isNumber()) // TODO data
-																// types
+						// TODO data types
+						if (((JsonPrimitive) value).isNumber())
 							object = new Literal(entry.getValue().getAsString());
 						if (((JsonPrimitive) value).isString())
 							object = new Literal(entry.getValue().getAsString());

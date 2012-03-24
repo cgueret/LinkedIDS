@@ -8,7 +8,8 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 /**
- * @author Christophe Guéret <christophe.gueret@gmail.com>
+ * @author Christophe Gueret <christophe.gueret@gmail.com>
+ * @author Victor de Boer <v.de.boer@vu.nl>
  *
  */
 public class Parameters {
