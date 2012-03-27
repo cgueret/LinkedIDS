@@ -134,3 +134,92 @@
 
 
  
+
+# ------------------------- Documents ----------------------------------
+
+:Document
+	a rdfs:Class;
+	rdfs:label "Document" ;
+	rdfs:subClassOf foaf:Document .
+ 
+:category_region
+	a rdf:Property ;
+	rdfs:label "Region of the document" ;
+	rdfs:subPropertyOf dcterms:coverage.
+	
+:category_theme
+	a rdf:Property ;
+	rdfs:label "Theme of the document" ;
+	rdfs:subPropertyOf dcterms:subject.
+	
+:country_focus
+	a rdf:Property ;
+	rdfs:label "Country of the document" ;
+	rdfs:subPropertyOf dcterms:coverage.
+
+:date_created
+	a rdf:Property ;
+	rdfs:label "Date created" ;
+	rdfs:subPropertyOf dcterms:created.
+	
+# VIC: subprop created? or something else
+:date_updated
+	a rdf:Property ;
+	rdfs:label "Date updated" ;
+	rdfs:subPropertyOf dcterms:created.
+	
+:description
+	a rdf:Property ;
+	rdfs:subPropertyOf dcterms:description;
+	rdfs:label "Description" .
+	
+:keyword
+	a rdf:Property ;
+	rdfs:label "Subject keywords that relate to the document" ;
+	rdfs:subPropertyOf dcterms:subject.
+	
+# VIC make this more semantic-> enrich to language resources
+:language_name 
+	a rdf:Property ;
+	rdfs:label "The language in which the title, headline and description are written" ;
+	rdfs:subPropertyOf dcterms:language.
+	
+:licence_type
+	a rdf:Property ;
+	rdfs:label "Type of licence that document is released under " ;
+	rdfs:subPropertyOf dcterms:license.
+
+# VIC: maybe contextualize this? 
+:name
+	a rdf:Property ;
+	rdfs:label "Name of the document" ;
+	rdfs:subPropertyOf dcterms:title.
+	
+:publication_date
+	a rdf:Property ;
+	rdfs:label "Date the research document was first published" ;
+	rdfs:subPropertyOf dcterms:created.
+	
+:publication_year
+	a rdf:Property ;
+	rdfs:label "Year the document was first published" ;
+	rdfs:subPropertyOf dcterms:created.
+	
+# VIC: publishers are classes!	
+:publisher
+	a rdf:Property ;
+	rdfs:label "Organisation that published the research. Each publisher has a linked organisation record, containing address, website and additional information" ;
+	rdf:range :Organisation;
+	rdfs:subPropertyOf dcterms:publisher.
+	 
+:title_sort
+	a rdf:Property ;
+	rdfs:label "Title on which to sort" ;
+	rdfs:subPropertyOf dcterms:title.
+	
+:urls
+	a rdf:Property ;
+	rdfs:label "URLs of the full text document" ;
+	rdfs:subPropertyOf dcterms:source ; 
+	rdf:range rdf:Resource.
+	
