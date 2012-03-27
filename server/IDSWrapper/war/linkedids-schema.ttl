@@ -58,6 +58,19 @@
 	rdfs:comment "URL for the asset on the collection website";
 	rdfs:subPropertyOf rdfs:seeAlso.	
 	
+# Next two are for documents and organisations	
+:date_created
+	a rdf:Property ;
+	rdfs:label "Date created" ;
+	rdfs:subPropertyOf dcterms:created.
+	
+# VIC: subprop created? or something else
+:date_updated
+	a rdf:Property ;
+	rdfs:label "Date updated" ;
+	rdfs:subPropertyOf dcterms:created.
+
+	
 # ---------------------------  Country --------------------------------
 
 :Country
@@ -113,6 +126,7 @@
 	rdfs:range :Region ;
 	rdfs:label "region of the country" ;
 	rdfs:subPropertyOf ontology:parentFeature.
+
 	
 # ---------------------------  Regions --------------------------------
 
@@ -140,6 +154,7 @@
 :Document
 	a rdfs:Class;
 	rdfs:label "Document" ;
+	rdfs:subClassOf :IDSResource;
 	rdfs:subClassOf foaf:Document .
  
 :category_region
@@ -156,17 +171,6 @@
 	a rdf:Property ;
 	rdfs:label "Country of the document" ;
 	rdfs:subPropertyOf dcterms:coverage.
-
-:date_created
-	a rdf:Property ;
-	rdfs:label "Date created" ;
-	rdfs:subPropertyOf dcterms:created.
-	
-# VIC: subprop created? or something else
-:date_updated
-	a rdf:Property ;
-	rdfs:label "Date updated" ;
-	rdfs:subPropertyOf dcterms:created.
 	
 :description
 	a rdf:Property ;
@@ -223,3 +227,42 @@
 	rdfs:subPropertyOf dcterms:source ; 
 	rdf:range rdf:Resource.
 	
+	
+#-------------------------- Organisations ---------------------------------	
+
+:Organisation 
+	a rdfs:Class ;
+	rdfs:subClassOf foaf:Organisation ;
+	rdfs:label "Organisation".
+
+:acronym
+	a rdf:Property ;
+	rdfs:label "Acronym of organisation" ;
+	rdfs:subPropertyOf foaf:name.
+	
+:alternative_acronym
+	a rdf:Property ;
+	rdfs:label "Alternative acronym of organisation" ;
+	rdfs:subPropertyOf foaf:name.
+	
+:alternative_name
+	a rdf:Property ;
+	rdfs:label "Alternative name of organisation" ;
+	rdfs:subPropertyOf foaf:name.
+	
+# VIC:category_region, category_theme, country_focus, description, keywords are retained from documents?
+
+# VIC: dcterms type? -> There seems to be such a thing as an organisation type, although the link on the site that should display the list of organisation types doesnt work
+:organisation_type
+	a rdf:Property ;
+	rdfs:label "Type of organisation" ;
+	#rdf:range :OrganisationType ;
+	rdf:range rdfs:Literal ;
+	rdfs:subPropertyOf dcterms:type.
+
+:organisation_url
+	a rdf:Property ;
+	rdfs:label "Website of the organisation" ;
+	rdfs:subPropertyOf foaf:homepage; 
+	rdf:range rdf:Resource.
+
