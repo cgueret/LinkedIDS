@@ -9,6 +9,7 @@
 @prefix ontology: <http://www.geonames.org/ontology#> .
 @prefix dcterms:  <http://purl.org/dc/terms/> .
 @prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:	  <http://xmlns.com/foaf/0.1/> .
 
 # --------------------------- IDSResource -----------------------
 :IDSResource
@@ -19,34 +20,34 @@
 :title
 	a rdf:Property ;
 	rdfs:domain :IDSResource ; 
-	rdfs:label "title" ; 
+	rdfs:label "Title" ; 
 	rdfs:subPropertyOf rdfs:label ; 
 	rdfs:comment "title of the Resource (IDS-generic)".
 	
 :object_id	
 	a rdf:Property ;
 	rdfs:domain :IDSResource ; 
-	rdfs:label "object id" ; 
+	rdfs:label "Object id" ; 
 	rdfs:comment "object id of the Resource (IDS-generic)".
 	
 :object_type
 	a rdf:Property ;
 	rdfs:domain :IDSResource ; 
-	rdfs:label "title" ; 
+	rdfs:label "Object type" ; 
 	rdfs:subPropertyOf rdf:type;
 	rdfs:comment "type of the Resource (IDS-generic)".
 	
 :metadata_url
 	a rdf:Property ;
 	rdfs:domain :IDSResource ; 
-	rdfs:label "metadata url" ; 
+	rdfs:label "Metadata url" ; 
 	rdfs:subPropertyOf rdfs:seeAlso ;
 	rdfs:comment "url of the metadata for the Resource (IDS-generic)".
 
 :timestamp
 	a rdf:Property ;
 	rdfs:domain :IDSResource ;
-	rdfs:label "timestamp" ;
+	rdfs:label "Timestamp" ;
 	rdfs:range rdfs:Literal ;
 	rdfs:comment "Indicates when record was indexed in the API. Used to determine updates to the index for synchronisation. Timestamp is in ISO 8601 format: YYYY-MM-DD hh:mm:ss." .
 	
@@ -135,17 +136,24 @@
 	rdfs:label "Region" ;
 	rdfs:subClassOf ontology:Feature.
 
-:cat_first_parent
-	a rdf:Property .
-:cat_level
-	a rdf:Property .
-:cat_superparent
-	a rdf:Property .
-:category_id
-	a rdf:Property .
-:category_path	
-	a rdf:Property .
+# VIC: for the hierarchy relations, we need a prefix, to distinguish from theme hierarchy (mapped to GN vs mapped to SKOS)
+:region_cat_first_parent
+	a rdf:Property ;
+	rdfs:subPropertyOf ontology:parentFeature ;
+	rdfs:label "First parent region".
+	
+	
+# VIC: :region_cat_level, :cat_superparent dropped
 
+:category_id
+	a rdf:Property ;
+	rdfs:subPropertyOf dcterms:identifier ;
+	rdfs:label "Region identifier".
+	
+:category_path	
+	a rdf:Property ;
+	rdfs:subPropertyOf dcterms:identifier ;
+	rdfs:label "Region path".
 
  
 
@@ -213,7 +221,7 @@
 :publisher
 	a rdf:Property ;
 	rdfs:label "Organisation that published the research. Each publisher has a linked organisation record, containing address, website and additional information" ;
-	rdf:range :Organisation;
+	rdfs:range :Organisation ;
 	rdfs:subPropertyOf dcterms:publisher.
 	 
 :title_sort
@@ -225,7 +233,7 @@
 	a rdf:Property ;
 	rdfs:label "URLs of the full text document" ;
 	rdfs:subPropertyOf dcterms:source ; 
-	rdf:range rdf:Resource.
+	rdfs:range rdf:Resource.
 	
 	
 #-------------------------- Organisations ---------------------------------	
@@ -256,13 +264,68 @@
 :organisation_type
 	a rdf:Property ;
 	rdfs:label "Type of organisation" ;
-	#rdf:range :OrganisationType ;
-	rdf:range rdfs:Literal ;
+	#rdfs:range :OrganisationType ;
+	rdfs:range rdfs:Literal ;
 	rdfs:subPropertyOf dcterms:type.
 
 :organisation_url
 	a rdf:Property ;
 	rdfs:label "Website of the organisation" ;
 	rdfs:subPropertyOf foaf:homepage; 
-	rdf:range rdf:Resource.
+	rdfs:range rdf:Resource.
+
+
+	
+#---------------------------- Themes --------------------------------
+
+:Theme
+	a rdfs:Class ; 
+	rdfs:subClassOf skos:Concept;
+	rdfs:label "IDS Theme".
+
+:cat_parent
+	a rdf:Property ; 
+	rdfs:range :Theme ;
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:broader;
+	rdfs:label "first parent theme" .
+
+# VIC: The following properties have been dropped: "cat_level":  "cat_first_parent":  "cat_superparent":  "parent_url
+
+:category_id
+	a rdf:Property ; 
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf dcterms:identifier;
+	rdfs:label "category identifier" .
+
+:category_path
+	a rdf:Property ; 
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf dcterms:identifier; # VIC: this could also be skos:note
+	rdfs:label "category path" .
+
+:children_url
+	a rdf:Property ; 
+	rdfs:range :Theme ;
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:narrower;
+	rdfs:label "children" .
+
+# VIC: theme titles should map to skos:prefLabel (?). The title is here prefixed to differentiate from the other (generic) title
+:theme_title
+	a rdf:Property ; 
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:prefLabel;
+	rdfs:label "title of the theme".
+	
+:theme_title_sort
+	a rdf:Property ; 
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:altLabel;
+	rdfs:label "Sorting title of the theme".
+
+
+
+
+
 
