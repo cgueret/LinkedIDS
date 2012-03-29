@@ -25,6 +25,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import uk.ac.ids.Main;
+import uk.ac.ids.data.GeoNamesBrowser;
 import uk.ac.ids.data.Parameters;
 
 import com.google.gson.JsonElement;
@@ -121,19 +122,16 @@ public class GenericResource extends ServerResource {
 			Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary");
 			for (Entry<String, JsonElement> entry : results.entrySet()) {
 				// By default, use the internal vocabulary. Replace with a
-				// mapped
-				// value when applicable
+				// mapped value when applicable
 				Reference predicate = new Reference(ns);
-				ns.setFragment(entry.getKey());
+				predicate.setFragment(entry.getKey());
 				if (MAP.containsKey(entry.getKey()))
 					predicate = MAP.get(entry.getKey());
 
 				JsonElement value = entry.getValue();
 				if (value.isJsonPrimitive()) {
-
 					// In the specific case of an object type, change it
 					if (entry.getKey().equals("object_type")) {
-						
 						Reference object = new Reference(ns, entry.getValue().getAsString());
 						graph.add(resource, predicate, object);
 					} else {
@@ -147,6 +145,16 @@ public class GenericResource extends ServerResource {
 						graph.add(resource, predicate, object);
 					}
 				}
+			}
+
+			// Link to geoname
+			if (resourceType.equals("country")) {
+				GeoNamesBrowser b = new GeoNamesBrowser();
+				String countryName = results.get("country_name").getAsString();
+				String countryCode = results.get("iso_two_letter_code").getAsString();
+				Reference target = b.getResource(countryName, countryCode);
+				if (target != null)
+					graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -184,7 +192,6 @@ public class GenericResource extends ServerResource {
 
 		return new TemplateRepresentation("resource.html", getApplication().getConfiguration(), map,
 				MediaType.TEXT_HTML);
-
 	}
 
 	/**
