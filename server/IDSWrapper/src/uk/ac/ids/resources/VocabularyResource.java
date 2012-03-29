@@ -20,7 +20,6 @@ public class VocabularyResource extends ServerResource {
 	 */
 	@Get
 	public Representation toRDFXML() {
-		System.out.println(getRequest());
 		Vocabulary vocab = Vocabulary.getInstance(getContext(), getRequest().getOriginalRef());
 		Graph g = vocab.getGraph();
 		return g.getRdfXmlRepresentation();

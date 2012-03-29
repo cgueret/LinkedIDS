@@ -14,6 +14,7 @@ import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.rdf.Graph;
+import org.restlet.ext.rdf.Link;
 import org.restlet.ext.rdf.Literal;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -59,6 +60,8 @@ public class GenericResource extends ServerResource {
 	public static final Map<String, String> PLURAL = new HashMap<String, String>() {
 		{
 			put("country", "countries");
+			put("region", "regions");
+			put("document", "documents");
 		}
 	};
 
@@ -114,9 +117,12 @@ public class GenericResource extends ServerResource {
 
 			// Parse the response
 			JsonParser parser = new JsonParser();
-			JsonObject results = (JsonObject) ((JsonObject) parser.parse(response.toString())).get("results");
+			JsonElement element = ((JsonObject) parser.parse(response.toString())).get("results");
+			if (!element.isJsonObject())
+				return;
+			JsonObject result = (JsonObject) element;
 			Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary");
-			for (Entry<String, JsonElement> entry : results.entrySet()) {
+			for (Entry<String, JsonElement> entry : result.entrySet()) {
 				// By default, use the internal vocabulary. Replace with a
 				// mapped value when applicable
 				Reference predicate = new Reference(ns);
@@ -136,7 +142,7 @@ public class GenericResource extends ServerResource {
 						// TODO data types
 						if (((JsonPrimitive) value).isNumber())
 							object = new Literal(entry.getValue().getAsString());
-						if (((JsonPrimitive) value).isString())
+						if (((JsonPrimitive) value).isString())	
 							object = new Literal(entry.getValue().getAsString());
 						graph.add(resource, predicate, object);
 					}
@@ -146,8 +152,8 @@ public class GenericResource extends ServerResource {
 			// Link to geoname
 			if (resourceType.equals("country")) {
 				GeoNamesBrowser b = new GeoNamesBrowser();
-				String countryName = results.get("country_name").getAsString();
-				String countryCode = results.get("iso_two_letter_code").getAsString();
+				String countryName = result.get("country_name").getAsString();
+				String countryCode = result.get("iso_two_letter_code").getAsString();
 				Reference target = b.getResource(countryName, countryCode);
 				if (target != null)
 					graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
