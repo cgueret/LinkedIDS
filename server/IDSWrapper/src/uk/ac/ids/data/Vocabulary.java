@@ -75,4 +75,20 @@ public class Vocabulary {
 	public Graph getGraph() {
 		return graph;
 	}
+	
+	/**
+	 * @param predicate
+	 * @return
+	 */
+	public Reference getRange(Reference predicate) {
+		for(Link l: graph) 
+			System.out.println(l);
+		
+		for(Link l: graph) 
+			if (l.getSource().equals(predicate))
+				if (l.getTypeRef().equals(new Reference("http://www.w3.org/2000/01/rdf-schema#range")))
+					return l.getTargetAsReference();
+		
+		return null;
+	}
 }

@@ -24,6 +24,7 @@ import org.restlet.resource.ServerResource;
 import uk.ac.ids.Main;
 import uk.ac.ids.data.GeoNamesBrowser;
 import uk.ac.ids.data.Parameters;
+import uk.ac.ids.data.Vocabulary;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -142,8 +143,12 @@ public class GenericResource extends ServerResource {
 						// TODO data types
 						if (((JsonPrimitive) value).isNumber())
 							object = new Literal(entry.getValue().getAsString());
-						if (((JsonPrimitive) value).isString())	
+						if (((JsonPrimitive) value).isString())	{
+							//Vocabulary vocab = Vocabulary.getInstance(getContext(), getRequest().getOriginalRef());
+							//System.out.println(predicate);
+							//System.out.println(vocab.getRange(predicate));
 							object = new Literal(entry.getValue().getAsString());
+						}
 						graph.add(resource, predicate, object);
 					}
 				}
