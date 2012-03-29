@@ -5,11 +5,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import org.restlet.data.MediaType;
@@ -17,7 +14,6 @@ import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.rdf.Graph;
-import org.restlet.ext.rdf.Link;
 import org.restlet.ext.rdf.Literal;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -181,15 +177,7 @@ public class GenericResource extends ServerResource {
 	public Representation toHTML() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("resource", resource);
-
-		Set<Link> triples = new HashSet<Link>();
-		Iterator<Link> it = graph.iterator();
-		while (it.hasNext()) {
-			Link link = it.next();
-			triples.add(link);
-		}
-		map.put("triples", triples);
-
+		map.put("triples", graph);
 		return new TemplateRepresentation("resource.html", getApplication().getConfiguration(), map,
 				MediaType.TEXT_HTML);
 	}
