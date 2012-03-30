@@ -14,7 +14,6 @@ import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.rdf.Graph;
-import org.restlet.ext.rdf.Link;
 import org.restlet.ext.rdf.Literal;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -24,7 +23,7 @@ import org.restlet.resource.ServerResource;
 import uk.ac.ids.Main;
 import uk.ac.ids.data.GeoNamesBrowser;
 import uk.ac.ids.data.Parameters;
-import uk.ac.ids.data.Vocabulary;
+import uk.ac.ids.util.Prettify;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -118,7 +117,10 @@ public class GenericResource extends ServerResource {
 
 			// Parse the response
 			JsonParser parser = new JsonParser();
-			JsonElement element = ((JsonObject) parser.parse(response.toString())).get("results");
+			JsonElement e = parser.parse(response.toString());
+			if (!e.isJsonObject())
+				return;
+			JsonElement element = ((JsonObject) e).get("results");
 			if (!element.isJsonObject())
 				return;
 			JsonObject result = (JsonObject) element;
@@ -143,10 +145,12 @@ public class GenericResource extends ServerResource {
 						// TODO data types
 						if (((JsonPrimitive) value).isNumber())
 							object = new Literal(entry.getValue().getAsString());
-						if (((JsonPrimitive) value).isString())	{
-							//Vocabulary vocab = Vocabulary.getInstance(getContext(), getRequest().getOriginalRef());
-							//System.out.println(predicate);
-							//System.out.println(vocab.getRange(predicate));
+						if (((JsonPrimitive) value).isString()) {
+							// Vocabulary vocab =
+							// Vocabulary.getInstance(getContext(),
+							// getRequest().getOriginalRef());
+							// System.out.println(predicate);
+							// System.out.println(vocab.getRange(predicate));
 							object = new Literal(entry.getValue().getAsString());
 						}
 						graph.add(resource, predicate, object);
@@ -186,9 +190,15 @@ public class GenericResource extends ServerResource {
 	 */
 	@Get("html")
 	public Representation toHTML() {
+		Prettify prettify = new Prettify();
+		Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary#");
+		prettify.register(ns.toString(), "ids:");
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("resource", resource);
 		map.put("triples", graph);
+		map.put("prettify", prettify);
+
 		return new TemplateRepresentation("resource.html", getApplication().getConfiguration(), map,
 				MediaType.TEXT_HTML);
 	}
