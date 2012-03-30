@@ -17,7 +17,7 @@ import org.restlet.ext.rdf.internal.turtle.RdfTurtleReader;
  */
 public class Vocabulary {
 	// Location of the vocabulary
-	private final static String VOCAB_FILE = "war:///linkedids-schema.ttl";
+	private final static String VOCAB_FILE = "war:///WEB-INF/rdf/linkedids-schema.ttl";
 
 	// The graph that will contain the vocabulary triples
 	private Graph graph = new Graph();
@@ -75,20 +75,20 @@ public class Vocabulary {
 	public Graph getGraph() {
 		return graph;
 	}
-	
+
 	/**
 	 * @param predicate
 	 * @return
 	 */
 	public Reference getRange(Reference predicate) {
-		for(Link l: graph) 
+		for (Link l : graph)
 			System.out.println(l);
-		
-		for(Link l: graph) 
+
+		for (Link l : graph)
 			if (l.getSource().equals(predicate))
 				if (l.getTypeRef().equals(new Reference("http://www.w3.org/2000/01/rdf-schema#range")))
 					return l.getTargetAsReference();
-		
+
 		return null;
 	}
 }

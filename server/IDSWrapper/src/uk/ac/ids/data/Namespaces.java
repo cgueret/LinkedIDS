@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.ids.util;
+package uk.ac.ids.data;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +14,8 @@ import org.restlet.data.Reference;
  * @author Christophe Gueret <christophe.gueret@gmail.com>
  * 
  */
-public class Prettify {
-	protected static final Logger logger = Logger.getLogger(Prettify.class.getName());
+public class Namespaces {
+	protected static final Logger logger = Logger.getLogger(Namespaces.class.getName());
 
 	/** List of namespaces */
 	// TODO load namespaces from external file
@@ -35,7 +35,7 @@ public class Prettify {
 	 * @param reference
 	 * @return the CURIE representation of the reference
 	 */
-	public String getLabel(Reference reference) {
+	public String prettify(Reference reference) {
 		String label = reference.toUrl().toString();
 		for (Entry<String, String> ns : NS.entrySet()) {
 			String[] s = label.split(ns.getKey());
@@ -68,13 +68,13 @@ public class Prettify {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Prettify p = new Prettify();
-		logger.info(p.getLabel(new Reference("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")));
-		logger.info(p.getLabel(new Reference("http://www.w3.org/2002/07/owl#sameAs")));
-		logger.info(p.getLabel(new Reference("http://dbpedia.org/ontology/PopulatedPlace/areaMetro")));
-		logger.info(p.getLabel(new Reference("http://idswrapper.appspot.com/vocabulary#site")));
+		Namespaces p = new Namespaces();
+		logger.info(p.prettify(new Reference("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")));
+		logger.info(p.prettify(new Reference("http://www.w3.org/2002/07/owl#sameAs")));
+		logger.info(p.prettify(new Reference("http://dbpedia.org/ontology/PopulatedPlace/areaMetro")));
+		logger.info(p.prettify(new Reference("http://idswrapper.appspot.com/vocabulary#site")));
 		p.register("http://idswrapper.appspot.com/vocabulary#", "ids:");
-		logger.info(p.getLabel(new Reference("http://idswrapper.appspot.com/vocabulary#site")));
+		logger.info(p.prettify(new Reference("http://idswrapper.appspot.com/vocabulary#site")));
 	}
 
 }

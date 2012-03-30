@@ -22,8 +22,8 @@ import org.restlet.resource.ServerResource;
 
 import uk.ac.ids.Main;
 import uk.ac.ids.data.GeoNamesBrowser;
+import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.data.Parameters;
-import uk.ac.ids.util.Prettify;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -190,14 +190,14 @@ public class GenericResource extends ServerResource {
 	 */
 	@Get("html")
 	public Representation toHTML() {
-		Prettify prettify = new Prettify();
+		Namespaces namespaces = new Namespaces();
 		Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary#");
-		prettify.register(ns.toString(), "ids:");
+		namespaces.register(ns.toString(), "ids:");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("resource", resource);
 		map.put("triples", graph);
-		map.put("prettify", prettify);
+		map.put("ns", namespaces);
 
 		return new TemplateRepresentation("resource.html", getApplication().getConfiguration(), map,
 				MediaType.TEXT_HTML);

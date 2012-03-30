@@ -10,7 +10,6 @@ import org.restlet.routing.Router;
 import uk.ac.ids.resources.ConfigResource;
 import uk.ac.ids.resources.GenericResource;
 import uk.ac.ids.resources.VocabularyResource;
-
 import freemarker.template.Configuration;
 
 //http://wiki.restlet.org/docs_2.1/13-restlet/275-restlet/252-restlet.html
@@ -34,7 +33,7 @@ public class Main extends Application {
 	public Restlet createInboundRoot() {
 		// initialize the Freemarker's configuration
 		configuration = new Configuration();
-		configuration.setTemplateLoader(new ContextTemplateLoader(getContext(), "war:///templates"));
+		configuration.setTemplateLoader(new ContextTemplateLoader(getContext(), "war:///WEB-INF/templates"));
 
 		// Create the router
 		Router router = new Router(getContext());
