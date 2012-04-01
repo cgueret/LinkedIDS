@@ -21,14 +21,14 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import uk.ac.ids.Main;
-import uk.ac.ids.data.GeoNamesBrowser;
 import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.data.Parameters;
+import uk.ac.ids.linker.LinkerParameters;
+import uk.ac.ids.linker.impl.GeoNames;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 
 // http://wiki.restlet.org/docs_2.1/13-restlet/28-restlet/270-restlet/245-restlet.html
 
@@ -71,6 +71,8 @@ public class GenericResource extends ServerResource {
 			put("object_type", new Reference("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"));
 		}
 	};
+
+	private static final Reference RDFS_Resource = new Reference("http://www.w3.org/2000/01/rdf-schema#Resource");
 
 	/*
 	 * (non-Javadoc)
@@ -126,44 +128,48 @@ public class GenericResource extends ServerResource {
 			JsonObject result = (JsonObject) element;
 			Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary");
 			for (Entry<String, JsonElement> entry : result.entrySet()) {
-				// By default, use the internal vocabulary. Replace with a
-				// mapped value when applicable
+				if (entry.getValue().isJsonObject())
+					continue;
+				if (entry.getValue().isJsonArray())
+					continue;
+
+				// By default, use the internal vocabulary.
 				Reference predicate = new Reference(ns);
 				predicate.setFragment(entry.getKey());
+
+				// Replace with a mapped value when applicable
+				// TODO get the static mappings from Mappings
 				if (MAP.containsKey(entry.getKey()))
 					predicate = MAP.get(entry.getKey());
 
-				JsonElement value = entry.getValue();
-				if (value.isJsonPrimitive()) {
-					// In the specific case of an object type, change it
-					if (entry.getKey().equals("object_type")) {
-						Reference object = new Reference(ns, entry.getValue().getAsString());
-						graph.add(resource, predicate, object);
-					} else {
-						// Interpret the literal
-						Literal object = null;
-						// TODO data types
-						if (((JsonPrimitive) value).isNumber())
-							object = new Literal(entry.getValue().getAsString());
-						if (((JsonPrimitive) value).isString()) {
-							// Vocabulary vocab =
-							// Vocabulary.getInstance(getContext(),
-							// getRequest().getOriginalRef());
-							// System.out.println(predicate);
-							// System.out.println(vocab.getRange(predicate));
-							object = new Literal(entry.getValue().getAsString());
-						}
-						graph.add(resource, predicate, object);
-					}
+				// Get the value
+				String text = entry.getValue().getAsString();
+
+				// Try to get the data type from the mappings
+				Reference type = getApplication().getMappings().getPredicateRange(new Reference("#" + entry.getKey()));
+
+				if (type != null && type.equals(RDFS_Resource)) {
+					Reference object;
+					if (text.startsWith("http"))
+						object = new Reference(text);
+					else
+						object = new Reference(ns + "#" + text);
+					graph.add(resource, predicate, object);
+				} else {
+					Literal object = new Literal(text);
+					graph.add(resource, predicate, object);
 				}
 			}
 
 			// Link to geoname
 			if (resourceType.equals("country")) {
-				GeoNamesBrowser b = new GeoNamesBrowser();
+				GeoNames b = new GeoNames();
 				String countryName = result.get("country_name").getAsString();
 				String countryCode = result.get("iso_two_letter_code").getAsString();
-				Reference target = b.getResource(countryName, countryCode);
+				LinkerParameters params = new LinkerParameters();
+				params.put(GeoNames.COUNTRY_CODE, countryCode);
+				params.put(GeoNames.COUNTRY_NAME, countryName);
+				Reference target = b.getResource(params);
 				if (target != null)
 					graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
 			}
@@ -190,9 +196,13 @@ public class GenericResource extends ServerResource {
 	 */
 	@Get("html")
 	public Representation toHTML() {
-		Namespaces namespaces = new Namespaces();
-		Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary#");
-		namespaces.register(ns.toString(), "ids:");
+		Namespaces namespaces = getApplication().getNamespaces();
+
+		// TODO move creation of ids namespace at creation time
+		if (!namespaces.isRegistered("ids:")) {
+			Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary#");
+			namespaces.register(ns.toString(), "ids:");
+		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("resource", resource);
