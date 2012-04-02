@@ -13,7 +13,6 @@ import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.resources.ConfigResource;
 import uk.ac.ids.resources.GenericResource;
 import uk.ac.ids.resources.VocabularyResource;
-
 import freemarker.template.Configuration;
 
 //http://wiki.restlet.org/docs_2.1/13-restlet/275-restlet/252-restlet.html
