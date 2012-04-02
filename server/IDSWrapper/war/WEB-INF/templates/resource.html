@@ -71,7 +71,11 @@ body {
 					<#list triples as triple>
 					<tr>
 						<td><a href="${triple.getTypeRef().toUri().toString()}">${ns.prettify(triple.getTypeRef())}</a></td>
-						<td>${triple.getTarget()}</td>
+						<#if triple.hasReferenceTarget()>
+							<td><a href="${triple.getTarget().toUri().toString()}">${ns.prettify(triple.getTarget())}</a></td>
+						<#else>
+							<td>${triple.getTarget()}</td>
+						</#if>
 					</tr>
 					</#list>
 				</tbody>

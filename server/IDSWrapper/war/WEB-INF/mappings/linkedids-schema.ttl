@@ -9,8 +9,12 @@
 @prefix ontology: <http://www.geonames.org/ontology#> .
 @prefix dcterms:  <http://purl.org/dc/terms/> .
 @prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+<<<<<<< HEAD
 @prefix foaf:	  <http://xmlns.com/foaf/0.1/> .
 @prefix xsd:	  <http://www.w3.org/2001/XMLSchema#>.
+=======
+@prefix foaf:	   <http://xmlns.com/foaf/0.1/> .
+>>>>>>> 34c265685cd7f564f89cfbd3c5759c6e03bae582
 
 # --------------------------- IDSResource -----------------------
 :IDSResource
