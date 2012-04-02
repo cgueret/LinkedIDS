@@ -1,5 +1,10 @@
 package uk.ac.ids.data;
 
+/**
+ * @author Christophe Gueret <christophe.gueret@gmail.com>
+ * @author Victor de Boer <v.de.boer@vu.nl>
+ * 
+ */
 public class Constants {
 	/**
 	 * Location of the templates for the HTML rendering of resources

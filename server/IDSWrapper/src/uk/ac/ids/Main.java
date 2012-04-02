@@ -32,10 +32,10 @@ public class Main extends Application {
 
 	// Mappings to turn ReST results into RDF properties
 	private Mappings mappings;
-	
+
 	// Namespaces used in the mappings
 	private Namespaces namespaces;
-	
+
 	/**
 	 * Creates a root Restlet that will receive all incoming calls and route
 	 * them to the corresponding handlers
@@ -51,10 +51,10 @@ public class Main extends Application {
 
 		// Initialize the namespaces
 		namespaces = new Namespaces();
-		
+
 		// Create the router
 		Router router = new Router(getContext());
-		
+
 		// Handler for requests to generic resources
 		router.attach("/{DB}/resource/{TYPE}/{ID}", GenericResource.class);
 

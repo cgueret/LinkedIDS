@@ -1,0 +1,12 @@
+@prefix ex:  <http://example.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:replaceby
+	a rdf:Property ;
+	rdfs:domain rdf:Property ; 
+	rdfs:range rdf:Property ; 
+	rdfs:comment "Indicate an other property to use instead".
+	
+:object_type
+	ex:replaceby rdf:type.
+	

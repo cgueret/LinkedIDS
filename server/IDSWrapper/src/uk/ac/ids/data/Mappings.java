@@ -29,7 +29,10 @@ public class Mappings implements Iterable<Link> {
 
 	// Range predicate
 	private static final Reference RDFS_RANGE = new Reference("http://www.w3.org/2000/01/rdf-schema#range");
-	
+
+	// Replace by predicate
+	private static final Reference REPLACE_BY = new Reference("http://example.org/replaceby");
+
 	// The graph that will contain all the mappings data
 	private final Graph graph = new Graph();
 
@@ -57,7 +60,7 @@ public class Mappings implements Iterable<Link> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// Load the content of all the files into the graph
 		for (Reference file : files) {
 			logger.info("Load " + file.toString());
@@ -92,11 +95,26 @@ public class Mappings implements Iterable<Link> {
 		return context;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Iterable#iterator()
 	 */
 	@Override
 	public Iterator<Link> iterator() {
 		return graph.iterator();
+	}
+
+	/**
+	 * @param predicate
+	 * @return
+	 */
+	public Reference getReplacementForPredicate(Reference predicate) {
+		for (Link l : graph)
+			if (l.getSource().equals(predicate))
+				if (l.getTypeRef().equals(REPLACE_BY))
+					return l.getTargetAsReference();
+
+		return null;
 	}
 }

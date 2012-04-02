@@ -12,6 +12,7 @@ import org.restlet.data.Reference;
 
 /**
  * @author Christophe Gueret <christophe.gueret@gmail.com>
+ * @author Victor de Boer <v.de.boer@vu.nl>
  * 
  */
 public class Namespaces {
