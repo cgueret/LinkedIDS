@@ -56,19 +56,15 @@ public class GenericResource extends ServerResource {
 	// The name of the resource;
 	private Reference resource = null;
 
+	// Set of key/value pairs for this resource
+	private Map<String, String> keyValuePairs = new HashMap<String, String>();
+
 	@SuppressWarnings("serial")
 	public static final Map<String, String> PLURAL = new HashMap<String, String>() {
 		{
 			put("country", "countries");
 			put("region", "regions");
 			put("document", "documents");
-		}
-	};
-
-	@SuppressWarnings("serial")
-	public static final Map<String, Reference> MAP = new HashMap<String, Reference>() {
-		{
-			put("object_type", new Reference("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"));
 		}
 	};
 
@@ -95,6 +91,73 @@ public class GenericResource extends ServerResource {
 		// Define the URI for this resource
 		resource = new Reference(getRequest().getOriginalRef().toUri());
 
+		// Load the key-values pairs from the JSON API
+		loadKeyValuePairs();
+
+		// Process them
+		for (Entry<String, String> keyValuePair : keyValuePairs.entrySet()) {
+			// Turn the key into a predicate
+			Reference predicate = new Reference(keyValuePair.getKey());
+
+			// Get the range of that predicate
+			Reference valueType = getApplication().getMappings().getPredicateRange(predicate);
+
+			// See if we need to rewrite the predicate into something else
+			Reference otherPredicate = getApplication().getMappings().getReplacementForPredicate(predicate);
+			if (otherPredicate != null)
+				predicate = otherPredicate;
+
+			// If the predicate is relative, bind it to the vocabulary NS
+			Reference vocabNS = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary");
+			if (predicate.isRelative())
+				predicate.setBaseRef(vocabNS);
+
+			// Get the value
+			String value = keyValuePair.getValue();
+
+			// If we know the type of this value, use it
+			if (valueType != null && valueType.equals(RDFS_Resource)) {
+				// The target value is a Resource
+				Reference object = new Reference(value);
+				if (object.isRelative())
+					object.setBaseRef(vocabNS);
+				graph.add(resource, predicate, object);
+			} else {
+				// Otherwise, add a plan literal
+				Literal object = new Literal(value);
+				graph.add(resource, predicate, object);
+			}
+		}
+
+		// Link to Geonames
+		// TODO move that configuration in a ttl file
+		if (resourceType.equals("country")) {
+			GeoNames b = new GeoNames();
+			String countryName = keyValuePairs.get("#country_name");
+			String countryCode = keyValuePairs.get("#iso_two_letter_code");
+			LinkerParameters params = new LinkerParameters();
+			params.put(GeoNames.COUNTRY_CODE, countryCode);
+			params.put(GeoNames.COUNTRY_NAME, countryName);
+			Reference target = b.getResource(params);
+			if (target != null)
+				graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.restlet.resource.Resource#getApplication()
+	 */
+	@Override
+	public Main getApplication() {
+		return (Main) super.getApplication();
+	}
+
+	/**
+	 * Load the key values pairs from the JSON API
+	 */
+	private void loadKeyValuePairs() {
 		try {
 			// Compose the URL
 			StringBuffer urlString = new StringBuffer("http://api.ids.ac.uk/openapi/");
@@ -125,68 +188,18 @@ public class GenericResource extends ServerResource {
 			JsonElement element = ((JsonObject) e).get("results");
 			if (!element.isJsonObject())
 				return;
-			JsonObject result = (JsonObject) element;
-			Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary");
-			for (Entry<String, JsonElement> entry : result.entrySet()) {
+			for (Entry<String, JsonElement> entry : ((JsonObject) element).entrySet()) {
 				if (entry.getValue().isJsonObject())
 					continue;
 				if (entry.getValue().isJsonArray())
 					continue;
 
-				// By default, use the internal vocabulary.
-				Reference predicate = new Reference(ns);
-				predicate.setFragment(entry.getKey());
-
-				// Replace with a mapped value when applicable
-				// TODO get the static mappings from Mappings
-				if (MAP.containsKey(entry.getKey()))
-					predicate = MAP.get(entry.getKey());
-
-				// Get the value
-				String text = entry.getValue().getAsString();
-
-				// Try to get the data type from the mappings
-				Reference type = getApplication().getMappings().getPredicateRange(new Reference("#" + entry.getKey()));
-
-				if (type != null && type.equals(RDFS_Resource)) {
-					Reference object;
-					if (text.startsWith("http"))
-						object = new Reference(text);
-					else
-						object = new Reference(ns + "#" + text);
-					graph.add(resource, predicate, object);
-				} else {
-					Literal object = new Literal(text);
-					graph.add(resource, predicate, object);
-				}
-			}
-
-			// Link to geoname
-			if (resourceType.equals("country")) {
-				GeoNames b = new GeoNames();
-				String countryName = result.get("country_name").getAsString();
-				String countryCode = result.get("iso_two_letter_code").getAsString();
-				LinkerParameters params = new LinkerParameters();
-				params.put(GeoNames.COUNTRY_CODE, countryCode);
-				params.put(GeoNames.COUNTRY_NAME, countryName);
-				Reference target = b.getResource(params);
-				if (target != null)
-					graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
+				// Store the value
+				keyValuePairs.put("#" + entry.getKey(), entry.getValue().getAsString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.restlet.resource.Resource#getApplication()
-	 */
-	@Override
-	public Main getApplication() {
-		return (Main) super.getApplication();
 	}
 
 	/**

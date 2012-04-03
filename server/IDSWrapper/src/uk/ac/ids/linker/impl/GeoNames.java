@@ -18,6 +18,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+/**
+ * @author Christophe Gueret <christophe.gueret@gmail.com>
+ * @author Victor de Boer <v.de.boer@vu.nl>
+ * 
+ */
 public class GeoNames extends Linker {
 	// Logger instance
 	protected static final Logger logger = Logger.getLogger(GeoNames.class.getName());

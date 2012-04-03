@@ -32,11 +32,11 @@ public class VocabularyResource extends ServerResource {
 			Reference s = triple.getSourceAsReference().clone();
 			if (s.isRelative())
 				s.setBaseRef(ns);
-			
+
 			Reference p = triple.getTypeRef().clone();
 			if (p.isRelative())
 				p.setBaseRef(ns);
-			
+
 			if (triple.hasReferenceTarget()) {
 				Reference o = triple.getTargetAsReference().clone();
 				if (o.isRelative())

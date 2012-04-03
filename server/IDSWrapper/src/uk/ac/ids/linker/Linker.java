@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import org.restlet.data.Reference;
 
-
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -79,13 +78,13 @@ public abstract class Linker {
 	 */
 	private void saveToCache(LinkerParameters parameters, Reference uri) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		
+
 		Entity entity = new Entity(DS_ENTITY);
 		for (Entry<String, String> prop : parameters.entrySet())
 			entity.setProperty(prop.getKey(), prop.getValue());
-		
+
 		entity.setProperty(RESOURCE_PROPERTY, uri.toString());
-		
+
 		datastore.put(entity);
 	}
 

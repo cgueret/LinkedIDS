@@ -10,7 +10,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 /**
  * @author Christophe Gueret <christophe.gueret@gmail.com>
  * @author Victor de Boer <v.de.boer@vu.nl>
- *
+ * 
  */
 public class Parameters {
 	// Entity type in the AppEngine data store
