@@ -123,7 +123,6 @@ public class GenericResource extends ServerResource {
 				parameters.put(Lexvo.LANG_NAME_LOCALE, "eng");
 				Lexvo lexvo = new Lexvo();
 				Reference target = lexvo.getResource(parameters);
-				System.out.println(valueType);
 				if (target != null) {
 					value = target.toUri().toString();
 					valueType = RDFS_Resource;
