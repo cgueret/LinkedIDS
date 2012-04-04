@@ -190,10 +190,10 @@
 	rdfs:label "Subject keywords that relate to the document" ;
 	rdfs:subPropertyOf dcterms:subject.
 	
-# VIC make this more semantic-> enrich to language resources
 :language_name 
 	a rdf:Property ;
 	rdfs:label "The language in which the title, headline and description are written" ;
+	rdfs:range rdfs:Resource .
 	rdfs:subPropertyOf dcterms:language.
 	
 :licence_type

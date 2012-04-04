@@ -1,5 +1,6 @@
-@prefix ex:  <http://example.org/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex:      <http://example.org/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 
 ex:replaceby
 	a rdf:Property ;
@@ -10,3 +11,5 @@ ex:replaceby
 :object_type
 	ex:replaceby rdf:type.
 	
+:language_name
+	ex:replaceby dcterms:language.
