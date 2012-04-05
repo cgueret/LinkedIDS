@@ -25,6 +25,7 @@ import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.data.Parameters;
 import uk.ac.ids.linker.LinkerParameters;
 import uk.ac.ids.linker.impl.GeoNames;
+import uk.ac.ids.linker.impl.Lexvo;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -115,6 +116,19 @@ public class GenericResource extends ServerResource {
 			// Get the value
 			String value = keyValuePair.getValue();
 
+			// See if we need to call a Linker to replace the value
+			if (keyValuePair.getKey().equals("#language_name")) {
+				LinkerParameters parameters = new LinkerParameters();
+				parameters.put(Lexvo.LANG_NAME, value);
+				parameters.put(Lexvo.LANG_NAME_LOCALE, "eng");
+				Lexvo lexvo = new Lexvo();
+				Reference target = lexvo.getResource(parameters);
+				if (target != null) {
+					value = target.toUri().toString();
+					valueType = RDFS_Resource;
+				}
+			}
+
 			// If we know the type of this value, use it
 			if (valueType != null && valueType.equals(RDFS_Resource)) {
 				// The target value is a Resource
@@ -123,7 +137,7 @@ public class GenericResource extends ServerResource {
 					object.setBaseRef(vocabNS);
 				graph.add(resource, predicate, object);
 			} else {
-				// Otherwise, add a plan literal
+				// Otherwise, add a plain literal
 				Literal object = new Literal(value);
 				graph.add(resource, predicate, object);
 			}

@@ -27,8 +27,8 @@ public class GeoNames extends Linker {
 	// Logger instance
 	protected static final Logger logger = Logger.getLogger(GeoNames.class.getName());
 
+	// Parameters
 	public static final String COUNTRY_NAME = "countryName";
-
 	public static final String COUNTRY_CODE = "countryCode";
 
 	// API to query geoname

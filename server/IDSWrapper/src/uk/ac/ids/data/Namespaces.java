@@ -23,10 +23,12 @@ public class Namespaces {
 	public static final Map<String, String> NS = new HashMap<String, String>() {
 		// Serial
 		private static final long serialVersionUID = 6448355116508480221L;
+
 		{
 			put("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf:");
 			put("http://www.w3.org/2002/07/owl#", "owl:");
 			put("http://dbpedia.org/ontology/", "dbpedia-owl:");
+			put("http://purl.org/dc/terms/", "dcterms:");
 		}
 	};
 
