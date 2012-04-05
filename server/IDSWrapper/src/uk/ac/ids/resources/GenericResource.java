@@ -24,6 +24,7 @@ import uk.ac.ids.Main;
 import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.data.Parameters;
 import uk.ac.ids.linker.LinkerParameters;
+import uk.ac.ids.linker.impl.DBpedia;
 import uk.ac.ids.linker.impl.GeoNames;
 import uk.ac.ids.linker.impl.Lexvo;
 
@@ -156,6 +157,18 @@ public class GenericResource extends ServerResource {
 			if (target != null)
 				graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
 		}
+		
+		// Link to DBpedia
+				// TODO move that configuration in a ttl file
+				if (resourceType.equals("theme")) {
+					DBpedia b = new DBpedia();
+					String themeTitle = keyValuePairs.get("#title");
+					LinkerParameters params = new LinkerParameters();
+					params.put(DBpedia.THEME_TITLE, themeTitle);
+					Reference target = b.getResource(params);
+					if (target != null)
+						graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
+				}
 	}
 
 	/*
