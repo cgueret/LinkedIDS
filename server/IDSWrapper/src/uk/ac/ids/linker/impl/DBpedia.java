@@ -3,12 +3,25 @@ package uk.ac.ids.linker.impl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.logging.Logger;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.restlet.data.Reference;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import uk.ac.ids.linker.Linker;
 import uk.ac.ids.linker.LinkerParameters;
@@ -46,22 +59,26 @@ public class DBpedia extends Linker {
 
 		String themeTitle = parameters.get(THEME_TITLE);
 
-		// Build the sparql query
-		String sparqlQuery = "select distinct ?Concept where  {?Concept <http://www.w3.org/2000/01/rdf-schema#label> \"";
-		sparqlQuery += themeTitle;
-		sparqlQuery += "\"@en . ?Concept <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept>}  LIMIT 10";
-		sparqlQuery += "?sparql-results=json";
+		// Build the sparql query: limit to 5  (could be one)
+		String sparqlQuery = 	"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>";
+		sparqlQuery += 			"prefix skos: <http://www.w3.org/2004/02/skos/core#>";
+		sparqlQuery += 			"prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
+		sparqlQuery += 			"select distinct ?Concept where  {?Concept rdfs:label \"";
+		sparqlQuery += 			themeTitle;
+		sparqlQuery += 			"\"@en .}  LIMIT 5";
 		
-		StringBuffer urlString = new StringBuffer(API);
-		urlString.append("query=").append(sparqlQuery);
-
-
+// ?Concept rdf:type skos:Concept.
+		
 		try {
 			// Compose the URL
+			sparqlQuery = URLEncoder.encode(sparqlQuery.toString(),"utf-8");
+			StringBuffer urlString = new StringBuffer(API);
+			urlString.append("query=").append(sparqlQuery);
 			URL url = new URL(urlString.toString());
 
 			// Issue the request
 			StringBuffer response = new StringBuffer();
+			
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String line;
@@ -69,28 +86,38 @@ public class DBpedia extends Linker {
 				response.append(line);
 			}
 			reader.close();
-
-			//TODO: tot hier
-			// Parse the response
-			JsonParser parser = new JsonParser();
-			JsonElement results = parser.parse(response.toString());
-			if (results.isJsonObject()) {
-				JsonObject obj = (JsonObject) results;
-				if (obj.get("totalResultsCount").getAsInt() == 1) {
-					JsonArray array = obj.get("geonames").getAsJsonArray();
-					JsonObject entry = array.get(0).getAsJsonObject();
-					String id = entry.get("geonameId").getAsString();
-					return new Reference("http://sws.geonames.org/" + id);
-				}
-			}
-
-			return null;
+			
+			
+			// Parse the response: return only the first URI. If there are nu URIs found, return null
+			 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			 DocumentBuilder db = dbf.newDocumentBuilder();
+			 InputSource is = new InputSource();
+			 is.setCharacterStream(new StringReader(response.toString()));
+			 Document doc = db.parse(is);
+			 NodeList results = doc.getElementsByTagName("result");
+			 if (results.getLength()>0){
+				 Element element = (Element) results.item(0);
+				 String uri = element.getElementsByTagName("uri").item(0).getTextContent();
+				 
+				 return new Reference(uri);
+			 }
+			 else{
+				 return null;
+			 }
+			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
-		}
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		} catch (SAXException e) {
+			e.printStackTrace();
+			return null;
+
+		} 
 	}
 }
