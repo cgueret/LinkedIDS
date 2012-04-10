@@ -67,6 +67,7 @@ public class GenericResource extends ServerResource {
 			put("country", "countries");
 			put("region", "regions");
 			put("document", "documents");
+			put("theme", "themes");
 		}
 	};
 
@@ -159,16 +160,16 @@ public class GenericResource extends ServerResource {
 		}
 		
 		// Link to DBpedia
-				// TODO move that configuration in a ttl file
-				if (resourceType.equals("theme")) {
-					DBpedia b = new DBpedia();
-					String themeTitle = keyValuePairs.get("#title");
-					LinkerParameters params = new LinkerParameters();
-					params.put(DBpedia.THEME_TITLE, themeTitle);
-					Reference target = b.getResource(params);
-					if (target != null)
-						graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
-				}
+		// TODO move that configuration in a ttl file
+		if (resourceType.equals("theme")) {
+			DBpedia b = new DBpedia();
+			String themeTitle = keyValuePairs.get("#title");
+			LinkerParameters params = new LinkerParameters();
+			params.put(DBpedia.THEME_TITLE, themeTitle);
+			Reference target = b.getResource(params);
+			if (target != null)
+				graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
+		}
 	}
 
 	/*
