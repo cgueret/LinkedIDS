@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.Restlet;
 import org.restlet.data.Method;
 import org.restlet.data.Reference;
 import org.restlet.data.ReferenceList;
@@ -48,7 +48,7 @@ public class Mappings implements Iterable<Link> {
 		this.context = context;
 
 		// Get the internal client
-		Client client = context.getClientDispatcher();
+		Restlet client = context.getClientDispatcher();
 
 		// Get a list of the files in the mappings directory
 		List<Reference> files = new ArrayList<Reference>();

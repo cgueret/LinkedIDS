@@ -20,7 +20,7 @@
 	rdfs:subClassOf rdfs:Resource.
 	
 :IDSClass
-	a rdfs :Class ;
+	a rdfs:Class ;
 	rdfs:label "Generic IDS Class" ;
 	rdfs:subClassOf rdfs:Class.
 

@@ -3,7 +3,9 @@ package uk.ac.ids;
 import java.util.logging.Logger;
 
 import org.restlet.Application;
+import org.restlet.Component;
 import org.restlet.Restlet;
+import org.restlet.data.Protocol;
 import org.restlet.ext.freemarker.ContextTemplateLoader;
 import org.restlet.routing.Router;
 
@@ -91,4 +93,25 @@ public class Main extends Application {
 	public Namespaces getNamespaces() {
 		return namespaces;
 	}
+
+	/**
+	 * @param args
+	 * @throws Exception
+	 */
+	public static void main(String[] args) throws Exception {
+		// Create the HTTP server and listen on port 8182
+		// Server server = new Server(Protocol.HTTP, 8182);
+		// Application a = new Main();
+		// a.setContext(server.getContext());
+		// a.start();
+		// System.out.println(a.getContext());
+
+		Component component = new Component();
+		component.getClients().add(Protocol.WAR);
+		component.getServers().add(Protocol.HTTP, 8080);
+		component.getDefaultHost().attach(new Main());
+		component.start();
+
+	}
+
 }
