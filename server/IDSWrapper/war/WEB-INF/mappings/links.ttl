@@ -1,16 +1,20 @@
-@prefix ex:      <http://example.org/> .
+@prefix ex:      <http://example.org#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
 
 ex:IgnoredProperty
 	a rdf:Property.
 	
 :category_region_array
-	a ex:IgnoredProperty.
+	a ex:IgnoredProperty .
 	
 :category_region_ids
+	ex:replaceby :region;
 	rdfs:range	:Region.
 	
 :Region
-	ex:pattern "eldis/resource/region/{id}"
-	
+	ex:pattern "eldis/resource/region/{id}".
+
+:IDSClass
+	ex:pattern "#{id}".	

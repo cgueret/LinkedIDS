@@ -1,5 +1,6 @@
 package uk.ac.ids.util;
 
+import uk.ac.ids.vocabulary.OWL;
 import uk.ac.ids.vocabulary.WRAPPER;
 
 public class Test {
@@ -10,6 +11,7 @@ public class Test {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println(WRAPPER.IGNORED_PROPERTY);
+		System.out.println(OWL.SAME_AS);
 	}
 
 }

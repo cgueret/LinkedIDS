@@ -107,7 +107,6 @@
 	rdfs:domain :Country ;
 	rdfs:range rdfs:Literal ;
 	rdfs:label "alternative_name" ;
-	rdfs:range rdfs:Literal ;
 	rdfs:subPropertyOf ontology:alternateName.
 
 :country_name
@@ -149,7 +148,7 @@
 # ---------------------------  Regions --------------------------------
 
 :Region
-	a :IDSClass ;
+	a rdfs:Class ;
 	rdfs:label "Region" ;
 	rdfs:subClassOf ontology:Feature.
 
@@ -244,6 +243,7 @@
 :title_sort
 	a rdf:Property ;
 	rdfs:label "Title on which to sort" ;
+	rdfs:range rdfs:Literal ;
 	rdfs:subPropertyOf dcterms:title.
 	
 :urls

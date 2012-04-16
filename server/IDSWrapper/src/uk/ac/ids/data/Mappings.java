@@ -18,6 +18,10 @@ import org.restlet.ext.rdf.GraphBuilder;
 import org.restlet.ext.rdf.Link;
 import org.restlet.ext.rdf.internal.turtle.RdfTurtleReader;
 
+import uk.ac.ids.vocabulary.RDF;
+import uk.ac.ids.vocabulary.RDFS;
+import uk.ac.ids.vocabulary.WRAPPER;
+
 /**
  * @author Christophe Gueret <christophe.gueret@gmail.com>
  * @author Victor de Boer <v.de.boer@vu.nl>
@@ -26,12 +30,6 @@ import org.restlet.ext.rdf.internal.turtle.RdfTurtleReader;
 public class Mappings implements Iterable<Link> {
 	// Logger
 	protected static final Logger logger = Logger.getLogger(Mappings.class.getName());
-
-	// Range predicate
-	private static final Reference RDFS_RANGE = new Reference("http://www.w3.org/2000/01/rdf-schema#range");
-
-	// Replace by predicate
-	private static final Reference REPLACE_BY = new Reference("http://example.org/replaceby");
 
 	// The graph that will contain all the mappings data
 	private final Graph graph = new Graph();
@@ -82,7 +80,7 @@ public class Mappings implements Iterable<Link> {
 	public Reference getPredicateRange(Reference predicate) {
 		for (Link l : graph)
 			if (l.getSource().equals(predicate))
-				if (l.getTypeRef().equals(RDFS_RANGE))
+				if (l.getTypeRef().equals(RDFS.RANGE))
 					return l.getTargetAsReference();
 
 		return null;
@@ -112,9 +110,35 @@ public class Mappings implements Iterable<Link> {
 	public Reference getReplacementForPredicate(Reference predicate) {
 		for (Link l : graph)
 			if (l.getSource().equals(predicate))
-				if (l.getTypeRef().equals(REPLACE_BY))
+				if (l.getTypeRef().equals(WRAPPER.REPLACE_BY))
 					return l.getTargetAsReference();
 
 		return null;
+	}
+
+	/**
+	 * @param type
+	 * @return
+	 */
+	public String getPatternFor(Reference type) {
+		for (Link l : graph)
+			if (l.getSource().equals(type))
+				if (l.getTypeRef().equals(WRAPPER.PATTERN))
+					return l.getTargetAsLiteral().getValue();
+
+		return null;
+	}
+
+	/**
+	 * @param valueType
+	 * @return
+	 */
+	public boolean isInternalType(Reference type) {
+		for (Link l : graph)
+			if (l.getSource().equals(type))
+				if (l.getTypeRef().equals(RDF.TYPE))
+					if (l.getTargetAsReference().equals(RDFS.CLASS))
+						return true;
+		return false;
 	}
 }

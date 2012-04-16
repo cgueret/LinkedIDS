@@ -27,7 +27,9 @@ import uk.ac.ids.linker.LinkerParameters;
 import uk.ac.ids.linker.impl.DBpedia;
 import uk.ac.ids.linker.impl.GeoNames;
 import uk.ac.ids.linker.impl.Lexvo;
+import uk.ac.ids.vocabulary.OWL;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -131,13 +133,35 @@ public class GenericResource extends ServerResource {
 				}
 			}
 
+			System.out.println(keyValuePair + " -- " + valueType);
+
 			// If we know the type of this value, use it
-			if (valueType != null && valueType.equals(RDFS_Resource)) {
+			if (valueType != null) {
 				// The target value is a Resource
-				Reference object = new Reference(value);
-				if (object.isRelative())
-					object.setBaseRef(vocabNS);
-				graph.add(resource, predicate, object);
+				if (valueType.equals(RDFS_Resource)) {
+					Reference object = new Reference(value);
+					if (object.isRelative())
+						object.setBaseRef(vocabNS);
+					graph.add(resource, predicate, object);
+				}
+
+				// The target is an internal link
+				else if (getApplication().getMappings().isInternalType(valueType)) {
+					String pattern = getApplication().getMappings().getPatternFor(valueType);
+					System.out.println("ok " + pattern);
+					if (pattern != null) {
+						Reference object = new Reference(pattern.replace("{id}", value));
+						if (object.isRelative())
+							object.setBaseRef(vocabNS);
+						graph.add(resource, predicate, object);
+					}
+				}
+
+				// Otherwise, add a plain literal
+				else {
+					Literal object = new Literal(value);
+					graph.add(resource, predicate, object);
+				}
 			} else {
 				// Otherwise, add a plain literal
 				Literal object = new Literal(value);
@@ -156,9 +180,9 @@ public class GenericResource extends ServerResource {
 			params.put(GeoNames.COUNTRY_NAME, countryName);
 			Reference target = b.getResource(params);
 			if (target != null)
-				graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
+				graph.add(resource, OWL.SAME_AS, target);
 		}
-		
+
 		// Link to DBpedia
 		// TODO move that configuration in a ttl file
 		if (resourceType.equals("theme")) {
@@ -168,7 +192,7 @@ public class GenericResource extends ServerResource {
 			params.put(DBpedia.THEME_TITLE, themeTitle);
 			Reference target = b.getResource(params);
 			if (target != null)
-				graph.add(resource, new Reference("http://www.w3.org/2002/07/owl#sameAs"), target);
+				graph.add(resource, OWL.SAME_AS, target);
 		}
 	}
 
@@ -219,11 +243,15 @@ public class GenericResource extends ServerResource {
 			for (Entry<String, JsonElement> entry : ((JsonObject) element).entrySet()) {
 				if (entry.getValue().isJsonObject())
 					continue;
-				if (entry.getValue().isJsonArray())
-					continue;
 
-				// Store the value
-				keyValuePairs.put("#" + entry.getKey(), entry.getValue().getAsString());
+				// Store all the entries of the array
+				if (entry.getValue().isJsonArray())
+					for (JsonElement v : (JsonArray) entry.getValue())
+						keyValuePairs.put("#" + entry.getKey(), v.getAsString());
+
+				// Store the single value
+				if (entry.getValue().isJsonPrimitive())
+					keyValuePairs.put("#" + entry.getKey(), entry.getValue().getAsString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
