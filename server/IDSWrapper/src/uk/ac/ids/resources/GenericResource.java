@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -126,14 +127,12 @@ public class GenericResource extends ServerResource {
 				parameters.put(Lexvo.LANG_NAME, value);
 				parameters.put(Lexvo.LANG_NAME_LOCALE, "eng");
 				Lexvo lexvo = new Lexvo();
-				Reference target = lexvo.getResource(parameters);
+				List<Reference> target = lexvo.getResource(parameters);
 				if (target != null) {
-					value = target.toUri().toString();
+					value = target.get(0).toUri().toString();
 					valueType = RDFS_Resource;
 				}
 			}
-
-			System.out.println(keyValuePair + " -- " + valueType);
 
 			// If we know the type of this value, use it
 			if (valueType != null) {
@@ -178,9 +177,9 @@ public class GenericResource extends ServerResource {
 			LinkerParameters params = new LinkerParameters();
 			params.put(GeoNames.COUNTRY_CODE, countryCode);
 			params.put(GeoNames.COUNTRY_NAME, countryName);
-			Reference target = b.getResource(params);
+			List<Reference> target = b.getResource(params);
 			if (target != null)
-				graph.add(resource, OWL.SAME_AS, target);
+				graph.add(resource, OWL.SAME_AS, target.get(0));
 		}
 
 		// Link to DBpedia
@@ -190,9 +189,9 @@ public class GenericResource extends ServerResource {
 			String themeTitle = keyValuePairs.get("#title");
 			LinkerParameters params = new LinkerParameters();
 			params.put(DBpedia.THEME_TITLE, themeTitle);
-			Reference target = b.getResource(params);
+			List<Reference> target = b.getResource(params);
 			if (target != null)
-				graph.add(resource, OWL.SAME_AS, target);
+				graph.add(resource, OWL.SAME_AS, target.get(0));
 		}
 	}
 

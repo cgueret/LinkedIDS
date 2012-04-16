@@ -1,6 +1,7 @@
 package uk.ac.ids.linker;
 
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.restlet.data.Reference;
@@ -20,22 +21,25 @@ public abstract class Linker {
 	// Entity type in the AppEngine data store
 	private final static String DS_ENTITY = "ExternalResource";
 
-	// Entity type in the AppEngine data store
-	private final static String RESOURCE_PROPERTY = "Resource";
+	// Property for the mapped resources
+	private final static String RESOURCE_PROPERTY = "Resources";
+
+	// Property for the parameters
+	private final static String PARAMETER_PROPERTY = "Parameters";
 
 	/**
 	 * @param countryName
 	 * @param countryCode
 	 * @return
 	 */
-	public Reference getResource(LinkerParameters parameters) {
+	public List<Reference> getResource(LinkerParameters parameters) {
 		logger.info("Get " + parameters);
 		try {
 			// Try to return the result from the cache
 			return getFromCache(parameters);
 		} catch (EntityNotFoundException e) {
 			// Try to get it from geoname
-			Reference uri = getFromService(parameters);
+			List<Reference> uri = getFromService(parameters);
 
 			// If successful, save it
 			if (uri != null)
@@ -50,41 +54,49 @@ public abstract class Linker {
 	 * @param parameters
 	 * @return
 	 */
-	protected abstract Reference getFromService(LinkerParameters parameters);
+	protected abstract List<Reference> getFromService(LinkerParameters parameters);
 
 	/**
 	 * @param parameters
 	 * @return
 	 * @throws EntityNotFoundException
 	 */
-	private Reference getFromCache(LinkerParameters parameters) throws EntityNotFoundException {
+	private List<Reference> getFromCache(LinkerParameters parameters) throws EntityNotFoundException {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
+		// Get the data
 		Query q = new Query(DS_ENTITY);
-		for (Entry<String, String> filter : parameters.entrySet())
-			q.addFilter(filter.getKey(), FilterOperator.EQUAL, filter.getValue());
+		q.addFilter(PARAMETER_PROPERTY, FilterOperator.EQUAL, parameters.toKey());
 		PreparedQuery pq = datastore.prepare(q);
 		Entity entity = pq.asSingleEntity();
-
 		if (entity == null)
 			throw new EntityNotFoundException(null);
 
-		return new Reference((String) entity.getProperty(RESOURCE_PROPERTY));
+		// De-serialize the data
+		@SuppressWarnings("unchecked")
+		List<String> uris = (List<String>) entity.getProperty(RESOURCE_PROPERTY);
+		List<Reference> results = new ArrayList<Reference>();
+		for (String uri : uris)
+			results.add(new Reference(uri));
+		return results;
 	}
 
 	/**
 	 * @param parameters
 	 * @param uri
 	 */
-	private void saveToCache(LinkerParameters parameters, Reference uri) {
+	private void saveToCache(LinkerParameters parameters, List<Reference> uris) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
+		// Serialize the uris
+		List<String> results = new ArrayList<String>();
+		for (Reference uri : uris)
+			results.add(uri.toString());
+
+		// Persist the data
 		Entity entity = new Entity(DS_ENTITY);
-		for (Entry<String, String> prop : parameters.entrySet())
-			entity.setProperty(prop.getKey(), prop.getValue());
-
-		entity.setProperty(RESOURCE_PROPERTY, uri.toString());
-
+		entity.setProperty(PARAMETER_PROPERTY, parameters.toKey());
+		entity.setProperty(RESOURCE_PROPERTY, results);
 		datastore.put(entity);
 	}
 

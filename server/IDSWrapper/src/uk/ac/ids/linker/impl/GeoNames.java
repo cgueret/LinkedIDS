@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.restlet.data.Reference;
@@ -41,7 +43,7 @@ public class GeoNames extends Linker {
 	 * uk.ac.ids.linker.Linker#getFromService(uk.ac.ids.linker.LinkerParameters)
 	 */
 	@Override
-	protected Reference getFromService(LinkerParameters parameters) {
+	protected List<Reference> getFromService(LinkerParameters parameters) {
 		if (!parameters.containsKey(COUNTRY_NAME) || !parameters.containsKey(COUNTRY_CODE))
 			return null;
 
@@ -80,7 +82,9 @@ public class GeoNames extends Linker {
 					JsonArray array = obj.get("geonames").getAsJsonArray();
 					JsonObject entry = array.get(0).getAsJsonObject();
 					String id = entry.get("geonameId").getAsString();
-					return new Reference("http://sws.geonames.org/" + id);
+					List<Reference> res = new ArrayList<Reference>();
+					res.add(new Reference("http://sws.geonames.org/" + id));
+					return res;
 				}
 			}
 

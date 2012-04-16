@@ -6,6 +6,8 @@ package uk.ac.ids.linker.impl;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.restlet.data.Reference;
@@ -41,7 +43,7 @@ public class Lexvo extends Linker {
 	 * uk.ac.ids.linker.Linker#getFromService(uk.ac.ids.linker.LinkerParameters)
 	 */
 	@Override
-	protected Reference getFromService(LinkerParameters parameters) {
+	protected List<Reference> getFromService(LinkerParameters parameters) {
 		// Get the main page of the language
 		String targetStr = LexvoIdentifiersAPI.getTermURI(parameters.get(LANG_NAME), parameters.get(LANG_NAME_LOCALE));
 		Reference target = new Reference(targetStr);
@@ -75,7 +77,9 @@ public class Lexvo extends Linker {
 			e.printStackTrace();
 		}
 
-		return target;
+		List<Reference> res = new ArrayList<Reference>();
+		res.add(target);
+		return res;
 	}
 
 	/**
