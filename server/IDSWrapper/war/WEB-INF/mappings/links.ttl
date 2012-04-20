@@ -16,5 +16,9 @@ ex:IgnoredProperty
 :Region
 	ex:pattern "eldis/resource/region/{id}".
 
+	
+:Theme
+	ex:pattern "eldis/resource/theme/{id}".
+	
 :IDSClass
 	ex:pattern "#{id}".	

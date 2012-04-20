@@ -85,19 +85,29 @@ public class DBpedia extends Linker {
 			// Parse the response: return only the first URI. If there are nu
 			// URIs found, return null
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
+			DocumentBuilder db = dbf.newDocumentBuilder(); 
 			InputSource is = new InputSource();
 			is.setCharacterStream(new StringReader(response.toString()));
 			Document doc = db.parse(is);
 			NodeList results = doc.getElementsByTagName("result");
+			
+			
+ 
 			if (results.getLength() > 0) {
-				Element element = (Element) results.item(0);
-				String uri = element.getElementsByTagName("uri").item(0).getTextContent();
-
 				List<Reference> res = new ArrayList<Reference>();
-				res.add(new Reference(uri));
+				for( int i = 0 ; i < results.getLength(); i++){
+	
+					Element element = (Element) results.item(i);
+
+					if (element.getElementsByTagName("uri").item(i) != null){
+						String uri = element.getElementsByTagName("uri").item(i).getTextContent();
+						res.add(new Reference(uri));
+					}
+				}
 				return res;
-			} else {
+				
+			} else 
+			{
 				return null;
 			}
 
