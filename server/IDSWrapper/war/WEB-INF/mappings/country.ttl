@@ -1,0 +1,71 @@
+#
+# LinkedIDS Schema / Mappings
+#
+# V. de Boer and C. Gueret March 2012
+#
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix ens:      <http://www.europeana.eu/schemas/edm/> .
+@prefix ontology: <http://www.geonames.org/ontology#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:	   <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:	   <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex:       <http://example.org#> .
+
+# ---------------------------  Country --------------------------------
+
+:Country
+	a :IDSClass ;
+	rdfs:label "Country" ;
+	rdfs:subClassOf ontology:Feature.	#VIC: maybe make this equiv.class
+
+:alternative_name
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:range rdfs:Literal ;
+	rdfs:label "alternative_name" ;
+	rdfs:subPropertyOf ontology:alternateName.
+
+:country_name
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:label "country name" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf ontology:name.
+
+:iso_number
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:label "iso number" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf dcterms:identifier.
+	
+:iso_three_letter_code
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:label "iso three letter code" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf dcterms:identifier.
+
+:iso_two_letter_code
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:label "ISO two letter code" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf ontology:countryCode.
+
+:region
+	a rdf:Property ;
+	rdfs:domain :Country ;
+	rdfs:range :Region ;
+	rdfs:label "region of the country" ;
+	rdfs:subPropertyOf ontology:parentFeature.
+
+:category_region_array
+	a ex:IgnoredProperty .
+
+:category_region_ids
+	ex:replaceby :region;
+	rdfs:range	:Region.
+	

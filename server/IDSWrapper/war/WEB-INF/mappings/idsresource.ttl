@@ -1,0 +1,104 @@
+#
+# LinkedIDS Schema / Mappings
+#
+# V. de Boer and C. Gueret March 2012
+#
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix ens:      <http://www.europeana.eu/schemas/edm/> .
+@prefix ontology: <http://www.geonames.org/ontology#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:	   <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:	   <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex:       <http://example.org#> .
+
+# --------------------------- IDSResource -----------------------
+:IDSResource
+	a :IDSClass ;
+	rdfs:label "Generic IDS Resource" ;
+	rdfs:subClassOf rdfs:Resource.
+	
+:IDSClass
+	a rdfs:Class ;
+	ex:pattern "#{id}" ;
+	rdfs:label "Generic IDS Class" ;
+	rdfs:subClassOf rdfs:Class.
+
+:title
+	a rdf:Property ;
+	rdfs:domain :IDSResource ; 
+	rdfs:range rdfs:Literal ;
+	rdfs:label "Title" ; 
+	rdfs:subPropertyOf rdfs:label ; 
+	rdfs:comment "title of the Resource (IDS-generic)".
+	
+:object_id	
+	a rdf:Property ;
+	rdfs:domain :IDSResource ; 
+	rdfs:range rdfs:Literal ;
+	rdfs:label "Object id" ; 
+	rdfs:comment "object id of the Resource (IDS-generic)".
+	
+:object_type
+	a rdf:Property ;
+	rdfs:domain :IDSResource ; 
+	rdfs:range :IDSClass;
+	rdfs:label "Object type" ; 
+	rdfs:subPropertyOf rdf:type;
+	rdfs:comment "type of the Resource (IDS-generic)".
+	
+:metadata_url
+	a rdf:Property ;
+	rdfs:domain :IDSResource ; 
+	rdfs:range rdfs:Resource ;
+	rdfs:label "Metadata url" ; 
+	rdfs:subPropertyOf rdfs:seeAlso ;
+	rdfs:comment "url of the metadata for the Resource (IDS-generic)".
+
+:timestamp
+	a rdf:Property ;
+	rdfs:domain :IDSResource ;
+	rdfs:label "Timestamp" ;
+	rdfs:range xsd:dateTime ;
+	rdfs:comment "Indicates when record was indexed in the API. Used to determine updates to the index for synchronisation. Timestamp is in ISO 8601 format: YYYY-MM-DD hh:mm:ss." .
+	
+:website_url
+	a rdf:Property ;
+	rdfs:domain :IDSResource ;
+	rdfs:label "website url" ;
+	rdfs:range rdfs:Resource ;
+	rdfs:comment "URL for the asset on the collection website";
+	rdfs:subPropertyOf rdfs:seeAlso.	
+	
+# Next two are for documents and organisations	
+:date_created
+	a rdf:Property ;
+	rdfs:label "Date created" ;
+	rdfs:domain :IDSResource ;
+	rdfs:range xsd:dateTime ;
+	rdfs:subPropertyOf dcterms:created.
+	
+# VIC: subprop created? or something else
+:date_updated
+	a rdf:Property ;
+	rdfs:label "Date updated" ;
+	rdfs:domain :IDSResource ;
+	rdfs:range xsd:dateTime ;
+	rdfs:subPropertyOf dcterms:created.
+
+:asset_id
+	a rdf:Property ;
+	rdfs:domain :IDSResource ;
+	rdfs:range xsd:integer ;
+	rdfs:label "asset_id" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf dcterms:identifier.
+
+:object_type
+	ex:replaceby rdf:type.
+	
+:language_name
+	ex:replaceby dcterms:language.
+	
+	

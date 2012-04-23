@@ -1,0 +1,52 @@
+#
+# LinkedIDS Schema / Mappings
+#
+# V. de Boer and C. Gueret March 2012
+#
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix ens:      <http://www.europeana.eu/schemas/edm/> .
+@prefix ontology: <http://www.geonames.org/ontology#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:	   <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:	   <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex:       <http://example.org#> .
+
+#-------------------------- Organisations ---------------------------------	
+
+:Organisation 
+	a :IDSClass ;
+	rdfs:subClassOf foaf:Organisation ;
+	rdfs:label "Organisation".
+
+:acronym
+	a rdf:Property ;
+	rdfs:label "Acronym of organisation" ;
+	rdfs:subPropertyOf foaf:name.
+	
+:alternative_acronym
+	a rdf:Property ;
+	rdfs:label "Alternative acronym of organisation" ;
+	rdfs:subPropertyOf foaf:name.
+	
+:alternative_name
+	a rdf:Property ;
+	rdfs:label "Alternative name of organisation" ;
+	rdfs:subPropertyOf foaf:name.
+	
+# VIC:category_region, category_theme, country_focus, description, keywords are retained from documents?
+
+# VIC: dcterms type? -> There seems to be such a thing as an organisation type, although the link on the site that should display the list of organisation types doesnt work
+:organisation_type
+	a rdf:Property ;
+	rdfs:label "Type of organisation" ;
+	#rdfs:range :OrganisationType ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf dcterms:type.
+
+:organisation_url
+	a rdf:Property ;
+	rdfs:label "Website of the organisation" ;
+	rdfs:subPropertyOf foaf:homepage; 
+	rdfs:range rdf:Resource.

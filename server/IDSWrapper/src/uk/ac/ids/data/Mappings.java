@@ -77,12 +77,15 @@ public class Mappings implements Iterable<Link> {
 	 * @param predicate
 	 * @return
 	 */
-	public Reference getPredicateRange(Reference predicate) {
-		for (Link l : graph)
-			if (l.getSource().equals(predicate))
-				if (l.getTypeRef().equals(RDFS.RANGE))
+	public Reference getRangeOf(Reference predicate) {
+		for (Link l : graph) {
+			if (l.getSource().equals(predicate)) {
+				if (l.getTypeRef().equals(RDFS.RANGE)) {
+					logger.info("Range of " + predicate + " is " + l.getTargetAsReference());
 					return l.getTargetAsReference();
-
+				}
+			}
+		}
 		return null;
 	}
 

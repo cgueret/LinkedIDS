@@ -1,0 +1,72 @@
+#
+# LinkedIDS Schema / Mappings
+#
+# V. de Boer and C. Gueret March 2012
+#
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix ens:      <http://www.europeana.eu/schemas/edm/> .
+@prefix ontology: <http://www.geonames.org/ontology#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:	   <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:	   <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex:       <http://example.org#> .
+
+#---------------------------- Themes --------------------------------
+:cat_parent
+	a rdf:Property ; 
+	rdfs:range :Theme ;
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:broader;
+	rdfs:label "first parent theme" .
+	
+:Theme
+	a :IDSClass ;
+	ex:pattern "eldis/resource/theme/{id}";
+	rdfs:subClassOf skos:Concept;
+	rdfs:label "IDS Theme".
+
+# VIC: The following properties have been dropped: "cat_level":  "cat_first_parent":  "cat_superparent":  "parent_url"
+
+:toplevel_parent_url
+	a rdf:Property ; 
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:broader;
+	rdfs:label "top level parent theme" .
+
+:category_id
+	a rdf:Property ; 
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf dcterms:identifier;
+	rdfs:label "category identifier" .
+
+:category_path
+	a rdf:Property ; 
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf dcterms:identifier; # VIC: this could also be skos:note
+	rdfs:label "category path" .
+
+:children_url
+	a rdf:Property ; 
+	rdfs:range :Theme ;
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:narrower;
+	rdfs:label "children" .
+
+# VIC: theme titles should map to skos:prefLabel (?). The title is here prefixed to differentiate from the other (generic) title
+:theme_title
+	a rdf:Property ; 
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:prefLabel;
+	rdfs:label "title of the theme".
+	
+:theme_title_sort
+	a rdf:Property ; 
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:altLabel;
+	rdfs:label "Sorting title of the theme".
+
+
+	
+

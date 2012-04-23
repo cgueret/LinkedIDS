@@ -1,0 +1,44 @@
+#
+# LinkedIDS Schema / Mappings
+#
+# V. de Boer and C. Gueret March 2012
+#
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix ens:      <http://www.europeana.eu/schemas/edm/> .
+@prefix ontology: <http://www.geonames.org/ontology#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:	   <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:	   <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex:       <http://example.org#> .
+
+# ---------------------------  Regions --------------------------------
+:Region
+	a rdfs:Class ;
+	ex:pattern "eldis/resource/region/{id}";
+	rdfs:label "Region" ;
+	rdfs:subClassOf ontology:Feature.
+
+
+# VIC: :region_cat_level, :cat_superparent dropped
+
+:category_id
+	a rdf:Property ;
+	rdfs:subPropertyOf dcterms:identifier ;
+	rdfs:label "Region identifier".
+	
+:category_path	
+	a rdf:Property ;
+	rdfs:subPropertyOf dcterms:identifier ;
+	rdfs:label "Region path".
+
+# VIC: for the hierarchy relations, we need a prefix, to distinguish from theme hierarchy (mapped to GN vs mapped to SKOS)
+:region_cat_first_parent
+	a rdf:Property ;
+	rdfs:subPropertyOf ontology:parentFeature ;
+	rdfs:label "First parent region".
+	
+
+
+	

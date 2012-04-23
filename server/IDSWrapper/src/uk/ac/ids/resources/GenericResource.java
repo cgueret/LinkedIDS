@@ -106,7 +106,7 @@ public class GenericResource extends ServerResource {
 			Reference predicate = new Reference(keyValuePair.getKey());
 
 			// Get the range of that predicate
-			Reference valueType = getApplication().getMappings().getPredicateRange(predicate);
+			Reference valueType = getApplication().getMappings().getRangeOf(predicate);
 
 			// See if we need to rewrite the predicate into something else
 			Reference otherPredicate = getApplication().getMappings().getReplacementForPredicate(predicate);
@@ -147,7 +147,6 @@ public class GenericResource extends ServerResource {
 				// The target is an internal link
 				else if (getApplication().getMappings().isInternalType(valueType)) {
 					String pattern = getApplication().getMappings().getPatternFor(valueType);
-					System.out.println("ok " + pattern);
 					if (pattern != null) {
 						Reference object = new Reference(pattern.replace("{id}", value));
 						if (object.isRelative())

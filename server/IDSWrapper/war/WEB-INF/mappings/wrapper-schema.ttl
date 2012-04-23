@@ -9,8 +9,5 @@ ex:replaceby
 	rdfs:range rdf:Property ; 
 	rdfs:comment "Indicate an other property to use instead".
 	
-:object_type
-	ex:replaceby rdf:type.
-	
-:language_name
-	ex:replaceby dcterms:language.
+ex:IgnoredProperty
+	a rdf:Property.

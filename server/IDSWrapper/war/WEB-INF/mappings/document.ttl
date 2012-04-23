@@ -1,0 +1,92 @@
+#
+# LinkedIDS Schema / Mappings
+#
+# V. de Boer and C. Gueret March 2012
+#
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix ens:      <http://www.europeana.eu/schemas/edm/> .
+@prefix ontology: <http://www.geonames.org/ontology#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:	  <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:	  <http://www.w3.org/2001/XMLSchema#>.
+
+# ------------------------- Documents ----------------------------------
+
+:Document
+	a :IDSClass;
+	rdfs:label "Document";
+	rdfs:subClassOf :IDSResource;
+	rdfs:subClassOf foaf:Document.
+ 
+:category_region
+	a rdf:Property ;
+	rdfs:label "Region of the document" ;
+	rdfs:subPropertyOf dcterms:coverage.
+	
+:category_theme
+	a rdf:Property ;
+	rdfs:label "Theme of the document" ;
+	rdfs:subPropertyOf dcterms:subject.
+	
+:country_focus
+	a rdf:Property ;
+	rdfs:label "Country of the document" ;
+	rdfs:subPropertyOf dcterms:coverage.
+	
+:description
+	a rdf:Property ;
+	rdfs:subPropertyOf dcterms:description;
+	rdfs:label "Description".
+	
+:keyword
+	a rdf:Property ;
+	rdfs:label "Subject keywords that relate to the document" ;
+	rdfs:subPropertyOf dcterms:subject.
+	
+:language_name 
+	a rdf:Property ;
+	rdfs:label "The language in which the title, headline and description are written" ;
+	rdfs:range rdfs:Resource ;
+	rdfs:subPropertyOf dcterms:language.
+	
+:licence_type
+	a rdf:Property ;
+	rdfs:label "Type of licence that document is released under " ;
+	rdfs:subPropertyOf dcterms:license.
+
+# VIC: maybe contextualize this? 
+:name
+	a rdf:Property ;
+	rdfs:label "Name of the document" ;
+	rdfs:subPropertyOf dcterms:title.
+	
+:publication_date
+	a rdf:Property ;
+	rdfs:label "Date the research document was first published" ;
+	rdfs:subPropertyOf dcterms:created.
+	
+:publication_year
+	a rdf:Property ;
+	rdfs:label "Year the document was first published" ;
+	rdfs:subPropertyOf dcterms:created.
+	
+# VIC: publishers are classes!	
+:publisher
+	a rdf:Property ;
+	rdfs:label "Organisation that published the research. Each publisher has a linked organisation record, containing address, website and additional information" ;
+	rdfs:range :Organisation ;
+	rdfs:subPropertyOf dcterms:publisher.
+	 
+:title_sort
+	a rdf:Property ;
+	rdfs:label "Title on which to sort" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf dcterms:title.
+	
+:urls
+	a rdf:Property ;
+	rdfs:label "URLs of the full text document" ;
+	rdfs:subPropertyOf dcterms:source ; 
+	rdfs:range rdf:Resource.
