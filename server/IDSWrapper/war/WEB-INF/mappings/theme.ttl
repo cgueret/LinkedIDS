@@ -44,8 +44,8 @@
 			
 :cat_level
 	a rdf:Property ;
-	rdfs:range :Theme ;
-	rdfs:domain rdfs:Literal.
+	rdfs:range rdfs:Literal;
+	rdfs:domain :Theme.
 	
 :toplevel_parent_url
 	a rdf:Property ; 
