@@ -22,7 +22,7 @@
 	rdfs:label "first parent theme" .
 	
 :Theme
-	a :IDSClass ;
+	a rdfs:Class ;
 	ex:pattern "eldis/resource/theme/{id}";
 	rdfs:subClassOf skos:Concept;
 	rdfs:label "IDS Theme".
