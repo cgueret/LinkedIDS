@@ -14,26 +14,45 @@
 @prefix ex:       <http://example.org#> .
 
 #---------------------------- Themes --------------------------------
-:cat_parent
-	a rdf:Property ; 
-	rdfs:range :Theme ;
-	rdfs:domain :Theme ;
-	rdfs:subPropertyOf skos:broader;
-	rdfs:label "first parent theme" .
-	
+
 :Theme
 	a rdfs:Class ;
 	ex:pattern "eldis/resource/theme/{id}";
 	rdfs:subClassOf skos:Concept;
 	rdfs:label "IDS Theme".
 
-# VIC: The following properties have been dropped: "cat_level":  "cat_first_parent":  "cat_superparent":  "parent_url"
+:cat_parent
+	a rdf:Property ; 
+	rdfs:range :Theme ;
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:broader;
+	rdfs:label "parent theme" .
+	
+:cat_first_parent
+	a rdf:Property ; 
+	rdfs:range :Theme ;
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:broader;
+	rdfs:label "first parent theme" .
 
+:parent_url
+	a ex:IgnoredProperty .
+	
+:cat_superparent
+	a ex:IgnoredProperty .
+		
+			
+:cat_level
+	a rdf:Property ;
+	rdfs:range :Theme ;
+	rdfs:domain rdfs:Literal.
+	
 :toplevel_parent_url
 	a rdf:Property ; 
 	rdfs:domain :Theme ;
+	rdfs:range :Resource ;
 	rdfs:subPropertyOf skos:broader;
-	rdfs:label "top level parent theme" .
+	rdfs:label "top level parent theme url" .
 
 :category_id
 	a rdf:Property ; 

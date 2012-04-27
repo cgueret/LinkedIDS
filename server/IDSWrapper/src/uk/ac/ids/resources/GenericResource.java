@@ -134,6 +134,15 @@ public class GenericResource extends ServerResource {
 				}
 			}
 
+			// Sort of a hack: if theme parent, have the value be preceded by a "C" to get a correct match
+			if (keyValuePair.getKey().equals("#cat_parent")) {
+				value = "C"+ value;
+				}
+			if (keyValuePair.getKey().equals("#cat_first_parent")) {
+				value = "C"+ value;
+				}
+			
+			
 			// If we know the type of this value, use it
 			if (valueType != null) {
 				// The target value is a Resource
@@ -190,8 +199,12 @@ public class GenericResource extends ServerResource {
 			params.put(DBpedia.THEME_TITLE, themeTitle);
 			List<Reference> target = b.getResource(params);
 			if (target != null)
-				graph.add(resource, OWL.SAME_AS, target.get(0));
+				for (Reference r : target)
+				{
+					graph.add(resource, OWL.SAME_AS, r);
+				}
 		}
+			
 	}
 
 	/*
