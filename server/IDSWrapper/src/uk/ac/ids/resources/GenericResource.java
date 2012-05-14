@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class GenericResource extends ServerResource {
 	private Reference resource = null;
 
 	// Set of key/value pairs for this resource
-	private Map<String, String> keyValuePairs = new HashMap<String, String>();
+	private Map<String, ArrayList<String>> keyValuePairs = new HashMap<String, ArrayList<String>>();
 
 	@SuppressWarnings("serial")
 	public static final Map<String, String> PLURAL = new HashMap<String, String>() {
@@ -101,7 +102,7 @@ public class GenericResource extends ServerResource {
 		loadKeyValuePairs();
 
 		// Process them
-		for (Entry<String, String> keyValuePair : keyValuePairs.entrySet()) {
+		for (Entry<String, ArrayList<String>> keyValuePair : keyValuePairs.entrySet()) {
 			// Turn the key into a predicate
 			Reference predicate = new Reference(keyValuePair.getKey());
 
@@ -118,61 +119,65 @@ public class GenericResource extends ServerResource {
 			if (predicate.isRelative())
 				predicate.setBaseRef(vocabNS);
 
-			// Get the value
-			String value = keyValuePair.getValue();
+			// Get the values
+			ArrayList<String> values = keyValuePair.getValue();
 
 			// See if we need to call a Linker to replace the value
 			if (keyValuePair.getKey().equals("#language_name")) {
 				LinkerParameters parameters = new LinkerParameters();
-				parameters.put(Lexvo.LANG_NAME, value);
+				parameters.put(Lexvo.LANG_NAME, values.get(0));
 				parameters.put(Lexvo.LANG_NAME_LOCALE, "eng");
 				Lexvo lexvo = new Lexvo();
 				List<Reference> target = lexvo.getResource(parameters);
 				if (target != null) {
-					value = target.get(0).toUri().toString();
+					values.clear();
+					values.add(target.get(0).toUri().toString());
 					valueType = RDFS_Resource;
 				}
 			}
 
-			// Sort of a hack: if theme parent, have the value be preceded by a "C" to get a correct match
-			if (keyValuePair.getKey().equals("#cat_parent")) {
-				value = "C"+ value;
+			for (String value : keyValuePair.getValue()) {
+				// Sort of a hack: if theme parent, have the value be preceded
+				// by a
+				// "C" to get a correct match
+				if (keyValuePair.getKey().equals("#cat_parent")) {
+					value = "C" + value;
 				}
-			if (keyValuePair.getKey().equals("#cat_first_parent")) {
-				value = "C"+ value;
-				}
-			
-			
-			// If we know the type of this value, use it
-			if (valueType != null) {
-				// The target value is a Resource
-				if (valueType.equals(RDFS_Resource)) {
-					Reference object = new Reference(value);
-					if (object.isRelative())
-						object.setBaseRef(vocabNS);
-					graph.add(resource, predicate, object);
+				if (keyValuePair.getKey().equals("#cat_first_parent")) {
+					value = "C" + value;
 				}
 
-				// The target is an internal link
-				else if (getApplication().getMappings().isInternalType(valueType)) {
-					String pattern = getApplication().getMappings().getPatternFor(valueType);
-					if (pattern != null) {
-						Reference object = new Reference(pattern.replace("{id}", value));
+				// If we know the type of this value, use it
+				if (valueType != null) {
+					// The target value is a Resource
+					if (valueType.equals(RDFS_Resource)) {
+						Reference object = new Reference(value);
 						if (object.isRelative())
 							object.setBaseRef(vocabNS);
 						graph.add(resource, predicate, object);
 					}
-				}
 
-				// Otherwise, add a plain literal
-				else {
+					// The target is an internal link
+					else if (getApplication().getMappings().isInternalType(valueType)) {
+						String pattern = getApplication().getMappings().getPatternFor(valueType);
+						if (pattern != null) {
+							Reference object = new Reference(pattern.replace("{id}", value));
+							if (object.isRelative())
+								object.setBaseRef(vocabNS);
+							graph.add(resource, predicate, object);
+						}
+					}
+
+					// Otherwise, add a plain literal
+					else {
+						Literal object = new Literal(value);
+						graph.add(resource, predicate, object);
+					}
+				} else {
+					// Otherwise, add a plain literal
 					Literal object = new Literal(value);
 					graph.add(resource, predicate, object);
 				}
-			} else {
-				// Otherwise, add a plain literal
-				Literal object = new Literal(value);
-				graph.add(resource, predicate, object);
 			}
 		}
 
@@ -180,8 +185,8 @@ public class GenericResource extends ServerResource {
 		// TODO move that configuration in a ttl file
 		if (resourceType.equals("country")) {
 			GeoNames b = new GeoNames();
-			String countryName = keyValuePairs.get("#country_name");
-			String countryCode = keyValuePairs.get("#iso_two_letter_code");
+			String countryName = keyValuePairs.get("#country_name").get(0);
+			String countryCode = keyValuePairs.get("#iso_two_letter_code").get(0);
 			LinkerParameters params = new LinkerParameters();
 			params.put(GeoNames.COUNTRY_CODE, countryCode);
 			params.put(GeoNames.COUNTRY_NAME, countryName);
@@ -194,17 +199,16 @@ public class GenericResource extends ServerResource {
 		// TODO move that configuration in a ttl file
 		if (resourceType.equals("theme")) {
 			DBpedia b = new DBpedia();
-			String themeTitle = keyValuePairs.get("#title");
+			String themeTitle = keyValuePairs.get("#title").get(0);
 			LinkerParameters params = new LinkerParameters();
 			params.put(DBpedia.THEME_TITLE, themeTitle);
 			List<Reference> target = b.getResource(params);
 			if (target != null)
-				for (Reference r : target)
-				{
+				for (Reference r : target) {
 					graph.add(resource, OWL.SAME_AS, r);
 				}
 		}
-			
+
 	}
 
 	/*
@@ -252,17 +256,24 @@ public class GenericResource extends ServerResource {
 			if (!element.isJsonObject())
 				return;
 			for (Entry<String, JsonElement> entry : ((JsonObject) element).entrySet()) {
+				// Ignore the objects
 				if (entry.getValue().isJsonObject())
 					continue;
+
+				// Prepare the list of values
+				ArrayList<String> values = new ArrayList<String>();
 
 				// Store all the entries of the array
 				if (entry.getValue().isJsonArray())
 					for (JsonElement v : (JsonArray) entry.getValue())
-						keyValuePairs.put("#" + entry.getKey(), v.getAsString());
+						values.add(v.getAsString());
 
 				// Store the single value
 				if (entry.getValue().isJsonPrimitive())
-					keyValuePairs.put("#" + entry.getKey(), entry.getValue().getAsString());
+					values.add(entry.getValue().getAsString());
+
+				// Store the
+				keyValuePairs.put("#" + entry.getKey(), values);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
