@@ -17,7 +17,7 @@
 
 :Theme
 	a rdfs:Class ;
-	ex:pattern "eldis/resource/theme/{id}";
+	#ex:pattern "eldis/resource/theme/{id}";
 	rdfs:subClassOf skos:Concept;
 	rdfs:label "IDS Theme".
 
@@ -70,8 +70,16 @@
 	a rdf:Property ; 
 	rdfs:range :Theme ;
 	rdfs:domain :Theme ;
-	rdfs:subPropertyOf skos:narrower;
+	#rdfs:subPropertyOf skos:narrower;
 	rdfs:label "children" .
+	
+	
+:child
+	a rdf:Property ; 
+	rdfs:range :Theme ;
+	rdfs:domain :Theme ;
+	rdfs:subPropertyOf skos:narrower;
+	rdfs:label "child theme" .
 
 # VIC: theme titles should map to skos:prefLabel (?). The title is here prefixed to differentiate from the other (generic) title
 :theme_title
