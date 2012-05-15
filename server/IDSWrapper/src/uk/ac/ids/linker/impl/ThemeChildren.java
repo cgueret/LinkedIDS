@@ -87,7 +87,7 @@ public class ThemeChildren extends Linker {
 						JsonObject obj = (JsonObject) elt;
 						String obj_id = obj.get("object_id").getAsString().toString();
 
-						Reference child = new Reference("/eldis/resource/" + obj_id);
+						Reference child = new Reference("http://localhost:8888/eldis/resource/theme/" + obj_id);
 						res.add(child);
 					}
 				}
