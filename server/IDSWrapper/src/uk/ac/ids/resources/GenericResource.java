@@ -100,6 +100,9 @@ public class GenericResource extends ServerResource {
 		// Define the URI for this resource
 		resource = new Reference(getRequest().getOriginalRef().toUri());
 
+		// Define the URI for the vocabulary
+		Reference vocabNS = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary");
+
 		// Load the key-values pairs from the JSON API
 		loadKeyValuePairs();
 
@@ -117,7 +120,6 @@ public class GenericResource extends ServerResource {
 				predicate = otherPredicate;
 
 			// If the predicate is relative, bind it to the vocabulary NS
-			Reference vocabNS = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary");
 			if (predicate.isRelative())
 				predicate.setBaseRef(vocabNS);
 
@@ -205,40 +207,41 @@ public class GenericResource extends ServerResource {
 			LinkerParameters params = new LinkerParameters();
 			params.put(DBpedia.THEME_TITLE, themeTitle);
 			List<Reference> target = b.getResource(params);
-			if (target != null)
+			if (target != null) {
 				for (Reference r : target) {
 					graph.add(resource, OWL.SAME_AS, r);
 				}
+			}
 		}
-		
+
 		// Link Theme to IATI
 		if (resourceType.equals("theme")) {
-			IATI iati= new IATI();
+			IATI iati = new IATI();
 			String children_url = keyValuePairs.get("#title").get(0);
 			LinkerParameters params = new LinkerParameters();
 			params.put(IATI.THEME_TITLE, children_url);
 			List<Reference> target = iati.getResource(params);
 			if (target != null)
-				for (Reference r : target)
-				{
+				for (Reference r : target) {
 					graph.add(resource, OWL.SAME_AS, r);
 				}
 		}
-		
-		
+
 		// Link to Theme's children
 		// TODO move that configuration in a ttl file, fix OWL sameas
 		if (resourceType.equals("theme")) {
-			ThemeChildren ch = new ThemeChildren();
+			ThemeChildren ch = new ThemeChildren(getRequest().getOriginalRef().getHostIdentifier());
 			String children_url = keyValuePairs.get("#children_url").get(0);
 			LinkerParameters params = new LinkerParameters();
 			params.put(ThemeChildren.CHILDREN_URL, children_url);
 			List<Reference> target = ch.getResource(params);
-			if (target != null)
-				for (Reference r : target)
-				{
-					graph.add(resource, new Reference("http://localhost:8888/vocabulary#child") ,r);
+			Reference predicate = new Reference("#child");
+			predicate.setBaseRef(vocabNS);
+			if (target != null) {
+				for (Reference r : target) {
+					graph.add(resource, predicate, r);
 				}
+			}
 		}
 
 	}
