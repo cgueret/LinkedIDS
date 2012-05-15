@@ -28,6 +28,7 @@ import uk.ac.ids.data.Parameters;
 import uk.ac.ids.linker.LinkerParameters;
 import uk.ac.ids.linker.impl.DBpedia;
 import uk.ac.ids.linker.impl.GeoNames;
+import uk.ac.ids.linker.impl.IATI;
 import uk.ac.ids.linker.impl.Lexvo;
 import uk.ac.ids.linker.impl.ThemeChildren;
 import uk.ac.ids.vocabulary.OWL;
@@ -210,8 +211,23 @@ public class GenericResource extends ServerResource {
 				}
 		}
 		
+		// Link Theme to IATI
+		if (resourceType.equals("theme")) {
+			IATI iati= new IATI();
+			String children_url = keyValuePairs.get("#title").get(0);
+			LinkerParameters params = new LinkerParameters();
+			params.put(IATI.THEME_TITLE, children_url);
+			List<Reference> target = iati.getResource(params);
+			if (target != null)
+				for (Reference r : target)
+				{
+					graph.add(resource, OWL.SAME_AS, r);
+				}
+		}
+		
+		
 		// Link to Theme's children
-		// TODO move that configuration in a ttl file
+		// TODO move that configuration in a ttl file, fix OWL sameas
 		if (resourceType.equals("theme")) {
 			ThemeChildren ch = new ThemeChildren();
 			String children_url = keyValuePairs.get("#children_url").get(0);
@@ -221,7 +237,7 @@ public class GenericResource extends ServerResource {
 			if (target != null)
 				for (Reference r : target)
 				{
-					graph.add(resource,new Reference("/vocabulary#child"),r);
+					graph.add(resource, new Reference("http://localhost:8888/vocabulary#child") ,r);
 				}
 		}
 
