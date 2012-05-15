@@ -29,6 +29,7 @@ import uk.ac.ids.linker.LinkerParameters;
 import uk.ac.ids.linker.impl.DBpedia;
 import uk.ac.ids.linker.impl.GeoNames;
 import uk.ac.ids.linker.impl.Lexvo;
+import uk.ac.ids.linker.impl.ThemeChildren;
 import uk.ac.ids.vocabulary.OWL;
 
 import com.google.gson.JsonArray;
@@ -206,6 +207,21 @@ public class GenericResource extends ServerResource {
 			if (target != null)
 				for (Reference r : target) {
 					graph.add(resource, OWL.SAME_AS, r);
+				}
+		}
+		
+		// Link to Theme's children
+		// TODO move that configuration in a ttl file
+		if (resourceType.equals("theme")) {
+			ThemeChildren ch = new ThemeChildren();
+			String children_url = keyValuePairs.get("#children_url").get(0);
+			LinkerParameters params = new LinkerParameters();
+			params.put(ThemeChildren.CHILDREN_URL, children_url);
+			List<Reference> target = ch.getResource(params);
+			if (target != null)
+				for (Reference r : target)
+				{
+					graph.add(resource,new Reference("/vocabulary#child"),r);
 				}
 		}
 
