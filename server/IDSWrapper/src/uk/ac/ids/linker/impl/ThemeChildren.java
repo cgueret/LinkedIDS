@@ -33,6 +33,16 @@ public class ThemeChildren extends Linker {
 	// Parameters
 	public static final String CHILDREN_URL = "children_url";
 
+	// The host identifier
+	private final String hostIdentifier;
+
+	/**
+	 * @param hostIdentifier
+	 */
+	public ThemeChildren(String hostIdentifier) {
+		this.hostIdentifier = hostIdentifier;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -74,7 +84,7 @@ public class ThemeChildren extends Linker {
 						JsonObject obj = (JsonObject) elt;
 						String obj_id = obj.get("object_id").getAsString().toString();
 
-						Reference child = new Reference("http://localhost:8888/eldis/resource/theme/" + obj_id);
+						Reference child = new Reference(hostIdentifier + "/eldis/resource/theme/" + obj_id);
 						res.add(child);
 					}
 				}
@@ -83,13 +93,10 @@ public class ThemeChildren extends Linker {
 			
 			
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (EntityNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
