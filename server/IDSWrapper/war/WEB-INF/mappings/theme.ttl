@@ -17,7 +17,7 @@
 
 :Theme
 	a rdfs:Class ;
-	#ex:pattern "eldis/resource/theme/{id}";
+	ex:pattern "eldis/resource/theme/{id}";
 	rdfs:subClassOf skos:Concept;
 	rdfs:label "IDS Theme".
 
