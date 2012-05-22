@@ -73,11 +73,12 @@ public abstract class Linker {
 			throw new EntityNotFoundException(null);
 
 		// De-serialize the data
+		List<Reference> results = new ArrayList<Reference>();
 		@SuppressWarnings("unchecked")
 		List<String> uris = (List<String>) entity.getProperty(RESOURCE_PROPERTY);
-		List<Reference> results = new ArrayList<Reference>();
-		for (String uri : uris)
-			results.add(new Reference(uri));
+		if (uris != null)
+			for (String uri : uris)
+				results.add(new Reference(uri));
 		return results;
 	}
 
