@@ -32,6 +32,9 @@
 	rdfs:label "Theme of the document" ;
 	rdfs:subPropertyOf dcterms:subject.
 	
+:category_theme_objects
+	a :IgnoredProperty .
+	
 :category_theme
 	a rdf:Property ;
 	rdfs:label "Theme of the document" ;

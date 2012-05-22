@@ -83,9 +83,10 @@ public class ThemeChildren extends Linker {
 					if (elt.isJsonObject()){
 						JsonObject obj = (JsonObject) elt;
 						String obj_id = obj.get("object_id").getAsString().toString();
-
-						Reference child = new Reference(hostIdentifier + "/eldis/resource/theme/" + obj_id);
-						res.add(child);
+						if (obj_id.length() > 0){
+							Reference child = new Reference(hostIdentifier + "/eldis/resource/theme/" + obj_id);
+							res.add(child);
+						}
 					}
 				}
 			}
