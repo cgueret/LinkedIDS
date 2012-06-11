@@ -16,8 +16,9 @@
 # ---------------------------  Country --------------------------------
 
 :Country
-	a :IDSClass ;
+	a rdfs:Class ;
 	rdfs:label "Country" ;
+	ex:pattern "eldis/resource/country/{id}";
 	rdfs:subClassOf ontology:Feature.	#VIC: maybe make this equiv.class
 
 :alternative_name

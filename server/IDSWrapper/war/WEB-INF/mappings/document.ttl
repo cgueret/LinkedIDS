@@ -45,6 +45,12 @@
 	rdfs:label "Country of the document" ;
 	rdfs:subPropertyOf dcterms:coverage.
 	
+:country_focus_ids
+	a rdf:Property ;
+	rdfs:range :Country ;
+	rdfs:label "Link to Country of the document" ;
+	rdfs:subPropertyOf dcterms:coverage.	
+	
 :description
 	a rdf:Property ;
 	rdfs:subPropertyOf dcterms:description;
