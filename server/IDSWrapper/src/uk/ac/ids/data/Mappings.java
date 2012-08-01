@@ -17,7 +17,7 @@ import org.restlet.data.ReferenceList;
 import org.restlet.ext.rdf.Graph;
 import org.restlet.ext.rdf.GraphBuilder;
 import org.restlet.ext.rdf.Link;
-import org.restlet.ext.rdf.internal.n3.RdfN3Reader;
+import org.restlet.ext.rdf.internal.turtle.RdfTurtleReader;
 
 import uk.ac.ids.linker.Linker;
 import uk.ac.ids.linker.LinkerParameters;
@@ -67,7 +67,7 @@ public class Mappings implements Iterable<Link> {
 			Response response = client.handle(new Request(Method.GET, file));
 			try {
 				GraphBuilder builder = new GraphBuilder(graph);
-				RdfN3Reader reader = new RdfN3Reader(response.getEntity(), builder);
+				RdfTurtleReader reader = new RdfTurtleReader(response.getEntity(), builder);
 				reader.parse();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -155,7 +155,7 @@ public class Mappings implements Iterable<Link> {
 	public void applyLinkers(Graph targetGraph, Reference resource, String resourceType,
 			Map<String, ArrayList<String>> keyValuePairs) {
 		for (Link l : graph) {
-			if (l.getSource().equals(resourceType) && l.getTypeRef().equals(WRAPPER.MATCHER)) {
+			if (l.getTypeRef().equals(WRAPPER.MATCHER)) {
 				Reference matcherBNode = l.getTargetAsReference();
 				logger.info("Found matcher " + matcherBNode);
 				String linkerClass = null;
