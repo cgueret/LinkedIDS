@@ -15,10 +15,29 @@ public class WRAPPER {
 	/** http://example.org#replaceby */
 	public static final Reference REPLACE_BY;
 
+	/** http://example.org#matcher */
+	public static final Reference MATCHER;
+
+	/** http://example.org#matcherName */
+	public static final Reference MATCHER_NAME;
+
+	/** http://example.org#parameter */
+	public static final Reference PARAMETER;
+
+	/** http://example.org#parameterKey */
+	public static final Reference PARAMETER_KEY;
+
+	/** http://example.org#parameterValue */
+	public static final Reference PARAMETER_VALUE;
+
 	static {
 		IGNORED_PROPERTY = new Reference(WRAPPER.NAMESPACE, "IgnoredProperty");
 		PATTERN = new Reference(WRAPPER.NAMESPACE, "pattern");
 		REPLACE_BY = new Reference(WRAPPER.NAMESPACE, "replaceby");
+		MATCHER = new Reference(WRAPPER.NAMESPACE, "matcher");
+		MATCHER_NAME = new Reference(WRAPPER.NAMESPACE, "matcherName");
+		PARAMETER = new Reference(WRAPPER.NAMESPACE, "parameter");
+		PARAMETER_KEY = new Reference(WRAPPER.NAMESPACE, "parameterKey");
+		PARAMETER_VALUE = new Reference(WRAPPER.NAMESPACE, "parameterValue");
 	}
-
 }

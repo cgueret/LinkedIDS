@@ -27,7 +27,6 @@ import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.data.Parameters;
 import uk.ac.ids.linker.LinkerParameters;
 import uk.ac.ids.linker.impl.DBpedia;
-import uk.ac.ids.linker.impl.GeoNames;
 import uk.ac.ids.linker.impl.IATI;
 import uk.ac.ids.linker.impl.Lexvo;
 import uk.ac.ids.linker.impl.ThemeChildren;
@@ -142,8 +141,7 @@ public class GenericResource extends ServerResource {
 
 			for (String value : keyValuePair.getValue()) {
 				// Sort of a hack: if theme parent, have the value be preceded
-				// by a
-				// "C" to get a correct match
+				// by a "C" to get a correct match
 				if (keyValuePair.getKey().equals("#cat_parent")) {
 					value = "C" + value;
 				}
@@ -185,19 +183,21 @@ public class GenericResource extends ServerResource {
 			}
 		}
 
+		// Look for linking services
+		getApplication().getMappings().applyLinkers(graph, resource, resourceType, keyValuePairs);
+
 		// Link to Geonames
 		// TODO move that configuration in a ttl file
-		if (resourceType.equals("country")) {
-			GeoNames b = new GeoNames();
-			String countryName = keyValuePairs.get("#country_name").get(0);
-			String countryCode = keyValuePairs.get("#iso_two_letter_code").get(0);
-			LinkerParameters params = new LinkerParameters();
-			params.put(GeoNames.COUNTRY_CODE, countryCode);
-			params.put(GeoNames.COUNTRY_NAME, countryName);
-			List<Reference> target = b.getResource(params);
-			if (target != null)
-				graph.add(resource, OWL.SAME_AS, target.get(0));
-		}
+		/*
+		 * if (resourceType.equals("country")) { GeoNames b = new GeoNames();
+		 * String countryName = keyValuePairs.get("#country_name").get(0);
+		 * String countryCode =
+		 * keyValuePairs.get("#iso_two_letter_code").get(0); LinkerParameters
+		 * params = new LinkerParameters(); params.put(GeoNames.COUNTRY_CODE,
+		 * countryCode); params.put(GeoNames.COUNTRY_NAME, countryName);
+		 * List<Reference> target = b.getResource(params); if (target != null)
+		 * graph.add(resource, OWL.SAME_AS, target.get(0)); }
+		 */
 
 		// Link to DBpedia
 		// TODO move that configuration in a ttl file

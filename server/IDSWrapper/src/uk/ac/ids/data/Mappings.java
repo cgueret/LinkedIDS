@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.restlet.Context;
@@ -16,8 +17,10 @@ import org.restlet.data.ReferenceList;
 import org.restlet.ext.rdf.Graph;
 import org.restlet.ext.rdf.GraphBuilder;
 import org.restlet.ext.rdf.Link;
-import org.restlet.ext.rdf.internal.turtle.RdfTurtleReader;
+import org.restlet.ext.rdf.internal.n3.RdfN3Reader;
 
+import uk.ac.ids.linker.Linker;
+import uk.ac.ids.linker.LinkerParameters;
 import uk.ac.ids.vocabulary.RDF;
 import uk.ac.ids.vocabulary.RDFS;
 import uk.ac.ids.vocabulary.WRAPPER;
@@ -31,11 +34,10 @@ public class Mappings implements Iterable<Link> {
 	// Logger
 	protected static final Logger logger = Logger.getLogger(Mappings.class.getName());
 
-	// The graph that will contain all the mappings data
-	private final Graph graph = new Graph();
-
 	// The context in which the mappings are used
 	private final Context context;
+
+	private Graph graph = new Graph();
 
 	/**
 	 * 
@@ -65,7 +67,7 @@ public class Mappings implements Iterable<Link> {
 			Response response = client.handle(new Request(Method.GET, file));
 			try {
 				GraphBuilder builder = new GraphBuilder(graph);
-				RdfTurtleReader reader = new RdfTurtleReader(response.getEntity(), builder);
+				RdfN3Reader reader = new RdfN3Reader(response.getEntity(), builder);
 				reader.parse();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -142,5 +144,58 @@ public class Mappings implements Iterable<Link> {
 					if (l.getTargetAsReference().equals(RDFS.CLASS))
 						return true;
 		return false;
+	}
+
+	/**
+	 * @param targetGraph
+	 * @param resource
+	 * @param resourceType
+	 * @param keyValuePairs
+	 */
+	public void applyLinkers(Graph targetGraph, Reference resource, String resourceType,
+			Map<String, ArrayList<String>> keyValuePairs) {
+		for (Link l : graph) {
+			if (l.getSource().equals(resourceType) && l.getTypeRef().equals(WRAPPER.MATCHER)) {
+				Reference matcherBNode = l.getTargetAsReference();
+				logger.info("Found matcher " + matcherBNode);
+				String linkerClass = null;
+				Reference linkerPredicate = null;
+				LinkerParameters params = new LinkerParameters();
+				for (Link l2 : graph) {
+					if (l2.getSource().equals(matcherBNode)) {
+						if (l2.getTypeRef().equals(WRAPPER.MATCHER_NAME))
+							linkerClass = l2.getTargetAsLiteral().getValue();
+						if (l2.getTypeRef().equals(RDF.PREDICATE))
+							linkerPredicate = l2.getTargetAsReference();
+						if (l2.getTypeRef().equals(WRAPPER.PARAMETER)) {
+							Reference parameterBNode = l2.getTargetAsReference();
+							String paramKey = null;
+							String paramValueKey = null;
+							for (Link l3 : graph) {
+								if (l3.getSource().equals(parameterBNode)) {
+									if (l3.getTypeRef().equals(WRAPPER.PARAMETER_KEY))
+										paramKey = l3.getTargetAsLiteral().getValue();
+									if (l3.getTypeRef().equals(WRAPPER.PARAMETER_VALUE))
+										paramValueKey = l3.getTargetAsLiteral().getValue();
+								}
+							}
+							params.put(paramKey, keyValuePairs.get(paramValueKey).get(0));
+						}
+					}
+				}
+
+				try {
+					Linker linker = (Linker) Class.forName(linkerClass).newInstance();
+					for (Reference ref : linker.getResource(params))
+						targetGraph.add(resource, linkerPredicate, ref);
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

@@ -16,7 +16,11 @@ public class RDF {
 	/** http://www.w3.org/1999/02/22-rdf-syntax-ns#type */
 	public final static Reference TYPE;
 
+	/** http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate */
+	public final static Reference PREDICATE;
+
 	static {
 		TYPE = new Reference(RDF.NAMESPACE, "type");
+		PREDICATE = new Reference(RDF.NAMESPACE, "predicate");
 	}
 }
