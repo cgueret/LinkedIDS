@@ -52,11 +52,15 @@ public class Parameters {
 	 * @throws EntityNotFoundException
 	 *             if the parameter has not been set
 	 */
-	public String get(String name) throws EntityNotFoundException {
+	public String get(String name) {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Key k = KeyFactory.createKey(PARAMETER_ENTITY, name);
-		Entity parameter = datastore.get(k);
-		return (String) parameter.getProperty("value");
+		try {
+			Entity parameter = datastore.get(k);
+			return (String) parameter.getProperty("value");
+		} catch (EntityNotFoundException e) {
+			return "";
+		}
 	}
 
 	/**

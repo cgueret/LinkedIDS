@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.restlet.data.Reference;
-import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import uk.ac.ids.data.Parameters;
 import uk.ac.ids.linker.Linker;
 import uk.ac.ids.linker.LinkerParameters;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * @author Christophe Gueret <christophe.gueret@gmail.com>
@@ -54,7 +54,7 @@ public class ThemeChildren extends Linker {
 		if (!parameters.containsKey(CHILDREN_URL))
 			return null;
 		String children_url = parameters.get(CHILDREN_URL);
-		
+
 		List<Reference> res = new ArrayList<Reference>();
 
 		try {
@@ -72,38 +72,33 @@ public class ThemeChildren extends Linker {
 				response.append(line);
 			}
 			reader.close();
-			
+
 			// Parse the response
 			JsonParser parser = new JsonParser();
 			JsonElement e = parser.parse(response.toString());
-			
-			JsonElement results = ((JsonObject) e).get("results");			
-			if (results.isJsonArray()){
-				for(JsonElement elt : (JsonArray) results){
-					if (elt.isJsonObject()){
+
+			JsonElement results = ((JsonObject) e).get("results");
+			if (results.isJsonArray()) {
+				for (JsonElement elt : (JsonArray) results) {
+					if (elt.isJsonObject()) {
 						JsonObject obj = (JsonObject) elt;
 						String obj_id = obj.get("object_id").getAsString().toString();
-						if (obj_id.length() > 0){
+						if (obj_id.length() > 0) {
 							Reference child = new Reference(hostIdentifier + "/eldis/resource/theme/" + obj_id);
 							res.add(child);
 						}
 					}
 				}
 			}
-			
-			
-			
+
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return res;
-				
-			
+
 	}
-	
+
 }

@@ -115,7 +115,7 @@ public class GenericResource extends ServerResource {
 			Reference valueType = getApplication().getMappings().getRangeOf(predicate);
 
 			// See if we need to rewrite the predicate into something else
-  			Reference otherPredicate = getApplication().getMappings().getReplacementForPredicate(predicate);
+			Reference otherPredicate = getApplication().getMappings().getReplacementForPredicate(predicate);
 			if (otherPredicate != null)
 				predicate = otherPredicate;
 

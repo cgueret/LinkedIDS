@@ -41,8 +41,8 @@ public class IATI extends Linker {
 	// API to query geoname
 	private final static String API = "http://api.kasabi.com/dataset/iati/apis/sparql";
 	// API key
-	//TODO: make this configurable.
-	private final static String API_KEY = "ab47bc3a56f2864def50c601b45cda6f55aecc14"; 
+	// TODO: make this configurable.
+	private final static String API_KEY = "ab47bc3a56f2864def50c601b45cda6f55aecc14";
 
 	/*
 	 * (non-Javadoc)
@@ -57,10 +57,11 @@ public class IATI extends Linker {
 
 		String themeTitle = parameters.get(THEME_TITLE);
 
-		StringBuilder sb = new StringBuilder(themeTitle); // one StringBuilder object  
-		sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));  
-		themeTitle =  sb.toString(); // one String object  
-		
+		StringBuilder sb = new StringBuilder(themeTitle); // one StringBuilder
+															// object
+		sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+		themeTitle = sb.toString(); // one String object
+
 		// Build the sparql query: limit to 5 (could be one)
 		String sparqlQuery = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> SELECT ?concept WHERE { ?concept skos:inScheme <http://data.kasabi.com/dataset/iati/codelists/IATI/Sector>.  ?concept skos:prefLabel \"";
 		sparqlQuery += themeTitle;
@@ -91,29 +92,26 @@ public class IATI extends Linker {
 			// Parse the response: return only the first URI. If there are nu
 			// URIs found, return null
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder(); 
+			DocumentBuilder db = dbf.newDocumentBuilder();
 			InputSource is = new InputSource();
 			is.setCharacterStream(new StringReader(response.toString()));
 			Document doc = db.parse(is);
 			NodeList results = doc.getElementsByTagName("result");
-			
-			
- 
+
 			if (results.getLength() > 0) {
 				List<Reference> res = new ArrayList<Reference>();
-				for( int i = 0 ; i < results.getLength(); i++){
-	
+				for (int i = 0; i < results.getLength(); i++) {
+
 					Element element = (Element) results.item(i);
 
-					if (element.getElementsByTagName("uri").item(i) != null){
+					if (element.getElementsByTagName("uri").item(i) != null) {
 						String uri = element.getElementsByTagName("uri").item(i).getTextContent();
 						res.add(new Reference(uri));
 					}
 				}
 				return res;
-				
-			} else 
-			{
+
+			} else {
 				return null;
 			}
 

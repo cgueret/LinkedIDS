@@ -61,11 +61,16 @@ public abstract class Linker {
 	 * @return
 	 * @throws EntityNotFoundException
 	 */
+	@SuppressWarnings("deprecation")
 	private List<Reference> getFromCache(LinkerParameters parameters) throws EntityNotFoundException {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 		// Get the data
 		Query q = new Query(DS_ENTITY);
+		// FilterPredicate p = new FilterPredicate(PARAMETER_PROPERTY,
+		// FilterOperator.EQUAL, parameters.toKey());
+		// q.setFilter(new FilterPredicate(PARAMETER_PROPERTY,
+		// FilterOperator.EQUAL, parameters.toKey()));
 		q.addFilter(PARAMETER_PROPERTY, FilterOperator.EQUAL, parameters.toKey());
 		PreparedQuery pq = datastore.prepare(q);
 		Entity entity = pq.asSingleEntity();
