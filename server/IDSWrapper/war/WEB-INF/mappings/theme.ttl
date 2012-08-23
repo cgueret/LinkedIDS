@@ -11,13 +11,14 @@
 @prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix foaf:	   <http://xmlns.com/foaf/0.1/> .
 @prefix xsd:	   <http://www.w3.org/2001/XMLSchema#>.
-@prefix ex:       <http://example.org#> .
+@prefix api2lod:  <http://api2lod.appspot.com/vocabulary#> .
+
 
 #---------------------------- Themes --------------------------------
 
 :Theme
 	a rdfs:Class ;
-	ex:pattern "eldis/resource/theme/{id}";
+	api2lod:pattern "eldis/resource/theme/{id}";
 	rdfs:subClassOf skos:Concept;
 	rdfs:label "IDS Theme".
 
@@ -36,12 +37,11 @@
 	rdfs:label "first parent theme" .
 
 :parent_url
-	a ex:IgnoredProperty .
+	a api2lod:IgnoredProperty .
 	
 :cat_superparent
-	a ex:IgnoredProperty .
-		
-			
+	a api2lod:IgnoredProperty .
+					
 :cat_level
 	a rdf:Property ;
 	rdfs:range rdfs:Literal;
