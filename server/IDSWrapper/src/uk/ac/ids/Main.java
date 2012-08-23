@@ -12,8 +12,10 @@ import org.restlet.routing.Router;
 import uk.ac.ids.data.Constants;
 import uk.ac.ids.data.Mappings;
 import uk.ac.ids.data.Namespaces;
+import uk.ac.ids.resources.ClassResource;
 import uk.ac.ids.resources.ConfigResource;
 import uk.ac.ids.resources.GenericResource;
+import uk.ac.ids.resources.HomePageResource;
 import uk.ac.ids.resources.VocabularyResource;
 import freemarker.template.Configuration;
 
@@ -43,14 +45,14 @@ public class Main extends Application {
 	 */
 	@Override
 	public Restlet createInboundRoot() {
-		// Initialize Freemarker's configuration
+		// Initialise Freemarker's configuration
 		configuration = new Configuration();
 		configuration.setTemplateLoader(new ContextTemplateLoader(getContext(), Constants.TEMPLATES_DIR));
 
-		// Initialize the mappings
+		// Initialise the mappings
 		mappings = new Mappings(getContext(), Constants.MAPPINGS_DIR);
 
-		// Initialize the namespaces
+		// Initialise the namespaces
 		namespaces = new Namespaces();
 
 		// Create the router
@@ -58,6 +60,15 @@ public class Main extends Application {
 
 		// Handler for requests to generic resources
 		router.attach("/{DB}/resource/{TYPE}/{ID}", GenericResource.class);
+
+		// Handler for the home page of a data set
+		router.attach("/{DB}/resource/{TYPE}", ClassResource.class);
+
+		// Handler for requests to vocabulary terms
+		router.attach("/{DB}/term/{TERM}", VocabularyResource.class);
+
+		// Handler for the home page of a data set
+		router.attach("/{DB}", HomePageResource.class);
 
 		// Handler for requests to vocabulary resources
 		router.attach("/vocabulary", VocabularyResource.class);
