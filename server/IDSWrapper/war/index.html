@@ -1,40 +1,15 @@
-<!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-<title>IDS Wrapper</title>
-
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
-<meta name="author" content="">
-<link rel="stylesheet"
-	href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
+<title>API2LOD</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
 <style type="text/css">
 body {
 	padding-top: 60px;
 	padding-bottom: 40px;
 }
 </style>
-<link
-	href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css"
-	rel="stylesheet">
-
-<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-<!--[if lt IE 9]>
-  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-
-<!-- fav and touch icons -->
-<link rel="shortcut icon"
-	href="http://twitter.github.com/bootstrap/assets/ico/favicon.ico">
-<link rel="apple-touch-icon"
-	href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72"
-	href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114"
-	href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-114x114.png">
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
 </head>
-
 <body>
 	<div class='navbar navbar-fixed-top' style='z-index: -1;'>
 		<div class='navbar-inner'>
@@ -42,7 +17,7 @@ body {
 				<a class="btn btn-navbar" data-toggle="collapse"
 					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 					class="icon-bar"></span> <span class="icon-bar"></span>
-				</a> <a class="brand" href="/">IDS Wrapper</a>
+				</a> <a class="brand" href="/">API2LOD</a>
 				<div class="nav-collapse">
 					<ul class='nav'>
 						<li class='active'><a href='/'>Home</a></li>
@@ -51,75 +26,59 @@ body {
 			</div>
 		</div>
 	</div>
-	<div class='container'>
-		<div class='well'>
-			<h1>IDS Knowledge Services RDF API</h1>
-			<p>
-				This server hosts a <a
-					href="http://www.w3.org/standards/semanticweb/data">Linked Data</a>
-				version of the API from the <a href='http://ids.ac.uk/'>Institute
-					for Development Studies</a>.
+	<div class="container">
+		<!-- Main hero unit for a primary marketing message or call to action -->
+		<div class="hero-unit">
+			<h1>Welcome to api2lod.appspot.com!</h1>
+			<p>API2LOD ("Happy to LOD") is a tool that facilitates exposing
+				the content of data API onto the Web as Linked Data. This tool is
+				available both as a downloadable servlet and an hosted service.
+				There are several linker services which connect the data to other
+				data sets.
+				<img style="margin:0px auto;display:block" src="https://cacoo.com/diagrams/iKhRlxjKb8SUchsK-3DCBC.png"
+					class="img-polaroid" />
 			</p>
 		</div>
+
+		<!-- Example row of columns -->
 		<div class="row">
-			<div class="span6">
-				<div class="well">
-					<h2>Example resources</h2>
-					<p>There are a number of resources available for testing:</p>
-					<ul>
-						<li><a href="eldis/resource/country/A1078">Country
-								'Gambia' (Eldis)</a></li>
-						<li><a href="eldis/resource/region/C21">Region 'Africa'
-								(Eldis)</a></li>
-						<li><a href="eldis/resource/document/A60737">Document
-								'Assessing Climate Change Vulnerability in East Africa' (Eldis)</a></li>
-						<li><a href="eldis/resource/theme/C444">Theme 'Food security'</a> (Eldis, includes a link to <a href="http://dbpedia.org/">DBPedia</a>)</li>
-						<li><a href="eldis/resource/theme/C282">Theme 'Higher education'</a> (Eldis, includes a link to <a href="http://kasabi.com/dataset/iati">IATI linked data</a>)</li>
-					</ul>
-					<p>
-				</div>
+			<div class="span4">
+				<h2>Hosted datasets</h2>
+				<p>These are the data sets we currently host. Click on any of
+					them to get to the data set homepage and explore its content</p>
+				<p>
+					<a class="btn" href="./eldis-ids">ELDIS (IDS) &raquo;</a>
+				</p>
 			</div>
-			<div class="span6">
-				<div class="alert alert-error">
-					<strong>IDSWrapper is work in progress</strong> We currently cover
-					most of the <a href=http://api.ids.ac.uk/">IDS API</a>.
-					Vocabularies used may change without notice.
-				</div>
+			<div class="span4">
+				<h2>Linking service</h2>
+				<p>We currently have linking services to the following external RDF data sets</p>
+				<ul>
+				<li><a href="http://www.dbpedia.org/">DBpedia</a></li>
+				<li><a href="http://www.geonames.org/">GeoName</a></li>
+				<li><a href="http://www.lexvo.org/">Lexvo</a></li>
+				</ul>
+			</div>
+			<div class="span4">
+				<h2>Credits</h2>
+				<p>This project is developed by Christophe Gu&eacute;ret and Victor de Boer. It is supported by the Institute of Development Studies (IDS)</p>
+				<p>
+					<a class="btn" href="http://api.ids.ac.uk/linked-data/">View details &raquo;</a>
+				</p>
 			</div>
 		</div>
+		<hr>
+		<footer>
+			<p>&copy; Christophe Gu&eacute;ret, Victor de boer, VU University
+				Amsterdam 2012</p>
+		</footer>
 	</div>
+
 	<a href="https://github.com/cgueret/LinkedIDS"><img
 		style="position: absolute; top: 0; right: 0; border: 0; z-index: 100;"
 		src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67"
 		alt="Fork me on GitHub"></a>
-
-	<!-- Javascript
-    ================================================== -->
-	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="http://twitter.github.com/bootstrap/assets/js/jquery.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-transition.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-alert.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-scrollspy.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tab.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tooltip.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-button.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-collapse.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-carousel.js"></script>
-	<script
-		src="http://twitter.github.com/bootstrap/assets/js/bootstrap-typeahead.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 </body>
 </html>
+
