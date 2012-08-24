@@ -54,8 +54,8 @@ public class GenericResource extends ServerResource {
 	// Type (class) of the resource
 	private String resourceType = null;
 
-	// The data source (eldis / bridge)
-	private String dataSource = null;
+	// The name of the data set
+	private String datasetName = null;
 
 	// The graph that will contain the data about that resource
 	private Graph graph = new Graph();
@@ -88,10 +88,10 @@ public class GenericResource extends ServerResource {
 		// Get the attributes value taken from the URI template
 		resourceID = (String) getRequest().getAttributes().get("ID");
 		resourceType = (String) getRequest().getAttributes().get("TYPE");
-		dataSource = (String) getRequest().getAttributes().get("DB");
+		datasetName = (String) getRequest().getAttributes().get("DB");
 
 		// If no ID has been given, return a 404
-		if (resourceID == null || resourceType == null || dataSource == null) {
+		if (resourceID == null || resourceType == null || datasetName == null) {
 			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 			setExisting(false);
 		}
@@ -111,10 +111,10 @@ public class GenericResource extends ServerResource {
 			Reference predicate = new Reference(keyValuePair.getKey());
 
 			// Get the range of that predicate
-			Reference valueType = getApplication().getMappings().getRangeOf(predicate);
+			Reference valueType = getApplication().getMappings(datasetName).getRangeOf(predicate);
 
 			// See if we need to rewrite the predicate into something else
-			Reference otherPredicate = getApplication().getMappings().getReplacementForPredicate(predicate);
+			Reference otherPredicate = getApplication().getMappings(datasetName).getReplacementForPredicate(predicate);
 			if (otherPredicate != null)
 				predicate = otherPredicate;
 
@@ -160,8 +160,8 @@ public class GenericResource extends ServerResource {
 					}
 
 					// The target is an internal link
-					else if (getApplication().getMappings().isInternalType(valueType)) {
-						String pattern = getApplication().getMappings().getPatternFor(valueType);
+					else if (getApplication().getMappings(datasetName).isInternalType(valueType)) {
+						String pattern = getApplication().getMappings(datasetName).getPatternFor(valueType);
 						if (pattern != null) {
 							Reference object = new Reference(pattern.replace("{id}", value));
 							if (object.isRelative())
@@ -184,7 +184,7 @@ public class GenericResource extends ServerResource {
 		}
 
 		// Look for linking services
-		getApplication().getMappings().applyLinkers(graph, resource, resourceType, keyValuePairs);
+		getApplication().getMappings(datasetName).applyLinkers(graph, resource, resourceType, keyValuePairs);
 
 		// Link to Geonames
 		// TODO move that configuration in a ttl file
@@ -262,8 +262,7 @@ public class GenericResource extends ServerResource {
 	private void loadKeyValuePairs() {
 		try {
 			// Compose the URL
-			StringBuffer urlString = new StringBuffer("http://api.ids.ac.uk/openapi/");
-			urlString.append(dataSource).append("/");
+			StringBuffer urlString = new StringBuffer("http://api.ids.ac.uk/openapi/eldis/");
 			urlString.append("get/").append(PLURAL.get(resourceType)).append("/");
 			urlString.append(resourceID).append("/full");
 			URL url = new URL(urlString.toString());

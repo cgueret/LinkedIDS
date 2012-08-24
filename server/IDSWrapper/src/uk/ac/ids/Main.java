@@ -1,5 +1,7 @@
 package uk.ac.ids;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.restlet.Application;
@@ -10,12 +12,12 @@ import org.restlet.ext.freemarker.ContextTemplateLoader;
 import org.restlet.routing.Router;
 
 import uk.ac.ids.data.Constants;
-import uk.ac.ids.data.Mappings;
+import uk.ac.ids.data.DataSet;
 import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.resources.ClassResource;
 import uk.ac.ids.resources.ConfigResource;
 import uk.ac.ids.resources.GenericResource;
-import uk.ac.ids.resources.HomePageResource;
+import uk.ac.ids.resources.DataSetResource;
 import uk.ac.ids.resources.VocabularyResource;
 import freemarker.template.Configuration;
 
@@ -33,8 +35,10 @@ public class Main extends Application {
 	// Freemarker's configuration
 	private Configuration configuration;
 
-	// Mappings to turn ReST results into RDF properties
-	private Mappings mappings;
+	// The mappings are the configuration to turn the API results into RDF
+	// The hashmap is used to associate one such mapping file to each data set
+	// served
+	private Map<String, DataSet> mappings = new HashMap<String, DataSet>();
 
 	// Namespaces used in the mappings
 	private Namespaces namespaces;
@@ -48,9 +52,6 @@ public class Main extends Application {
 		// Initialise Freemarker's configuration
 		configuration = new Configuration();
 		configuration.setTemplateLoader(new ContextTemplateLoader(getContext(), Constants.TEMPLATES_DIR));
-
-		// Initialise the mappings
-		mappings = new Mappings(getContext(), Constants.MAPPINGS_DIR);
 
 		// Initialise the namespaces
 		namespaces = new Namespaces();
@@ -68,7 +69,7 @@ public class Main extends Application {
 		router.attach("/{DB}/term/{TERM}", VocabularyResource.class);
 
 		// Handler for the home page of a data set
-		router.attach("/{DB}", HomePageResource.class);
+		router.attach("/{DB}", DataSetResource.class);
 
 		// Handler for requests to vocabulary resources
 		router.attach("/vocabulary", VocabularyResource.class);
@@ -92,10 +93,20 @@ public class Main extends Application {
 	}
 
 	/**
+	 * Return the mappings object associated to a given data set
+	 * 
 	 * @return the mappings
+	 * 
 	 */
-	public Mappings getMappings() {
-		return mappings;
+	public DataSet getMappings(String datasetName) {
+		// If this is the first time we ask for this data set, load its
+		// configuration
+		if (!mappings.containsKey(datasetName)) {
+			DataSet mapping = new DataSet(getContext(), Constants.MAPPINGS_DIR + datasetName + "/");
+			mappings.put(datasetName, mapping);
+		}
+
+		return mappings.get(datasetName);
 	}
 
 	/**

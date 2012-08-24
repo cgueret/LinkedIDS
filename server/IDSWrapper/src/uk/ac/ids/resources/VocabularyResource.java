@@ -19,16 +19,27 @@ public class VocabularyResource extends ServerResource {
 	// The vocabulary graph
 	private final Graph vocabulary = new Graph();
 
+	// The vocabulary term
+	private String vocabularyTerm = null;
+
+	// The name of the data set
+	private String datasetName = null;
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.restlet.resource.Resource#doInit()
 	 */
+	@Override
 	protected void doInit() throws ResourceException {
+		// Get the attributes value taken from the URI template
+		vocabularyTerm = (String) getRequest().getAttributes().get("TERM");
+		datasetName = (String) getRequest().getAttributes().get("DB");
+
 		// Get the reference for the vocabulary namespace
 		Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary#");
 
-		for (Link triple : getApplication().getMappings()) {
+		for (Link triple : getApplication().getMappings(datasetName)) {
 			Reference s = triple.getSourceAsReference().clone();
 			if (s.isRelative())
 				s.setBaseRef(ns);

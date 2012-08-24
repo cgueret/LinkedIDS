@@ -30,20 +30,24 @@ import uk.ac.ids.vocabulary.WRAPPER;
  * @author Victor de Boer <v.de.boer@vu.nl>
  * 
  */
-public class Mappings implements Iterable<Link> {
+public class DataSet implements Iterable<Link> {
 	// Logger
-	protected static final Logger logger = Logger.getLogger(Mappings.class.getName());
+	protected static final Logger logger = Logger.getLogger(DataSet.class.getName());
 
 	// The context in which the mappings are used
 	private final Context context;
 
+	// The RDF graph that stores all the mappings
 	private Graph graph = new Graph();
+
+	// The metadata for this data set
+	private final DataSetMetadata metadata = new DataSetMetadata();
 
 	/**
 	 * 
 	 */
 
-	public Mappings(Context context, String mappingsDir) {
+	public DataSet(Context context, String datasetDirectory) {
 		// Save a pointer to the context
 		this.context = context;
 
@@ -53,7 +57,7 @@ public class Mappings implements Iterable<Link> {
 		// Get a list of the files in the mappings directory
 		List<Reference> files = new ArrayList<Reference>();
 		try {
-			Response response = client.handle(new Request(Method.GET, mappingsDir));
+			Response response = client.handle(new Request(Method.GET, datasetDirectory + "/mappings"));
 			if (response != null)
 				for (Reference entry : new ReferenceList(response.getEntity()))
 					files.add(entry);
@@ -72,6 +76,15 @@ public class Mappings implements Iterable<Link> {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+
+		// Load the metadata
+		logger.info("Load " + datasetDirectory + "/metadata.ttl");
+		Response response = client.handle(new Request(Method.GET, datasetDirectory + "/metadata.ttl"));
+		try {
+			metadata.load(response.getEntity());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -179,6 +192,7 @@ public class Mappings implements Iterable<Link> {
 										paramValueKey = l3.getTargetAsLiteral().getValue();
 								}
 							}
+							logger.info(paramValueKey + " " + keyValuePairs);
 							params.put(paramKey, keyValuePairs.get(paramValueKey).get(0));
 						}
 					}
@@ -197,5 +211,12 @@ public class Mappings implements Iterable<Link> {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	public DataSetMetadata getMetaData() {
+		return metadata;
 	}
 }

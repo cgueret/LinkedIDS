@@ -15,5 +15,5 @@ public class Constants {
 	 * Location of all the configuration files related to the mapping of API key
 	 * to RDF properties
 	 */
-	public final static String MAPPINGS_DIR = "war:///WEB-INF/mappings/";
+	public final static String MAPPINGS_DIR = "war:///WEB-INF/datasets/";
 }

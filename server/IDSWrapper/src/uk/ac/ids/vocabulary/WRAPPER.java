@@ -3,32 +3,38 @@ package uk.ac.ids.vocabulary;
 import org.restlet.data.Reference;
 
 public class WRAPPER {
-	/** http://example.org# */
-	public static final String NAMESPACE = "http://example.org";
+	/** http://api2lod.appspot.com/vocabulary# */
+	public static final String NAMESPACE = "http://api2lod.appspot.com/vocabulary";
 
-	/** http://example.org#IgnoredProperty */
+	/** http://api2lod.appspot.com/vocabulary#IgnoredProperty */
 	public static final Reference IGNORED_PROPERTY;
 
-	/** http://example.org#pattern */
+	/** http://api2lod.appspot.com/vocabulary#pattern */
 	public static final Reference PATTERN;
 
-	/** http://example.org#replaceby */
+	/** http://api2lod.appspot.com/vocabulary#replaceby */
 	public static final Reference REPLACE_BY;
 
-	/** http://example.org#matcher */
+	/** http://api2lod.appspot.com/vocabulary#matcher */
 	public static final Reference MATCHER;
 
-	/** http://example.org#matcherName */
+	/** http://api2lod.appspot.com/vocabulary#matcherName */
 	public static final Reference MATCHER_NAME;
 
-	/** http://example.org#parameter */
+	/** http://api2lod.appspot.com/vocabulary#parameter */
 	public static final Reference PARAMETER;
 
-	/** http://example.org#parameterKey */
+	/** http://api2lod.appspot.com/vocabulary#parameterKey */
 	public static final Reference PARAMETER_KEY;
 
-	/** http://example.org#parameterValue */
+	/** http://api2lod.appspot.com/vocabulary#parameterValue */
 	public static final Reference PARAMETER_VALUE;
+
+	public static final Reference APIURL;
+
+	public static final Reference EXAMPLE;
+
+	public static final Reference LINK;
 
 	static {
 		IGNORED_PROPERTY = new Reference(WRAPPER.NAMESPACE, "IgnoredProperty");
@@ -39,5 +45,8 @@ public class WRAPPER {
 		PARAMETER = new Reference(WRAPPER.NAMESPACE, "parameter");
 		PARAMETER_KEY = new Reference(WRAPPER.NAMESPACE, "parameterKey");
 		PARAMETER_VALUE = new Reference(WRAPPER.NAMESPACE, "parameterValue");
+		APIURL = new Reference(WRAPPER.NAMESPACE, "api_url");
+		EXAMPLE = new Reference(WRAPPER.NAMESPACE, "example");
+		LINK = new Reference(WRAPPER.NAMESPACE, "link");
 	}
 }
