@@ -1,0 +1,40 @@
+#
+# LinkedIDS Schema / Mappings
+#
+# V. de Boer and C. Gueret March 2012
+#
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix ens:      <http://www.europeana.eu/schemas/edm/> .
+@prefix ontology: <http://www.geonames.org/ontology#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:	   <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:	   <http://www.w3.org/2001/XMLSchema#>.
+@prefix api2lod:  <http://api2lod.appspot.com/vocabulary#> .
+
+:api2lod_metadata
+	rdfs:label "IDS Knowledge Services RDF API";
+	rdfs:comment "This server hosts a Linked Data version of the API from the Institute for Development Studies";
+	api2lod:api_url "http://api.ids.ac.uk/";
+	foaf:depiction "http://api.ids.ac.uk/site_media/images/eldis_logo.gif";
+	api2lod:example [
+		api2lod:link "./resource/country/A1078";
+		rdfs:label "Country 'Gambia'";
+	];
+	api2lod:example [
+		api2lod:link "./resource/region/C21";
+		rdfs:label "Region 'Africa'";
+	];
+	api2lod:example [
+		api2lod:link "./resource/document/A60737";
+		rdfs:label "Document 'Assessing Climate Change Vulnerability in East Africa' (Eldis)";
+	];
+	api2lod:example [
+		api2lod:link "./resource/theme/C444";
+		rdfs:label "Theme 'Food security' (includes a link to DBPedia)";
+	];
+	api2lod:example [
+		api2lod:link "./resource/theme/C282";
+		rdfs:label "Theme 'Higher education' (includes a link to IATI linked data)";
+	].

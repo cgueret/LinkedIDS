@@ -1,0 +1,8 @@
+@prefix ids:  <http://idswrapper.appspot.com/eldis/resource/country/> .
+@prefix idsv:  <http://idswrapper.appspot.com/vocabulary#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+ids:A1078
+	owl:sameAs [
+		a idsv:Country.
+	].
