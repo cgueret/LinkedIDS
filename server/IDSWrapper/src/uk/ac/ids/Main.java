@@ -16,8 +16,9 @@ import uk.ac.ids.data.DataSet;
 import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.resources.ClassResource;
 import uk.ac.ids.resources.ConfigResource;
-import uk.ac.ids.resources.GenericResource;
 import uk.ac.ids.resources.DataSetResource;
+import uk.ac.ids.resources.GenericResource;
+import uk.ac.ids.resources.SearchResource;
 import uk.ac.ids.resources.VocabularyResource;
 import freemarker.template.Configuration;
 
@@ -67,6 +68,9 @@ public class Main extends Application {
 
 		// Handler for requests to vocabulary terms
 		router.attach("/{DB}/term/{TERM}", VocabularyResource.class);
+
+		// Handler for search for resources
+		router.attach("/{DB}/search/{TERM}", SearchResource.class);
 
 		// Handler for the home page of a data set
 		router.attach("/{DB}", DataSetResource.class);

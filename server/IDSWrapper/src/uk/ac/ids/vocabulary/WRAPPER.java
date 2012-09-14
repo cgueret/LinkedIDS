@@ -36,6 +36,9 @@ public class WRAPPER {
 
 	public static final Reference LINK;
 
+	/** http://api2lod.appspot.com/vocabulary#resultPattern */
+	public static final Reference RESULT_PATTERN;
+
 	static {
 		IGNORED_PROPERTY = new Reference(WRAPPER.NAMESPACE, "IgnoredProperty");
 		PATTERN = new Reference(WRAPPER.NAMESPACE, "pattern");
@@ -48,5 +51,7 @@ public class WRAPPER {
 		APIURL = new Reference(WRAPPER.NAMESPACE, "api_url");
 		EXAMPLE = new Reference(WRAPPER.NAMESPACE, "example");
 		LINK = new Reference(WRAPPER.NAMESPACE, "link");
+		RESULT_PATTERN = new Reference(WRAPPER.NAMESPACE, "resultPattern");
+
 	}
 }

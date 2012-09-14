@@ -37,4 +37,10 @@
 	api2lod:example [
 		api2lod:link "./resource/theme/C282";
 		rdfs:label "Theme 'Higher education' (includes a link to IATI linked data)";
-	].
+	];
+	api2lod:search [
+		api2lod:pattern "search/assets/short?q={word}";
+		api2lod:resultPattern "./resource/{object_type}/{object_id}";
+		rdfs:label "{title} ({object_type})";
+	]
+	.
