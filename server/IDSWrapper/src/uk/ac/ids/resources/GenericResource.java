@@ -90,6 +90,7 @@ public class GenericResource extends ServerResource {
 		// Get the attributes value taken from the URI template
 		resourceID = (String) getRequest().getAttributes().get("ID");
 		resourceType = (String) getRequest().getAttributes().get("TYPE");
+		resourceType = resourceType.toLowerCase();
 		datasetName = (String) getRequest().getAttributes().get("DB");
 
 		// If no ID has been given, return a 404

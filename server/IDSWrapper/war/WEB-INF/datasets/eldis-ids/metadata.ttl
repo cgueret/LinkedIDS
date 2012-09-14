@@ -19,19 +19,19 @@
 	api2lod:api_url "http://api.ids.ac.uk/";
 	foaf:depiction "http://api.ids.ac.uk/site_media/images/eldis_logo.gif";
 	api2lod:example [
-		api2lod:link "./resource/country/A1078";
+		api2lod:link "resource/country/A1078";
 		rdfs:label "Country 'Gambia'";
 	];
 	api2lod:example [
-		api2lod:link "./resource/region/C21";
+		api2lod:link "resource/region/C21";
 		rdfs:label "Region 'Africa'";
 	];
 	api2lod:example [
-		api2lod:link "./resource/document/A60737";
+		api2lod:link "resource/document/A60737";
 		rdfs:label "Document 'Assessing Climate Change Vulnerability in East Africa' (Eldis)";
 	];
 	api2lod:example [
-		api2lod:link "./resource/theme/C444";
+		api2lod:link "resource/theme/C444";
 		rdfs:label "Theme 'Food security' (includes a link to DBPedia)";
 	];
 	api2lod:example [
