@@ -54,13 +54,14 @@ body {
 			<div class="span6">
 				<div class="well">
 					<h2>Search for a resource</h2>
-					<p>
-						<form class="form-search" name="searchForm">
-							 <!--  <input type="text" class="input-medium search-query" name="searchTerm"> -->
-							 <button id="searchButton" class="btn">Search</button>
-						</form>
-					</p>
-					<ul id="search_results"><li> no results</li></ul>
+					<div class="clearfix">
+						<input id="searchTerm" type="text" class="span2">
+						<button onclick="javascript:doSearch()" class="btn btn-primary" value="Get Results"><i class="icon-search icon-white"></i> Run Query</button>
+					</div>
+					<div class="clearfix">
+					<ul id="search_results">
+					</ul>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -74,8 +75,8 @@ body {
 	<a href="https://github.com/cgueret/LinkedIDS"><img
 		style="position: absolute; top: 0; right: 0; border: 0; z-index: 100;"
 		src="img/forkme.png" alt="Fork me on GitHub"></a>
+	<script src="js/jquery-1.8.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery-1.8.1.js"></script>
 	<script src="js/scripts.js"></script>
 </body>
 </html>

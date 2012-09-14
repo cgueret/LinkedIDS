@@ -46,7 +46,8 @@ import com.google.gson.JsonParser;
  */
 public class GenericResource extends ServerResource {
 	// Logger instance
-	protected static final Logger logger = Logger.getLogger(GenericResource.class.getName());
+	protected static final Logger logger = Logger
+			.getLogger(GenericResource.class.getName());
 
 	// Identifier of the resource
 	private String resourceID = null;
@@ -76,7 +77,8 @@ public class GenericResource extends ServerResource {
 		}
 	};
 
-	private static final Reference RDFS_Resource = new Reference("http://www.w3.org/2000/01/rdf-schema#Resource");
+	private static final Reference RDFS_Resource = new Reference(
+			"http://www.w3.org/2000/01/rdf-schema#Resource");
 
 	/*
 	 * (non-Javadoc)
@@ -100,21 +102,26 @@ public class GenericResource extends ServerResource {
 		resource = new Reference(getRequest().getOriginalRef().toUri());
 
 		// Define the URI for the vocabulary
-		Reference vocabNS = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary");
+		Reference vocabNS = new Reference(getRequest().getOriginalRef()
+				.getHostIdentifier() + "/vocabulary");
 
 		// Load the key-values pairs from the JSON API
 		loadKeyValuePairs();
 
 		// Process them
-		for (Entry<String, ArrayList<String>> keyValuePair : keyValuePairs.entrySet()) {
+		for (Entry<String, ArrayList<String>> keyValuePair : keyValuePairs
+				.entrySet()) {
 			// Turn the key into a predicate
 			Reference predicate = new Reference(keyValuePair.getKey());
 
 			// Get the range of that predicate
-			Reference valueType = getApplication().getMappings(datasetName).getRangeOf(predicate);
+			Reference valueType = getApplication().getMappings(datasetName)
+					.getRangeOf(predicate);
 
 			// See if we need to rewrite the predicate into something else
-			Reference otherPredicate = getApplication().getMappings(datasetName).getReplacementForPredicate(predicate);
+			Reference otherPredicate = getApplication()
+					.getMappings(datasetName).getReplacementForPredicate(
+							predicate);
 			if (otherPredicate != null)
 				predicate = otherPredicate;
 
@@ -160,10 +167,13 @@ public class GenericResource extends ServerResource {
 					}
 
 					// The target is an internal link
-					else if (getApplication().getMappings(datasetName).isInternalType(valueType)) {
-						String pattern = getApplication().getMappings(datasetName).getPatternFor(valueType);
+					else if (getApplication().getMappings(datasetName)
+							.isInternalType(valueType)) {
+						String pattern = getApplication().getMappings(
+								datasetName).getPatternFor(valueType);
 						if (pattern != null) {
-							Reference object = new Reference(pattern.replace("{id}", value));
+							Reference object = new Reference(pattern.replace(
+									"{id}", value));
 							if (object.isRelative())
 								object.setBaseRef(vocabNS);
 							graph.add(resource, predicate, object);
@@ -184,20 +194,10 @@ public class GenericResource extends ServerResource {
 		}
 
 		// Look for linking services
-		getApplication().getMappings(datasetName).applyLinkers(graph, resource, resourceType, keyValuePairs);
-
-		// Link to Geonames
-		// TODO move that configuration in a ttl file
-		/*
-		 * if (resourceType.equals("country")) { GeoNames b = new GeoNames();
-		 * String countryName = keyValuePairs.get("#country_name").get(0);
-		 * String countryCode =
-		 * keyValuePairs.get("#iso_two_letter_code").get(0); LinkerParameters
-		 * params = new LinkerParameters(); params.put(GeoNames.COUNTRY_CODE,
-		 * countryCode); params.put(GeoNames.COUNTRY_NAME, countryName);
-		 * List<Reference> target = b.getResource(params); if (target != null)
-		 * graph.add(resource, OWL.SAME_AS, target.get(0)); }
-		 */
+		if (resourceType.equals("country")) {
+			getApplication().getMappings(datasetName).applyLinkers(graph,
+					resource, resourceType, keyValuePairs);
+		}
 
 		// Link to DBpedia
 		// TODO move that configuration in a ttl file
@@ -230,7 +230,8 @@ public class GenericResource extends ServerResource {
 		// Link to Theme's children
 		// TODO move that configuration in a ttl file, fix OWL sameas
 		if (resourceType.equals("theme")) {
-			ThemeChildren ch = new ThemeChildren(getRequest().getOriginalRef().getHostIdentifier());
+			ThemeChildren ch = new ThemeChildren(getRequest().getOriginalRef()
+					.getHostIdentifier());
 			String children_url = keyValuePairs.get("#children_url").get(0);
 			LinkerParameters params = new LinkerParameters();
 			params.put(ThemeChildren.CHILDREN_URL, children_url);
@@ -262,8 +263,10 @@ public class GenericResource extends ServerResource {
 	private void loadKeyValuePairs() {
 		try {
 			// Compose the URL
-			StringBuffer urlString = new StringBuffer("http://api.ids.ac.uk/openapi/eldis/");
-			urlString.append("get/").append(PLURAL.get(resourceType)).append("/");
+			StringBuffer urlString = new StringBuffer(
+					"http://api.ids.ac.uk/openapi/eldis/");
+			urlString.append("get/").append(PLURAL.get(resourceType))
+					.append("/");
 			urlString.append(resourceID).append("/full");
 			URL url = new URL(urlString.toString());
 
@@ -272,9 +275,11 @@ public class GenericResource extends ServerResource {
 
 			// Issue the API request
 			StringBuffer response = new StringBuffer();
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
 			connection.setRequestProperty("Token-Guid", api_key);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				response.append(line);
@@ -289,7 +294,8 @@ public class GenericResource extends ServerResource {
 			JsonElement element = ((JsonObject) e).get("results");
 			if (!element.isJsonObject())
 				return;
-			for (Entry<String, JsonElement> entry : ((JsonObject) element).entrySet()) {
+			for (Entry<String, JsonElement> entry : ((JsonObject) element)
+					.entrySet()) {
 				// Ignore the objects
 				if (entry.getValue().isJsonObject())
 					continue;
@@ -325,7 +331,8 @@ public class GenericResource extends ServerResource {
 
 		// TODO move creation of ids namespace at creation time
 		if (!namespaces.isRegistered("ids:")) {
-			Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary#");
+			Reference ns = new Reference(getRequest().getOriginalRef()
+					.getHostIdentifier() + "/vocabulary#");
 			namespaces.register(ns.toString(), "ids:");
 		}
 
@@ -334,8 +341,8 @@ public class GenericResource extends ServerResource {
 		map.put("triples", graph);
 		map.put("ns", namespaces);
 
-		return new TemplateRepresentation("resource.html", getApplication().getConfiguration(), map,
-				MediaType.TEXT_HTML);
+		return new TemplateRepresentation("resource.html", getApplication()
+				.getConfiguration(), map, MediaType.TEXT_HTML);
 	}
 
 	/**

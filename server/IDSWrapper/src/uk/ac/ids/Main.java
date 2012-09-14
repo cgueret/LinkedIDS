@@ -60,6 +60,12 @@ public class Main extends Application {
 		// Create the router
 		Router router = new Router(getContext());
 
+		// Handler for requests to vocabulary resources
+		router.attach("/vocabulary", VocabularyResource.class);
+
+		// Handler for requests to parameters setting
+		router.attach("/config", ConfigResource.class);
+
 		// Handler for requests to generic resources
 		router.attach("/{DB}/resource/{TYPE}/{ID}", GenericResource.class);
 
@@ -74,12 +80,6 @@ public class Main extends Application {
 
 		// Handler for the home page of a data set
 		router.attach("/{DB}", DataSetResource.class);
-
-		// Handler for requests to vocabulary resources
-		router.attach("/vocabulary", VocabularyResource.class);
-
-		// Handler for requests to parameters setting
-		router.attach("/config", ConfigResource.class);
 
 		// Activate content filtering based on extensions
 		getTunnelService().setExtensionsTunnel(true);

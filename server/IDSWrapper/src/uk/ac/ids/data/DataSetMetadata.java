@@ -16,6 +16,7 @@ import org.restlet.ext.rdf.Link;
 import org.restlet.ext.rdf.internal.turtle.RdfTurtleReader;
 import org.restlet.representation.Representation;
 
+import uk.ac.ids.util.SearchTool;
 import uk.ac.ids.vocabulary.RDFS;
 import uk.ac.ids.vocabulary.WRAPPER;
 
@@ -29,7 +30,8 @@ public class DataSetMetadata {
 	private String apiURL = "";
 	private String depiction = "";
 	private Map<String, String> examples = new HashMap<String, String>();
-
+	private SearchTool search = null;
+	
 	/**
 	 * @param entity
 	 * @throws IOException
@@ -55,12 +57,8 @@ public class DataSetMetadata {
 					apiURL = l.getTargetAsLiteral().getValue();
 
 				// The image associated to the data set
-				System.out.println(l.getTypeRef());
-				if (l.getTypeRef().toString().equals("http://xmlns.com/foaf/0.1/depiction")) {
-					System.out.println(l);
-
+				if (l.getTypeRef().toString().equals("http://xmlns.com/foaf/0.1/depiction")) 
 					depiction = l.getTargetAsLiteral().getValue();
-				}
 			}
 
 			// An example resource
@@ -77,6 +75,25 @@ public class DataSetMetadata {
 					}
 				}
 				examples.put(exampleLabel, exampleTarget);
+			}
+			
+			// The search tool
+			if (l.getTypeRef().equals(WRAPPER.SEARCH)) {
+				Reference s = l.getTargetAsReference();
+				String searchPattern = "";
+				String searchResultPattern = "";
+				String resultFormat = "";
+				for (Link l2 : graph) {
+					if (l2.getSourceAsReference().equals(s)) {
+						if (l2.getTypeRef().equals(WRAPPER.PATTERN))
+							searchPattern = l2.getTargetAsLiteral().getValue();
+						if (l2.getTypeRef().equals(WRAPPER.RESULT_PATTERN))
+							searchResultPattern = l2.getTargetAsLiteral().getValue();
+						if (l2.getTypeRef().equals(RDFS.LABEL))
+							resultFormat = l2.getTargetAsLiteral().getValue();
+					}
+				}
+				search = new SearchTool(searchPattern, searchResultPattern, resultFormat);
 			}
 		}
 	}
@@ -114,6 +131,13 @@ public class DataSetMetadata {
 	 */
 	public Collection<Entry<String, String>> getExamples() {
 		return examples.entrySet();
+	}
+
+	/**
+	 * @return the search tool
+	 */
+	public SearchTool getSearch() {
+		return search;
 	}
 
 }

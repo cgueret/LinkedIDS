@@ -23,6 +23,7 @@ public class ConfigResource extends ServerResource {
 	 */
 	@Get
 	public Representation setParameter() {
+		System.out.println("fdfd");
 		Form form = this.getQuery();
 
 		// Get the value for the key

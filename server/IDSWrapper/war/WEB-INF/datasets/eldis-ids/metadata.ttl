@@ -35,12 +35,12 @@
 		rdfs:label "Theme 'Food security' (includes a link to DBPedia)";
 	];
 	api2lod:example [
-		api2lod:link "./resource/theme/C282";
+		api2lod:link "resource/theme/C282";
 		rdfs:label "Theme 'Higher education' (includes a link to IATI linked data)";
 	];
 	api2lod:search [
-		api2lod:pattern "search/assets/short?q={word}";
-		api2lod:resultPattern "./resource/{object_type}/{object_id}";
+		api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/search/assets/short?&format=json&q={word}";
+		api2lod:resultPattern "resource/{object_type}/{object_id}";
 		rdfs:label "{title} ({object_type})";
 	]
 	.
