@@ -54,14 +54,14 @@ body {
 			<div class="span6">
 				<div class="well">
 					<h2>Search for a resource</h2>
+					<p>Use this form to search for a resource which contains some word in its description.</p>
 					<div class="clearfix">
-						<input id="searchTerm" type="text" class="span2">
-						<button onclick="javascript:doSearch()" class="btn btn-primary" value="Get Results"><i class="icon-search icon-white"></i> Run Query</button>
+						<input onkeydown="javascript:update(event)" id="searchTerm" type="text" class="span2" style="height: 30px; margin-bottom: 0px;">
+						<button onclick="javascript:doSearch()" class="btn btn-primary" value="Get Results"><i class="icon-search icon-white"></i>Search</button>
 					</div>
-					<div class="clearfix">
-					<ul id="search_results">
-					</ul>
-					</div>
+					<hr>
+					<span id="search_results">
+					</span>
 				</div>
 			</div>
 		</div>
