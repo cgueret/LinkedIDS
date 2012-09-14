@@ -31,7 +31,7 @@ public class SearchResource extends ServerResource {
 
 	@Get
 	public Representation getResults() {
-		return "";
+		return null;
 	}
 
 	/*
