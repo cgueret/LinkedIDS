@@ -1,0 +1,29 @@
+#
+# LinkedIDS Schema / Mappings
+#
+# V. de Boer and C. Gueret March 2012
+#
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix ens:      <http://www.europeana.eu/schemas/edm/> .
+@prefix ontology: <http://www.geonames.org/ontology#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:	   <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:	   <http://www.w3.org/2001/XMLSchema#>.
+@prefix api2lod:  <http://api2lod.appspot.com/vocabulary#> .
+
+:api2lod_metadata
+	rdfs:label "Openaid IATI Parser and API";
+	rdfs:comment "OIPA is a framework that provides a rich and usable API for parsing, ingesting, storing and searching IATI standard compliant datasets.";
+	api2lod:api_url "http://oipa.openaidsearch.org/api/v2/docs/";
+	foaf:depiction "http://www.akvo.org/blog/wp-content/themes/akvo/img/main_nav_akvo_logo.png";
+	api2lod:example [
+		api2lod:link "resource/Organisation/41120";
+		rdfs:label "Organisation UN Habitat";
+	];
+	api2lod:example [
+		api2lod:link "resource/Activity/NL-1-PPR-13192";
+		rdfs:label "Multi donor fund to support civil society in democracy related issues";
+	].
+	

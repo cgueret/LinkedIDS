@@ -153,6 +153,21 @@ public class DataSet implements Iterable<Link> {
 	}
 
 	/**
+	 * @param type
+	 * @return
+	 */
+	public String getResultRoot(Reference type) {
+		for (Link l : graph) {
+			if (l.getSource().toString().equals("#"+type)) {
+				if (l.getTypeRef().equals(WRAPPER.RESULT_ROOT)) {
+					return new String(l.getTargetAsLiteral().getValue());
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * @param valueType
 	 * @return
 	 */

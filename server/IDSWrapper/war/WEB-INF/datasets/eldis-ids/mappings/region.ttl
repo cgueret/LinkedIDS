@@ -18,6 +18,7 @@
 :Region
 	a rdfs:Class ;
 	api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/get/regions/{id}/full";
+	api2lod:resultRoot "results";
 	rdfs:label "Region" ;
 	rdfs:subClassOf ontology:Feature.
 

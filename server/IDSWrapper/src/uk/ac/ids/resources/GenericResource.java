@@ -239,7 +239,8 @@ public class GenericResource extends ServerResource {
 			String query = getApplication().getDataSet(datasetName)
 					.getPatternFor(resourceType);
 			URL url = new URL(query.replace("{id}", resourceID));
-
+			logger.info("Query " + url);
+			
 			// Get the API key
 			String api_key = Parameters.getInstance().get(Parameters.API_KEY);
 
@@ -255,17 +256,29 @@ public class GenericResource extends ServerResource {
 				response.append(line);
 			}
 			reader.close();
+			logger.info("Response " + response.toString());
 
 			// Parse the response
 			JsonParser parser = new JsonParser();
-			JsonElement e = parser.parse(response.toString());
-			if (!e.isJsonObject())
-				return;
-			JsonElement element = ((JsonObject) e).get("results");
+			JsonElement element = parser.parse(response.toString());
 			if (!element.isJsonObject())
 				return;
+			logger.info("a:"+element.toString());
+			
+			// Check if there is a specific root to use
+			String root = getApplication().getDataSet(datasetName).getResultRoot(resourceType);
+			logger.info("Get root "+root);
+			
+			if (root != null)
+				 element = ((JsonObject) element).get(root);
+			if (!element.isJsonObject())
+				return;
+			logger.info("b:"+element.toString());
+			
 			for (Entry<String, JsonElement> entry : ((JsonObject) element)
 					.entrySet()) {
+				logger.info(entry.toString());
+				
 				// Ignore the objects
 				if (entry.getValue().isJsonObject())
 					continue;
@@ -276,7 +289,8 @@ public class GenericResource extends ServerResource {
 				// Store all the entries of the array
 				if (entry.getValue().isJsonArray())
 					for (JsonElement v : (JsonArray) entry.getValue())
-						values.add(v.getAsString());
+						if (v.isJsonPrimitive())
+							values.add(v.getAsString());
 
 				// Store the single value
 				if (entry.getValue().isJsonPrimitive())

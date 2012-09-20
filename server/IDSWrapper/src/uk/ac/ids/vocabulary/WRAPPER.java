@@ -39,6 +39,9 @@ public class WRAPPER {
 	/** http://api2lod.appspot.com/vocabulary#resultPattern */
 	public static final Reference RESULT_PATTERN;
 
+	/** http://api2lod.appspot.com/vocabulary#resultRoot */
+	public static final Reference RESULT_ROOT;
+	
 	/** http://api2lod.appspot.com/vocabulary#search */
 	public static final Reference SEARCH;
 
@@ -56,5 +59,6 @@ public class WRAPPER {
 		LINK = new Reference(WRAPPER.NAMESPACE, "link");
 		RESULT_PATTERN = new Reference(WRAPPER.NAMESPACE, "resultPattern");
 		SEARCH = new Reference(WRAPPER.NAMESPACE, "search");
+		RESULT_ROOT = new Reference(WRAPPER.NAMESPACE, "resultRoot");
 	}
 }

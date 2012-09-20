@@ -20,6 +20,7 @@
 	a rdfs:Class ;
 	rdfs:label "Country" ;
 	api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/get/countries/{id}/full";
+	api2lod:resultRoot "results";
 	api2lod:matcher [
 		api2lod:matcherName "uk.ac.ids.linker.impl.GeoNames";
 		api2lod:parameter [
@@ -82,23 +83,6 @@
 :category_region_ids
 	api2lod:replaceby :region;
 	rdfs:range	:Region.
-	
-	
-#
-# LinkedIDS Schema / Mappings
-#
-# V. de Boer and C. Gueret March 2012
-#
-@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
-@prefix ens:      <http://www.europeana.eu/schemas/edm/> .
-@prefix ontology: <http://www.geonames.org/ontology#> .
-@prefix dcterms:  <http://purl.org/dc/terms/> .
-@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix foaf:	  <http://xmlns.com/foaf/0.1/> .
-@prefix xsd:	  <http://www.w3.org/2001/XMLSchema#>.
-@prefix api2lod:  <http://api2lod.appspot.com/vocabulary#> .
-@prefix owl:      <http://www.w3.org/2002/07/owl#> .
 
 
 #---------------------------- Themes --------------------------------
@@ -106,6 +90,7 @@
 :Theme
 	a rdfs:Class;
 	api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/get/themes/{id}/full";
+	api2lod:resultRoot "results";
 	api2lod:matcher [
 		api2lod:matcherName "uk.ac.ids.linker.impl.DBpedia";
 		api2lod:parameter [
