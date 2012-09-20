@@ -75,16 +75,19 @@ public class GenericResource extends ServerResource {
 	 */
 	@Override
 	protected void doInit() throws ResourceException {
+		// Get the dataset name from the URI template
+		datasetName = (String) getRequest().getAttributes().get("DB");
+		
 		// Define the URI for the vocabulary
 		Reference vocabNS = new Reference(getRequest().getOriginalRef()
-				.getHostIdentifier() + "/vocabulary");
+				.getHostIdentifier() + "/" + datasetName + "/vocabulary#");
+
 
 		// Get the attributes value taken from the URI template
 		resourceID = (String) getRequest().getAttributes().get("ID");
 		String type = (String) getRequest().getAttributes().get("TYPE");
 		resourceType = new Reference(type);
 		resourceType.setBaseRef(vocabNS);
-		datasetName = (String) getRequest().getAttributes().get("DB");
 
 		// If no ID has been given, return a 404
 		if (resourceID == null || resourceType == null || datasetName == null) {
@@ -180,24 +183,9 @@ public class GenericResource extends ServerResource {
 			}
 		}
 
-		// Look for linking services
+		// Look for linking services and apply them
 		getApplication().getDataSet(datasetName).applyLinkers(graph, resource,
 				resourceType, keyValuePairs);
-
-		// Link to DBpedia
-		// TODO move that configuration in a ttl file
-		if (resourceType.equals("theme")) {
-			DBpedia b = new DBpedia();
-			String themeTitle = keyValuePairs.get("#title").get(0);
-			LinkerParameters params = new LinkerParameters();
-			params.put(DBpedia.THEME_TITLE, themeTitle);
-			List<Reference> target = b.getResource(params);
-			if (target != null) {
-				for (Reference r : target) {
-					graph.add(resource, OWL.SAME_AS, r);
-				}
-			}
-		}
 
 		// Link Theme to IATI
 		if (resourceType.equals("theme")) {
@@ -312,10 +300,10 @@ public class GenericResource extends ServerResource {
 		Namespaces namespaces = getApplication().getNamespaces();
 
 		// TODO move creation of ids namespace at creation time
-		if (!namespaces.isRegistered("ids:")) {
+		if (!namespaces.isRegistered(datasetName+":")) {
 			Reference ns = new Reference(getRequest().getOriginalRef()
-					.getHostIdentifier() + "/vocabulary#");
-			namespaces.register(ns.toString(), "ids:");
+					.getHostIdentifier() + "/" + datasetName + "/vocabulary#");
+			namespaces.register(ns.toString(), datasetName+":");
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();

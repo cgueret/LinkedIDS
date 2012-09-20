@@ -175,8 +175,9 @@ public class DataSet implements Iterable<Link> {
 			Reference resourceType, Map<String, ArrayList<String>> keyValuePairs) {
 		for (Link l : graph) {
 			if (l.getTypeRef().equals(WRAPPER.MATCHER) && l.getSource().toString().equals("#"+resourceType)) {
+				logger.info(l.getTarget().toString());
 				Reference matcherBNode = l.getTargetAsReference();
-				logger.info("Found matcher " + matcherBNode);
+				logger.info("Found linker for " + resourceType + " | " + matcherBNode);
 				String linkerClass = null;
 				Reference linkerPredicate = null;
 				LinkerParameters params = new LinkerParameters();
@@ -204,6 +205,7 @@ public class DataSet implements Iterable<Link> {
 								}
 							}
 							logger.info(paramValueKey + " " + keyValuePairs);
+							logger.info(keyValuePairs.get(paramValueKey).toString());
 							params.put(paramKey,
 									keyValuePairs.get(paramValueKey).get(0));
 						}
