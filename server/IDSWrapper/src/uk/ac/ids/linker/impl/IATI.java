@@ -40,6 +40,7 @@ public class IATI extends Linker {
 
 	// API to query geoname
 	private final static String API = "http://api.kasabi.com/dataset/iati/apis/sparql";
+	
 	// API key
 	// TODO: make this configurable.
 	private final static String API_KEY = "ab47bc3a56f2864def50c601b45cda6f55aecc14";
