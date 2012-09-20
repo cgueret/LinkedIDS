@@ -16,7 +16,8 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 
 public abstract class Linker {
 	// Logger instance
-	protected static final Logger logger = Logger.getLogger(Linker.class.getName());
+	protected static final Logger logger = Logger.getLogger(Linker.class
+			.getName());
 
 	// Entity type in the AppEngine data store
 	private final static String DS_ENTITY = "ExternalResource";
@@ -38,7 +39,7 @@ public abstract class Linker {
 			// Try to return the result from the cache
 			return getFromCache(parameters);
 		} catch (EntityNotFoundException e) {
-			// Try to get it from geoname
+			// Try to get it from the service
 			List<Reference> uri = getFromService(parameters);
 
 			// If successful, save it
@@ -54,7 +55,8 @@ public abstract class Linker {
 	 * @param parameters
 	 * @return
 	 */
-	protected abstract List<Reference> getFromService(LinkerParameters parameters);
+	protected abstract List<Reference> getFromService(
+			LinkerParameters parameters);
 
 	/**
 	 * @param parameters
@@ -62,8 +64,10 @@ public abstract class Linker {
 	 * @throws EntityNotFoundException
 	 */
 	@SuppressWarnings("deprecation")
-	private List<Reference> getFromCache(LinkerParameters parameters) throws EntityNotFoundException {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	private List<Reference> getFromCache(LinkerParameters parameters)
+			throws EntityNotFoundException {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
 
 		// Get the data
 		Query q = new Query(DS_ENTITY);
@@ -71,7 +75,8 @@ public abstract class Linker {
 		// FilterOperator.EQUAL, parameters.toKey());
 		// q.setFilter(new FilterPredicate(PARAMETER_PROPERTY,
 		// FilterOperator.EQUAL, parameters.toKey()));
-		q.addFilter(PARAMETER_PROPERTY, FilterOperator.EQUAL, parameters.toKey());
+		q.addFilter(PARAMETER_PROPERTY, FilterOperator.EQUAL,
+				parameters.toKey());
 		PreparedQuery pq = datastore.prepare(q);
 		Entity entity = pq.asSingleEntity();
 		if (entity == null)
@@ -80,10 +85,13 @@ public abstract class Linker {
 		// De-serialize the data
 		List<Reference> results = new ArrayList<Reference>();
 		@SuppressWarnings("unchecked")
-		List<String> uris = (List<String>) entity.getProperty(RESOURCE_PROPERTY);
-		if (uris != null)
-			for (String uri : uris)
+		List<String> uris = (List<String>) entity
+				.getProperty(RESOURCE_PROPERTY);
+		if (uris != null) {
+			for (String uri : uris) {
 				results.add(new Reference(uri));
+			}
+		}
 		return results;
 	}
 
@@ -92,7 +100,8 @@ public abstract class Linker {
 	 * @param uri
 	 */
 	private void saveToCache(LinkerParameters parameters, List<Reference> uris) {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
 
 		// Serialize the uris
 		List<String> results = new ArrayList<String>();

@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.restlet.data.Reference;
 
@@ -19,18 +20,16 @@ import com.google.gson.JsonParser;
 import uk.ac.ids.linker.Linker;
 import uk.ac.ids.linker.LinkerParameters;
 
-public class IATIActivity extends Linker {
+public class API2LOD extends Linker {
 	// Parameters
 	public static final String ORGANISATION = "organisation_id";
 
 	@Override
 	protected List<Reference> getFromService(LinkerParameters parameters) {
-		// Get the ID
-		String id = parameters.get(ORGANISATION);
-		
+		logger.info(parameters.toKey());
 		// Prepare the API call
-		String apiCall = "http://oipa.openaidsearch.org/api/v2/activities/?format=json&organisations={id}";
-		apiCall = apiCall.replace("{id}", id);
+		String apiCall = parameters.get("queryPattern");
+		apiCall = apiCall.replace("{id}", parameters.get("queryPatternID"));
 		
 		try {
 			// Compose the URL
@@ -51,14 +50,17 @@ public class IATIActivity extends Linker {
 			JsonElement results = parser.parse(response.toString());
 			if (results.isJsonObject()) {
 				JsonObject obj = (JsonObject) results;
-				JsonArray resultsArray = obj.get("objects").getAsJsonArray();
+				JsonArray resultsArray = obj.get(parameters.get("resultsRoot")).getAsJsonArray();
+				List<Reference> res = new ArrayList<Reference>();
 				for (int i=0; i < resultsArray.size(); i++) {
 					JsonObject entry = resultsArray.get(i).getAsJsonObject();
-					String iati = entry.get("iati_identifier").getAsString();
-					List<Reference> res = new ArrayList<Reference>();
-					res.add(new Reference("http://sws.geonames.org/" + iati));
-					return res;
+					String result = parameters.get("resultsPattern");
+					for (Entry<String, JsonElement> a: entry.entrySet()) 
+						if (result.contains(a.getKey()))
+							result = result.replace("{" + a.getKey() + "}", a.getValue().getAsString());
+					res.add(new Reference(parameters.get("API2LOD") + "/" + result));
 				}
+				return res;
 			}
 
 			return null;

@@ -143,7 +143,7 @@ public class DataSet implements Iterable<Link> {
 	 */
 	public String getPatternFor(Reference type) {
 		for (Link l : graph) {
-			if (l.getSource().toString().equals("#"+type)) {
+			if (l.getSource().toString().equals("#" + type)) {
 				if (l.getTypeRef().equals(WRAPPER.PATTERN)) {
 					return new String(l.getTargetAsLiteral().getValue());
 				}
@@ -158,7 +158,7 @@ public class DataSet implements Iterable<Link> {
 	 */
 	public String getResultRoot(Reference type) {
 		for (Link l : graph) {
-			if (l.getSource().toString().equals("#"+type)) {
+			if (l.getSource().toString().equals("#" + type)) {
 				if (l.getTypeRef().equals(WRAPPER.RESULT_ROOT)) {
 					return new String(l.getTargetAsLiteral().getValue());
 				}
@@ -166,7 +166,7 @@ public class DataSet implements Iterable<Link> {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param valueType
 	 * @return
@@ -186,13 +186,15 @@ public class DataSet implements Iterable<Link> {
 	 * @param resourceType
 	 * @param keyValuePairs
 	 */
-	public void applyLinkers(Graph targetGraph, Reference resource,
-			Reference resourceType, Map<String, ArrayList<String>> keyValuePairs) {
+	public void applyLinkers(String hostIdentifier, Graph targetGraph, Reference resource,
+			Reference resourceType, Map<String, ArrayList<String>> keyValuePairs, Reference ns) {
 		for (Link l : graph) {
-			if (l.getTypeRef().equals(WRAPPER.MATCHER) && l.getSource().toString().equals("#"+resourceType)) {
+			if (l.getTypeRef().equals(WRAPPER.MATCHER)
+					&& l.getSource().toString().equals("#" + resourceType)) {
 				logger.info(l.getTarget().toString());
 				Reference matcherBNode = l.getTargetAsReference();
-				logger.info("Found linker for " + resourceType + " | " + matcherBNode);
+				logger.info("Found linker for " + resourceType + " | "
+						+ matcherBNode);
 				String linkerClass = null;
 				Reference linkerPredicate = null;
 				LinkerParameters params = new LinkerParameters();
@@ -219,19 +221,32 @@ public class DataSet implements Iterable<Link> {
 												.getValue();
 								}
 							}
-							logger.info(paramValueKey + " " + keyValuePairs);
-							logger.info(keyValuePairs.get(paramValueKey).toString());
-							params.put(paramKey,
-									keyValuePairs.get(paramValueKey).get(0));
+							if (paramValueKey.startsWith("#"))
+								params.put(paramKey,
+										keyValuePairs.get(paramValueKey).get(0));
+							else
+								params.put(paramKey, paramValueKey);
 						}
 					}
 				}
 
 				try {
+					// Instanciate the linker
 					Linker linker = (Linker) Class.forName(linkerClass)
 							.newInstance();
-					for (Reference ref : linker.getResource(params))
+					
+					// Add the host identifier to the parameters
+					params.put("API2LOD", hostIdentifier);
+					
+					if (linkerPredicate.isRelative())
+						linkerPredicate.setBaseRef(ns);
+					for (Reference ref : linker.getResource(params)) {
+						if (ref.isRelative()) {
+							logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+							ref = new Reference(ns + "/" + ref);
+						}
 						targetGraph.add(resource, linkerPredicate, ref);
+					}
 				} catch (InstantiationException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {

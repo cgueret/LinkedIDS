@@ -185,8 +185,9 @@ public class GenericResource extends ServerResource {
 		}
 
 		// Look for linking services and apply them
-		getApplication().getDataSet(datasetName).applyLinkers(graph, resource,
-				resourceType, keyValuePairs);
+		getApplication().getDataSet(datasetName).applyLinkers(getRequest().getOriginalRef()
+				.getHostIdentifier(), graph, resource,
+				resourceType, keyValuePairs, vocabNS);
 
 		// Link Theme to IATI
 		if (resourceType.equals("theme")) {

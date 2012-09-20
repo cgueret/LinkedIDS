@@ -19,6 +19,26 @@
 :Organisation
 	a rdfs:Class ;
 	rdfs:label "Organisation" ;
+	api2lod:matcher [
+		api2lod:matcherName "uk.ac.ids.linker.impl.API2LOD";
+		api2lod:parameter [
+			api2lod:parameterKey "queryPattern";
+			api2lod:parameterValue "http://oipa.openaidsearch.org/api/v2/activities/?format=json&organisations={id}";
+		];
+		api2lod:parameter [
+			api2lod:parameterKey "queryPatternID";
+			api2lod:parameterValue "#ref";
+		];
+		api2lod:parameter [
+			api2lod:parameterKey "resultsPattern";
+			api2lod:parameterValue "oipa/resource/Activity/{iati_identifier}";
+		];
+		api2lod:parameter [
+			api2lod:parameterKey "resultsRoot";
+			api2lod:parameterValue "objects";
+		];
+		rdf:predicate :hasActivity . 
+	];
 	api2lod:pattern "http://oipa.openaidsearch.org/api/v2/organisations/{id}".
 	
 :Activity
