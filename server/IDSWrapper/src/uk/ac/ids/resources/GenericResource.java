@@ -31,6 +31,7 @@ import uk.ac.ids.linker.impl.IATI;
 import uk.ac.ids.linker.impl.Lexvo;
 import uk.ac.ids.linker.impl.ThemeChildren;
 import uk.ac.ids.vocabulary.OWL;
+import uk.ac.ids.vocabulary.RDFS;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -53,7 +54,7 @@ public class GenericResource extends ServerResource {
 	private String resourceID = null;
 
 	// Type (class) of the resource
-	private String resourceType = null;
+	private Reference resourceType = null;
 
 	// The name of the data set
 	private String datasetName = null;
@@ -67,19 +68,6 @@ public class GenericResource extends ServerResource {
 	// Set of key/value pairs for this resource
 	private Map<String, ArrayList<String>> keyValuePairs = new HashMap<String, ArrayList<String>>();
 
-	@SuppressWarnings("serial")
-	public static final Map<String, String> PLURAL = new HashMap<String, String>() {
-		{
-			put("country", "countries");
-			put("region", "regions");
-			put("document", "documents");
-			put("theme", "themes");
-		}
-	};
-
-	private static final Reference RDFS_Resource = new Reference(
-			"http://www.w3.org/2000/01/rdf-schema#Resource");
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -87,10 +75,15 @@ public class GenericResource extends ServerResource {
 	 */
 	@Override
 	protected void doInit() throws ResourceException {
+		// Define the URI for the vocabulary
+		Reference vocabNS = new Reference(getRequest().getOriginalRef()
+				.getHostIdentifier() + "/vocabulary");
+
 		// Get the attributes value taken from the URI template
 		resourceID = (String) getRequest().getAttributes().get("ID");
-		resourceType = (String) getRequest().getAttributes().get("TYPE");
-		resourceType = resourceType.toLowerCase();
+		String type = (String) getRequest().getAttributes().get("TYPE");
+		resourceType = new Reference(type);
+		resourceType.setBaseRef(vocabNS);
 		datasetName = (String) getRequest().getAttributes().get("DB");
 
 		// If no ID has been given, return a 404
@@ -102,10 +95,6 @@ public class GenericResource extends ServerResource {
 		// Define the URI for this resource
 		resource = new Reference(getRequest().getOriginalRef().toUri());
 
-		// Define the URI for the vocabulary
-		Reference vocabNS = new Reference(getRequest().getOriginalRef()
-				.getHostIdentifier() + "/vocabulary");
-
 		// Load the key-values pairs from the JSON API
 		loadKeyValuePairs();
 
@@ -116,13 +105,12 @@ public class GenericResource extends ServerResource {
 			Reference predicate = new Reference(keyValuePair.getKey());
 
 			// Get the range of that predicate
-			Reference valueType = getApplication().getMappings(datasetName)
+			Reference valueType = getApplication().getDataSet(datasetName)
 					.getRangeOf(predicate);
 
 			// See if we need to rewrite the predicate into something else
-			Reference otherPredicate = getApplication()
-					.getMappings(datasetName).getReplacementForPredicate(
-							predicate);
+			Reference otherPredicate = getApplication().getDataSet(datasetName)
+					.getReplacementForPredicate(predicate);
 			if (otherPredicate != null)
 				predicate = otherPredicate;
 
@@ -143,7 +131,7 @@ public class GenericResource extends ServerResource {
 				if (target != null) {
 					values.clear();
 					values.add(target.get(0).toUri().toString());
-					valueType = RDFS_Resource;
+					valueType = RDFS.RESOURCE;
 				}
 			}
 
@@ -160,7 +148,7 @@ public class GenericResource extends ServerResource {
 				// If we know the type of this value, use it
 				if (valueType != null) {
 					// The target value is a Resource
-					if (valueType.equals(RDFS_Resource)) {
+					if (valueType.equals(RDFS.RESOURCE)) {
 						Reference object = new Reference(value);
 						if (object.isRelative())
 							object.setBaseRef(vocabNS);
@@ -168,18 +156,16 @@ public class GenericResource extends ServerResource {
 					}
 
 					// The target is an internal link
-					else if (getApplication().getMappings(datasetName)
-							.isInternalType(valueType)) {
-						String pattern = getApplication().getMappings(
-								datasetName).getPatternFor(valueType);
-						if (pattern != null) {
-							Reference object = new Reference(pattern.replace(
-									"{id}", value));
-							if (object.isRelative())
-								object.setBaseRef(vocabNS);
-							graph.add(resource, predicate, object);
-						}
-					}
+					/*
+					 * else if (getApplication().getMappings(datasetName)
+					 * .isInternalType(valueType)) { String pattern =
+					 * getApplication().getMappings(
+					 * datasetName).getPatternFor(valueType); if (pattern !=
+					 * null) { Reference object = new Reference(pattern.replace(
+					 * "{id}", value)); if (object.isRelative())
+					 * object.setBaseRef(vocabNS); graph.add(resource,
+					 * predicate, object); } }
+					 */
 
 					// Otherwise, add a plain literal
 					else {
@@ -195,10 +181,8 @@ public class GenericResource extends ServerResource {
 		}
 
 		// Look for linking services
-		if (resourceType.equals("country")) {
-			getApplication().getMappings(datasetName).applyLinkers(graph,
-					resource, resourceType, keyValuePairs);
-		}
+		getApplication().getDataSet(datasetName).applyLinkers(graph, resource,
+				resourceType, keyValuePairs);
 
 		// Link to DBpedia
 		// TODO move that configuration in a ttl file
@@ -264,12 +248,9 @@ public class GenericResource extends ServerResource {
 	private void loadKeyValuePairs() {
 		try {
 			// Compose the URL
-			StringBuffer urlString = new StringBuffer(
-					"http://api.ids.ac.uk/openapi/eldis/");
-			urlString.append("get/").append(PLURAL.get(resourceType))
-					.append("/");
-			urlString.append(resourceID).append("/full");
-			URL url = new URL(urlString.toString());
+			String query = getApplication().getDataSet(datasetName)
+					.getPatternFor(resourceType);
+			URL url = new URL(query.replace("{id}", resourceID));
 
 			// Get the API key
 			String api_key = Parameters.getInstance().get(Parameters.API_KEY);

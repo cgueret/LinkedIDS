@@ -39,7 +39,7 @@ public class VocabularyResource extends ServerResource {
 		// Get the reference for the vocabulary namespace
 		Reference ns = new Reference(getRequest().getOriginalRef().getHostIdentifier() + "/vocabulary#");
 
-		for (Link triple : getApplication().getMappings(datasetName)) {
+		for (Link triple : getApplication().getDataSet(datasetName)) {
 			Reference s = triple.getSourceAsReference().clone();
 			if (s.isRelative())
 				s.setBaseRef(ns);

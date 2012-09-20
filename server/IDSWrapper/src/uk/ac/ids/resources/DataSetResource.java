@@ -49,7 +49,7 @@ public class DataSetResource extends ServerResource {
 	@Get("html")
 	public Representation toHTML() {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("meta", getApplication().getMappings(datasetName).getMetaData());
+		map.put("meta", getApplication().getDataSet(datasetName).getMetaData());
 		map.put("datasetName", datasetName);
 		return new TemplateRepresentation("dataset.html", getApplication().getConfiguration(), map, MediaType.TEXT_HTML);
 	}

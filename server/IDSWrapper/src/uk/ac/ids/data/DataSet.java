@@ -32,7 +32,8 @@ import uk.ac.ids.vocabulary.WRAPPER;
  */
 public class DataSet implements Iterable<Link> {
 	// Logger
-	protected static final Logger logger = Logger.getLogger(DataSet.class.getName());
+	protected static final Logger logger = Logger.getLogger(DataSet.class
+			.getName());
 
 	// The context in which the mappings are used
 	private final Context context;
@@ -57,7 +58,8 @@ public class DataSet implements Iterable<Link> {
 		// Get a list of the files in the mappings directory
 		List<Reference> files = new ArrayList<Reference>();
 		try {
-			Response response = client.handle(new Request(Method.GET, datasetDirectory + "/mappings"));
+			Response response = client.handle(new Request(Method.GET,
+					datasetDirectory + "/mappings"));
 			if (response != null)
 				for (Reference entry : new ReferenceList(response.getEntity()))
 					files.add(entry);
@@ -71,7 +73,8 @@ public class DataSet implements Iterable<Link> {
 			Response response = client.handle(new Request(Method.GET, file));
 			try {
 				GraphBuilder builder = new GraphBuilder(graph);
-				RdfTurtleReader reader = new RdfTurtleReader(response.getEntity(), builder);
+				RdfTurtleReader reader = new RdfTurtleReader(
+						response.getEntity(), builder);
 				reader.parse();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -80,7 +83,8 @@ public class DataSet implements Iterable<Link> {
 
 		// Load the metadata
 		logger.info("Load " + datasetDirectory + "/metadata.ttl");
-		Response response = client.handle(new Request(Method.GET, datasetDirectory + "/metadata.ttl"));
+		Response response = client.handle(new Request(Method.GET,
+				datasetDirectory + "/metadata.ttl"));
 		try {
 			metadata.load(response.getEntity());
 		} catch (Exception e) {
@@ -138,11 +142,13 @@ public class DataSet implements Iterable<Link> {
 	 * @return
 	 */
 	public String getPatternFor(Reference type) {
-		for (Link l : graph)
-			if (l.getSource().equals(type))
-				if (l.getTypeRef().equals(WRAPPER.PATTERN))
-					return l.getTargetAsLiteral().getValue();
-
+		for (Link l : graph) {
+			if (l.getSource().toString().equals("#"+type)) {
+				if (l.getTypeRef().equals(WRAPPER.PATTERN)) {
+					return new String(l.getTargetAsLiteral().getValue());
+				}
+			}
+		}
 		return null;
 	}
 
@@ -165,10 +171,10 @@ public class DataSet implements Iterable<Link> {
 	 * @param resourceType
 	 * @param keyValuePairs
 	 */
-	public void applyLinkers(Graph targetGraph, Reference resource, String resourceType,
-			Map<String, ArrayList<String>> keyValuePairs) {
+	public void applyLinkers(Graph targetGraph, Reference resource,
+			Reference resourceType, Map<String, ArrayList<String>> keyValuePairs) {
 		for (Link l : graph) {
-			if (l.getTypeRef().equals(WRAPPER.MATCHER)) {
+			if (l.getTypeRef().equals(WRAPPER.MATCHER) && l.getSource().toString().equals("#"+resourceType)) {
 				Reference matcherBNode = l.getTargetAsReference();
 				logger.info("Found matcher " + matcherBNode);
 				String linkerClass = null;
@@ -181,25 +187,32 @@ public class DataSet implements Iterable<Link> {
 						if (l2.getTypeRef().equals(RDF.PREDICATE))
 							linkerPredicate = l2.getTargetAsReference();
 						if (l2.getTypeRef().equals(WRAPPER.PARAMETER)) {
-							Reference parameterBNode = l2.getTargetAsReference();
+							Reference parameterBNode = l2
+									.getTargetAsReference();
 							String paramKey = null;
 							String paramValueKey = null;
 							for (Link l3 : graph) {
 								if (l3.getSource().equals(parameterBNode)) {
-									if (l3.getTypeRef().equals(WRAPPER.PARAMETER_KEY))
-										paramKey = l3.getTargetAsLiteral().getValue();
-									if (l3.getTypeRef().equals(WRAPPER.PARAMETER_VALUE))
-										paramValueKey = l3.getTargetAsLiteral().getValue();
+									if (l3.getTypeRef().equals(
+											WRAPPER.PARAMETER_KEY))
+										paramKey = l3.getTargetAsLiteral()
+												.getValue();
+									if (l3.getTypeRef().equals(
+											WRAPPER.PARAMETER_VALUE))
+										paramValueKey = l3.getTargetAsLiteral()
+												.getValue();
 								}
 							}
 							logger.info(paramValueKey + " " + keyValuePairs);
-							params.put(paramKey, keyValuePairs.get(paramValueKey).get(0));
+							params.put(paramKey,
+									keyValuePairs.get(paramValueKey).get(0));
 						}
 					}
 				}
 
 				try {
-					Linker linker = (Linker) Class.forName(linkerClass).newInstance();
+					Linker linker = (Linker) Class.forName(linkerClass)
+							.newInstance();
 					for (Reference ref : linker.getResource(params))
 						targetGraph.add(resource, linkerPredicate, ref);
 				} catch (InstantiationException e) {

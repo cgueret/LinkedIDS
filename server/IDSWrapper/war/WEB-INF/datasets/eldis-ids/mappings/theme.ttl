@@ -18,7 +18,7 @@
 
 :Theme
 	a rdfs:Class ;
-	api2lod:pattern "eldis/resource/theme/{id}";
+	api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/get/themes/{id}/full";
 	rdfs:subClassOf skos:Concept;
 	rdfs:label "IDS Theme".
 

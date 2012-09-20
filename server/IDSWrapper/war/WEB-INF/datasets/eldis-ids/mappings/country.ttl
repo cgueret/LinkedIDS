@@ -19,7 +19,7 @@
 :Country
 	a rdfs:Class ;
 	rdfs:label "Country" ;
-	api2lod:pattern "eldis/resource/country/{id}";
+	api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/get/countries/{id}/full";
 	api2lod:matcher [
 		api2lod:matcherName "uk.ac.ids.linker.impl.GeoNames";
 		api2lod:parameter [

@@ -18,6 +18,7 @@
 
 :Organisation 
 	a :IDSClass ;
+	api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/get/organisations/{id}/full";
 	rdfs:subClassOf foaf:Organisation ;
 	rdfs:label "Organisation".
 

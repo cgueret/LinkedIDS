@@ -44,7 +44,7 @@ public class SearchResource extends ServerResource {
 	 */
 	@Get("json")
 	public Representation getResults() {
-		Map<String, String> results = getApplication().getMappings(datasetName)
+		Map<String, String> results = getApplication().getDataSet(datasetName)
 				.getMetaData().getSearch().getResults(searchTerm);
 
 		JSONObject json = new JSONObject();

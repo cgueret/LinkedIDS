@@ -17,6 +17,7 @@
 :Document
 	a :IDSClass;
 	rdfs:label "Document";
+	api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/get/documents/{id}/full";
 	rdfs:subClassOf :IDSResource;
 	rdfs:subClassOf foaf:Document.
  

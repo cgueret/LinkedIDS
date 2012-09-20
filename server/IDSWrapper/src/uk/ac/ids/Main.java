@@ -102,7 +102,7 @@ public class Main extends Application {
 	 * @return the mappings
 	 * 
 	 */
-	public DataSet getMappings(String datasetName) {
+	public DataSet getDataSet(String datasetName) {
 		// If this is the first time we ask for this data set, load its
 		// configuration
 		if (!mappings.containsKey(datasetName)) {
