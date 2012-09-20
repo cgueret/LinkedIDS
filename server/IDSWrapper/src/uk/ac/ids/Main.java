@@ -60,11 +60,11 @@ public class Main extends Application {
 		// Create the router
 		Router router = new Router(getContext());
 
-		// Handler for requests to vocabulary resources
-		router.attach("/vocabulary", VocabularyResource.class);
-
 		// Handler for requests to parameters setting
 		router.attach("/config", ConfigResource.class);
+
+		// Handler for requests to vocabulary resources
+		router.attach("/{DB}/vocabulary", VocabularyResource.class);
 
 		// Handler for requests to generic resources
 		router.attach("/{DB}/resource/{TYPE}/{ID}", GenericResource.class);

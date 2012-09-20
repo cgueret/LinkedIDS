@@ -186,8 +186,9 @@ public class DataSet implements Iterable<Link> {
 	 * @param resourceType
 	 * @param keyValuePairs
 	 */
-	public void applyLinkers(String hostIdentifier, Graph targetGraph, Reference resource,
-			Reference resourceType, Map<String, ArrayList<String>> keyValuePairs, Reference ns) {
+	public void applyLinkers(String hostIdentifier, Graph targetGraph,
+			Reference resource, Reference resourceType,
+			Map<String, ArrayList<String>> keyValuePairs, Reference ns) {
 		for (Link l : graph) {
 			if (l.getTypeRef().equals(WRAPPER.MATCHER)
 					&& l.getSource().toString().equals("#" + resourceType)) {
@@ -232,20 +233,23 @@ public class DataSet implements Iterable<Link> {
 
 				try {
 					// Instanciate the linker
+					logger.info(linkerClass);
 					Linker linker = (Linker) Class.forName(linkerClass)
 							.newInstance();
-					
+
 					// Add the host identifier to the parameters
 					params.put("API2LOD", hostIdentifier);
-					
+
 					if (linkerPredicate.isRelative())
 						linkerPredicate.setBaseRef(ns);
-					for (Reference ref : linker.getResource(params)) {
-						if (ref.isRelative()) {
-							logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-							ref = new Reference(ns + "/" + ref);
+					if (linker != null) {
+						for (Reference ref : linker.getResource(params)) {
+							if (ref.isRelative()) {
+								logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+								ref = new Reference(ns + "/" + ref);
+							}
+							targetGraph.add(resource, linkerPredicate, ref);
 						}
-						targetGraph.add(resource, linkerPredicate, ref);
 					}
 				} catch (InstantiationException e) {
 					e.printStackTrace();

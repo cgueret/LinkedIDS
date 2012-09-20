@@ -49,6 +49,8 @@ public class DBpedia extends Linker {
 	 */
 	@Override
 	protected List<Reference> getFromService(LinkerParameters parameters) {
+		List<Reference> res = new ArrayList<Reference>();
+		
 		if (!parameters.containsKey(THEME_TITLE))
 			return null;
 
@@ -92,7 +94,6 @@ public class DBpedia extends Linker {
 			NodeList results = doc.getElementsByTagName("result");
 
 			if (results.getLength() > 0) {
-				List<Reference> res = new ArrayList<Reference>();
 				for (int i = 0; i < results.getLength(); i++) {
 
 					Element element = (Element) results.item(i);
@@ -105,22 +106,21 @@ public class DBpedia extends Linker {
 				return res;
 
 			} else {
-				return null;
+				return res;
 			}
 
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			return null;
+			return res;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
+			return res;
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
-			return null;
+			return res;
 		} catch (SAXException e) {
 			e.printStackTrace();
-			return null;
-
+			return res;
 		}
 	}
 }

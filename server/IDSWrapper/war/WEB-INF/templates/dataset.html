@@ -41,43 +41,55 @@ body {
 			</p>
 		</div>
 		<div class="row">
+			<#if meta.hasSearch()>
 			<div class="span6">
-				<div class="well">
-					<h2>Example resources</h2>
-					<p>There are a number of resources available for testing:</p>
-					<ul>
-						<#list meta.getExamples() as example>
-						<li><a href="${datasetName}/${example.getValue()}">${example.getKey()}</a></li></#list>
-					</ul>
-				</div>
-			</div>
-			<div class="span6">
-				<div class="well">
-					<h2>Search for a resource</h2>
-					<p>Use this form to search for a resource which contains some word in its description.</p>
-					<div class="clearfix">
-						<input onkeydown="javascript:update(event)" id="searchTerm" type="text" class="span2" style="height: 30px; margin-bottom: 0px;">
-						<button onclick="javascript:doSearch()" class="btn btn-primary" value="Get Results"><i class="icon-search icon-white"></i>Search</button>
+				<#else>
+				<div class="span12">
+					</#if>
+					<div class="well">
+						<h2>Example resources</h2>
+						<p>There are a number of resources available for testing:</p>
+						<ul>
+							<#list meta.getExamples() as example>
+							<li><a href="${datasetName}/${example.getValue()}">${example.getKey()}</a></li></#list>
+						</ul>
 					</div>
-					<hr>
-					<span id="search_results">
-					</span>
 				</div>
-			</div>
-		</div>
-		<hr>
-		<footer>
-			<p>&copy; Christophe Gu&eacute;ret, Victor de boer, VU University
-				Amsterdam 2012</p>
-		</footer>
-	</div>
 
-	<a href="https://github.com/cgueret/LinkedIDS"><img
-		style="position: absolute; top: 0; right: 0; border: 0; z-index: 100;"
-		src="img/forkme.png" alt="Fork me on GitHub"></a>
-	<script src="js/jquery-1.8.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/scripts.js"></script>
+				<#if meta.hasSearch()>
+				<div class="span6">
+					<div class="well">
+						<h2>Search for a resource</h2>
+						<p>Use this form to search for a resource which contains some
+							word in its description.</p>
+						<div class="clearfix">
+							<input onkeydown="javascript:update(event)" id="searchTerm"
+								type="text" class="span2"
+								style="height: 30px; margin-bottom: 0px;">
+							<button onclick="javascript:doSearch()" class="btn btn-primary"
+								value="Get Results">
+								<i class="icon-search icon-white"></i>Search
+							</button>
+						</div>
+						<hr>
+						<span id="search_results"> </span>
+					</div>
+				</div>
+				</#if>
+			</div>
+			<hr>
+			<footer>
+				<p>&copy; Christophe Gu&eacute;ret, Victor de boer, VU
+					University Amsterdam 2012</p>
+			</footer>
+		</div>
+
+		<a href="https://github.com/cgueret/LinkedIDS"><img
+			style="position: absolute; top: 0; right: 0; border: 0; z-index: 100;"
+			src="img/forkme.png" alt="Fork me on GitHub"></a>
+		<script src="js/jquery-1.8.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/scripts.js"></script>
 </body>
 </html>
 

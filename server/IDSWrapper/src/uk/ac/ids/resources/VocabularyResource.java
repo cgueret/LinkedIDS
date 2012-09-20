@@ -19,9 +19,6 @@ public class VocabularyResource extends ServerResource {
 	// The vocabulary graph
 	private final Graph vocabulary = new Graph();
 
-	// The vocabulary term
-	private String vocabularyTerm = null;
-
 	// The name of the data set
 	private String datasetName = null;
 
@@ -33,7 +30,6 @@ public class VocabularyResource extends ServerResource {
 	@Override
 	protected void doInit() throws ResourceException {
 		// Get the attributes value taken from the URI template
-		vocabularyTerm = (String) getRequest().getAttributes().get("TERM");
 		datasetName = (String) getRequest().getAttributes().get("DB");
 
 		// Get the reference for the vocabulary namespace

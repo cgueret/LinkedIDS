@@ -139,5 +139,11 @@ public class DataSetMetadata {
 	public SearchTool getSearch() {
 		return search;
 	}
-
+	
+	/**
+	 * @return
+	 */
+	public boolean hasSearch() {
+		return search != null;
+	}
 }
