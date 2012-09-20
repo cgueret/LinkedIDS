@@ -38,6 +38,10 @@
 		api2lod:link "resource/Theme/C282";
 		rdfs:label "Theme 'Higher education' (includes a link to IATI linked data)";
 	];
+	api2lod:example [
+		api2lod:link "resource/Organisation/A60210";
+		rdfs:label "Organisation 'Care Climate Change Information Centre'";
+	];
 	api2lod:search [
 		api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/search/assets/short?&format=json&q={word}";
 		api2lod:resultPattern "resource/{object_type}/{object_id}";

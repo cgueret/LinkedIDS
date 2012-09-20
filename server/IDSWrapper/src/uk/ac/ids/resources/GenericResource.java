@@ -77,11 +77,10 @@ public class GenericResource extends ServerResource {
 	protected void doInit() throws ResourceException {
 		// Get the dataset name from the URI template
 		datasetName = (String) getRequest().getAttributes().get("DB");
-		
+
 		// Define the URI for the vocabulary
 		Reference vocabNS = new Reference(getRequest().getOriginalRef()
 				.getHostIdentifier() + "/" + datasetName + "/vocabulary#");
-
 
 		// Get the attributes value taken from the URI template
 		resourceID = (String) getRequest().getAttributes().get("ID");
@@ -159,16 +158,18 @@ public class GenericResource extends ServerResource {
 					}
 
 					// The target is an internal link
-					/*
-					 * else if (getApplication().getMappings(datasetName)
-					 * .isInternalType(valueType)) { String pattern =
-					 * getApplication().getMappings(
-					 * datasetName).getPatternFor(valueType); if (pattern !=
-					 * null) { Reference object = new Reference(pattern.replace(
-					 * "{id}", value)); if (object.isRelative())
-					 * object.setBaseRef(vocabNS); graph.add(resource,
-					 * predicate, object); } }
-					 */
+					else if (getApplication().getDataSet(datasetName)
+							.isInternalType(valueType)) {
+						logger.info("Internal " + valueType);
+						String pattern = "resource/";
+						pattern += valueType.toString().substring(1);
+						pattern += "/" + value;
+						Reference target = new Reference(pattern);
+						if (target.isRelative())
+							target.setBaseRef(vocabNS);
+
+						graph.add(resource, predicate, target);
+					}
 
 					// Otherwise, add a plain literal
 					else {
@@ -240,7 +241,7 @@ public class GenericResource extends ServerResource {
 					.getPatternFor(resourceType);
 			URL url = new URL(query.replace("{id}", resourceID));
 			logger.info("Query " + url);
-			
+
 			// Get the API key
 			String api_key = Parameters.getInstance().get(Parameters.API_KEY);
 
@@ -263,22 +264,23 @@ public class GenericResource extends ServerResource {
 			JsonElement element = parser.parse(response.toString());
 			if (!element.isJsonObject())
 				return;
-			logger.info("a:"+element.toString());
-			
+			logger.info("a:" + element.toString());
+
 			// Check if there is a specific root to use
-			String root = getApplication().getDataSet(datasetName).getResultRoot(resourceType);
-			logger.info("Get root "+root);
-			
+			String root = getApplication().getDataSet(datasetName)
+					.getResultRoot(resourceType);
+			logger.info("Get root " + root);
+
 			if (root != null)
-				 element = ((JsonObject) element).get(root);
+				element = ((JsonObject) element).get(root);
 			if (!element.isJsonObject())
 				return;
-			logger.info("b:"+element.toString());
-			
+			logger.info("b:" + element.toString());
+
 			for (Entry<String, JsonElement> entry : ((JsonObject) element)
 					.entrySet()) {
 				logger.info(entry.toString());
-				
+
 				// Ignore the objects
 				if (entry.getValue().isJsonObject())
 					continue;
@@ -314,10 +316,10 @@ public class GenericResource extends ServerResource {
 		Namespaces namespaces = getApplication().getNamespaces();
 
 		// TODO move creation of ids namespace at creation time
-		if (!namespaces.isRegistered(datasetName+":")) {
+		if (!namespaces.isRegistered(datasetName + ":")) {
 			Reference ns = new Reference(getRequest().getOriginalRef()
 					.getHostIdentifier() + "/" + datasetName + "/vocabulary#");
-			namespaces.register(ns.toString(), datasetName+":");
+			namespaces.register(ns.toString(), datasetName + ":");
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
