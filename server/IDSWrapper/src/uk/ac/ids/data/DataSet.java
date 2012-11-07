@@ -222,11 +222,14 @@ public class DataSet implements Iterable<Link> {
 												.getValue();
 								}
 							}
-							if (paramValueKey.startsWith("#"))
-								params.put(paramKey,
-										keyValuePairs.get(paramValueKey).get(0));
-							else
+							if (paramValueKey.startsWith("#")) {
+								ArrayList<String> values = keyValuePairs
+										.get(paramValueKey);
+								if (values != null)
+									params.put(paramKey, values.get(0));
+							} else {
 								params.put(paramKey, paramValueKey);
+							}
 						}
 					}
 				}
@@ -251,12 +254,8 @@ public class DataSet implements Iterable<Link> {
 							targetGraph.add(resource, linkerPredicate, ref);
 						}
 					}
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					logger.warning("Exception in DataSet");
 				}
 			}
 		}

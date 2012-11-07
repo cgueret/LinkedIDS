@@ -1,10 +1,9 @@
 package uk.ac.ids.resources;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,27 +15,24 @@ import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.rdf.Graph;
+import org.restlet.ext.rdf.Link;
 import org.restlet.ext.rdf.Literal;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Triple;
 
 import uk.ac.ids.Main;
 import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.data.Parameters;
 import uk.ac.ids.linker.LinkerParameters;
-import uk.ac.ids.linker.impl.DBpedia;
 import uk.ac.ids.linker.impl.IATI;
 import uk.ac.ids.linker.impl.Lexvo;
 import uk.ac.ids.linker.impl.ThemeChildren;
+import uk.ac.ids.util.DataHarvester;
 import uk.ac.ids.vocabulary.OWL;
 import uk.ac.ids.vocabulary.RDFS;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 // http://wiki.restlet.org/docs_2.1/13-restlet/28-restlet/270-restlet/245-restlet.html
 
@@ -98,7 +94,18 @@ public class GenericResource extends ServerResource {
 		resource = new Reference(getRequest().getOriginalRef().toUri());
 
 		// Load the key-values pairs from the JSON API
-		loadKeyValuePairs();
+		try {
+			DataHarvester d = new DataHarvester();
+			String query = getApplication().getDataSet(datasetName)
+					.getPatternFor(resourceType);
+			d.setURL(new URL(query.replace("{id}", resourceID)));
+			String api_key = Parameters.getInstance().get(Parameters.API_KEY);
+			d.setKey(api_key);
+			d.setRoot(getApplication().getDataSet(datasetName).getResultRoot(
+					resourceType));
+			keyValuePairs = d.getKeyValuePairs();
+		} catch (Exception e) {
+		}
 
 		// Process them
 		for (Entry<String, ArrayList<String>> keyValuePair : keyValuePairs
@@ -185,9 +192,9 @@ public class GenericResource extends ServerResource {
 		}
 
 		// Look for linking services and apply them
-		getApplication().getDataSet(datasetName).applyLinkers(getRequest().getOriginalRef()
-				.getHostIdentifier(), graph, resource,
-				resourceType, keyValuePairs, vocabNS);
+		getApplication().getDataSet(datasetName).applyLinkers(
+				getRequest().getOriginalRef().getHostIdentifier(), graph,
+				resource, resourceType, keyValuePairs, vocabNS);
 
 		// Link Theme to IATI
 		if (resourceType.equals("theme")) {
@@ -232,80 +239,52 @@ public class GenericResource extends ServerResource {
 		return (Main) super.getApplication();
 	}
 
-	/**
-	 * Load the key values pairs from the JSON API
+	/*
+	 * private void loadKeyValuePairs() { try { // Compose the URL String query
+	 * = getApplication().getDataSet(datasetName) .getPatternFor(resourceType);
+	 * URL url = new URL(query.replace("{id}", resourceID));
+	 * logger.info("Query " + url);
+	 * 
+	 * // Get the API key String api_key =
+	 * Parameters.getInstance().get(Parameters.API_KEY);
+	 * 
+	 * // Issue the API request StringBuffer response = new StringBuffer();
+	 * HttpURLConnection connection = (HttpURLConnection) url .openConnection();
+	 * connection.setRequestProperty("Token-Guid", api_key); BufferedReader
+	 * reader = new BufferedReader(new InputStreamReader(
+	 * connection.getInputStream())); String line; while ((line =
+	 * reader.readLine()) != null) { response.append(line); } reader.close();
+	 * logger.info("Response " + response.toString());
+	 * 
+	 * // Parse the response JsonParser parser = new JsonParser(); JsonElement
+	 * element = parser.parse(response.toString()); if (!element.isJsonObject())
+	 * return; logger.info("a:" + element.toString());
+	 * 
+	 * // Check if there is a specific root to use String root =
+	 * getApplication().getDataSet(datasetName) .getResultRoot(resourceType);
+	 * logger.info("Get root " + root);
+	 * 
+	 * if (root != null) element = ((JsonObject) element).get(root); if
+	 * (!element.isJsonObject()) return; logger.info("b:" + element.toString());
+	 * 
+	 * for (Entry<String, JsonElement> entry : ((JsonObject) element)
+	 * .entrySet()) { logger.info(entry.toString());
+	 * 
+	 * // Ignore the objects if (entry.getValue().isJsonObject()) continue;
+	 * 
+	 * // Prepare the list of values ArrayList<String> values = new
+	 * ArrayList<String>();
+	 * 
+	 * // Store all the entries of the array if (entry.getValue().isJsonArray())
+	 * for (JsonElement v : (JsonArray) entry.getValue()) if
+	 * (v.isJsonPrimitive()) values.add(v.getAsString());
+	 * 
+	 * // Store the single value if (entry.getValue().isJsonPrimitive())
+	 * values.add(entry.getValue().getAsString());
+	 * 
+	 * // Store the keyValuePairs.put("#" + entry.getKey(), values); } } catch
+	 * (Exception e) { e.printStackTrace(); } }
 	 */
-	private void loadKeyValuePairs() {
-		try {
-			// Compose the URL
-			String query = getApplication().getDataSet(datasetName)
-					.getPatternFor(resourceType);
-			URL url = new URL(query.replace("{id}", resourceID));
-			logger.info("Query " + url);
-
-			// Get the API key
-			String api_key = Parameters.getInstance().get(Parameters.API_KEY);
-
-			// Issue the API request
-			StringBuffer response = new StringBuffer();
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection();
-			connection.setRequestProperty("Token-Guid", api_key);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					connection.getInputStream()));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				response.append(line);
-			}
-			reader.close();
-			logger.info("Response " + response.toString());
-
-			// Parse the response
-			JsonParser parser = new JsonParser();
-			JsonElement element = parser.parse(response.toString());
-			if (!element.isJsonObject())
-				return;
-			logger.info("a:" + element.toString());
-
-			// Check if there is a specific root to use
-			String root = getApplication().getDataSet(datasetName)
-					.getResultRoot(resourceType);
-			logger.info("Get root " + root);
-
-			if (root != null)
-				element = ((JsonObject) element).get(root);
-			if (!element.isJsonObject())
-				return;
-			logger.info("b:" + element.toString());
-
-			for (Entry<String, JsonElement> entry : ((JsonObject) element)
-					.entrySet()) {
-				logger.info(entry.toString());
-
-				// Ignore the objects
-				if (entry.getValue().isJsonObject())
-					continue;
-
-				// Prepare the list of values
-				ArrayList<String> values = new ArrayList<String>();
-
-				// Store all the entries of the array
-				if (entry.getValue().isJsonArray())
-					for (JsonElement v : (JsonArray) entry.getValue())
-						if (v.isJsonPrimitive())
-							values.add(v.getAsString());
-
-				// Store the single value
-				if (entry.getValue().isJsonPrimitive())
-					values.add(entry.getValue().getAsString());
-
-				// Store the
-				keyValuePairs.put("#" + entry.getKey(), values);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Returns an HTML representation of the resource
@@ -323,9 +302,20 @@ public class GenericResource extends ServerResource {
 			namespaces.register(ns.toString(), datasetName + ":");
 		}
 
+		// Sort the triples
+		List<Link> triples = new ArrayList<Link>();
+		for (Link t : graph)
+			triples.add(t);
+		Collections.sort(triples, new Comparator<Link>() {
+			public int compare(Link a, Link b) {
+				return a.getTypeRef().toString()
+						.compareTo(b.getTypeRef().toString());
+			}
+		});
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("resource", resource);
-		map.put("triples", graph);
+		map.put("triples", triples);
 		map.put("ns", namespaces);
 
 		return new TemplateRepresentation("resource.html", getApplication()
