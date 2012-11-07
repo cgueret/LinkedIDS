@@ -113,7 +113,8 @@ public class DataHarvester {
 				list = new ArrayList<String>();
 				results.put(key, list);
 			}
-			list.add(element.getAsString());
+			if (!element.getAsString().equals(""))
+				list.add(element.getAsString());
 		}
 	}
 
