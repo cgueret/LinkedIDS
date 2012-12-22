@@ -248,7 +248,7 @@ public class DataSet implements Iterable<Link> {
 					if (linker != null) {
 						for (Reference ref : linker.getResource(params)) {
 							if (ref.isRelative()) {
-								logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+								logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + ref);
 								ref = new Reference(ns + "/" + ref);
 							}
 							targetGraph.add(resource, linkerPredicate, ref);

@@ -45,6 +45,6 @@
 	api2lod:search [
 		api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/search/assets/short?&format=json&q={word}";
 		api2lod:resultPattern "resource/{object_type}/{object_id}";
-		rdfs:label "{title} ({object_type})";
+		rdfs:label "[{object_type}] {title}";
 	]
 	.

@@ -21,17 +21,14 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
-import org.restlet.util.Triple;
 
 import uk.ac.ids.Main;
 import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.data.Parameters;
 import uk.ac.ids.linker.LinkerParameters;
-import uk.ac.ids.linker.impl.IATI;
 import uk.ac.ids.linker.impl.Lexvo;
 import uk.ac.ids.linker.impl.ThemeChildren;
 import uk.ac.ids.util.DataHarvester;
-import uk.ac.ids.vocabulary.OWL;
 import uk.ac.ids.vocabulary.RDFS;
 
 // http://wiki.restlet.org/docs_2.1/13-restlet/28-restlet/270-restlet/245-restlet.html
@@ -197,18 +194,20 @@ public class GenericResource extends ServerResource {
 				resource, resourceType, keyValuePairs, vocabNS);
 
 		// Link Theme to IATI
+		/*
 		if (resourceType.equals("theme")) {
 			IATI iati = new IATI();
 			String children_url = keyValuePairs.get("#title").get(0);
 			LinkerParameters params = new LinkerParameters();
-			params.put(IATI.THEME_TITLE, children_url);
+			params.put(IATI.TITLE, children_url);
 			List<Reference> target = iati.getResource(params);
 			if (target != null)
 				for (Reference r : target) {
 					graph.add(resource, OWL.SAME_AS, r);
 				}
 		}
-
+*/
+		
 		// Link to Theme's children
 		// TODO move that configuration in a ttl file, fix OWL sameas
 		if (resourceType.equals("theme")) {

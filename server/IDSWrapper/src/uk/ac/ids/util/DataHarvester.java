@@ -29,7 +29,7 @@ public class DataHarvester {
 
 	// The resultRoot
 	private String resultRoot = null;
-	
+
 	/**
 	 * @param url
 	 */
@@ -51,8 +51,6 @@ public class DataHarvester {
 	public Map<String, ArrayList<String>> getKeyValuePairs() throws IOException {
 		Map<String, ArrayList<String>> results = new HashMap<String, ArrayList<String>>();
 
-		logger.info("Query " + url);
-
 		// Issue the API request
 		StringBuffer response = new StringBuffer();
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -65,7 +63,6 @@ public class DataHarvester {
 			response.append(line);
 		}
 		reader.close();
-		logger.info("Response " + response.toString());
 
 		// Parse the response
 		JsonParser parser = new JsonParser();
@@ -92,13 +89,10 @@ public class DataHarvester {
 
 		else if (element.isJsonArray()) {
 			JsonArray array = element.getAsJsonArray();
-			if (array.size() < 2) {
-			// TODO: Find a better model for verbose descriptions, just cut now
-				for (int i = 0; i < array.size(); i++) {
-					JsonElement v = array.get(i);
-					String newRoot = root + i + ".";
-					parseElement(newRoot, v, results);
-				}
+			for (int i = 0; i < array.size(); i++) {
+				JsonElement v = array.get(i);
+				String newRoot = root + i + ".";
+				parseElement(newRoot, v, results);
 			}
 		}
 

@@ -14,8 +14,6 @@
 @prefix api2lod:  <http://api2lod.appspot.com/vocabulary#> .
 @prefix owl:      <http://www.w3.org/2002/07/owl#> .
 
-# ---------------------------  Country --------------------------------
-
 :Organisation
 	a rdfs:Class ;
 	rdfs:label "Organisation" ;
@@ -45,3 +43,19 @@
 	a rdf:Class;
 	rdfs:label "Activity";
 	api2lod:pattern "http://oipa.openaidsearch.org/api/v2/activities/{id}".
+	
+:Sector
+	a rdf:Class;
+	rdfs:label "Sector";
+	api2lod:pattern "http://oipa.openaidsearch.org/api/v2/sectors/{id}".
+
+:Organisation
+	a rdf:Class;
+	rdfs:label "Organisation";
+	api2lod:pattern "http://oipa.openaidsearch.org/api/v2/organisations/{id}".
+
+:Item
+	a rdf:Class;
+	rdfs:label "Item";
+	api2lod:pattern "http://oipa.openaidsearch.org/api/v2/items/{id}".
+	
