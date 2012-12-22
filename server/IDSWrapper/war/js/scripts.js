@@ -1,6 +1,6 @@
-function doSearch() {
+function doSearch(datasetName) {
 	$("#search_results").empty();
-	$.getJSON('./eldis-ids/search/' + $("#searchTerm").val(), function(data) {
+	$.getJSON('./' + datasetName + '/search/' + $("#searchTerm").val(), function(data) {
 		if (data.results.length > 0) {
 			var message = $("<div>").attr("class","alert alert-success").text(data.results.length + " results !");
 			$("#search_results").append(message);

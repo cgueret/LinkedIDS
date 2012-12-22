@@ -93,7 +93,6 @@ public class SearchTool {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 		return results;

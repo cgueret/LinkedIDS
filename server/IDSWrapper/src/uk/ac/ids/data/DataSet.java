@@ -38,20 +38,29 @@ public class DataSet implements Iterable<Link> {
 	// The context in which the mappings are used
 	private final Context context;
 
+	// The name of the data set
+	private final String datasetName;
+	
+	// The metadata for this data set
+	private final DataSetMetadata metadata;
+	
 	// The RDF graph that stores all the mappings
 	private Graph graph = new Graph();
 
-	// The metadata for this data set
-	private final DataSetMetadata metadata = new DataSetMetadata();
 
 	/**
 	 * 
 	 */
-
-	public DataSet(Context context, String datasetDirectory) {
+	public DataSet(Context context, String datasetName, String datasetDirectory) {
 		// Save a pointer to the context
 		this.context = context;
 
+		// Save the dataSet name
+		this.datasetName = datasetName;
+		
+		// The metadata for this data set
+		this.metadata = new DataSetMetadata(this.datasetName);
+		
 		// Get the internal client
 		Restlet client = context.getClientDispatcher();
 

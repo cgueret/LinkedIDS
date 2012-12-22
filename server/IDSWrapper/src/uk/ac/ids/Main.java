@@ -106,7 +106,7 @@ public class Main extends Application {
 		// If this is the first time we ask for this data set, load its
 		// configuration
 		if (!mappings.containsKey(datasetName)) {
-			DataSet mapping = new DataSet(getContext(), Constants.MAPPINGS_DIR + datasetName + "/");
+			DataSet mapping = new DataSet(getContext(), datasetName, Constants.MAPPINGS_DIR + datasetName + "/");
 			mappings.put(datasetName, mapping);
 		}
 

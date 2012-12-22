@@ -34,7 +34,7 @@ body {
 			<img style="float: right; display: block"
 				src="${meta.getDepiction()}" class="img-polaroid" />
 			<h1>${meta.getLabel()}</h1>
-			<p>${meta.getDescription()}d</p>
+			<p>${meta.getDescription()}</p>
 			<p>
 				<a class="btn btn-primary btn-large" href="${meta.getApiURL()}">Visit
 					the API page</a>
@@ -66,7 +66,7 @@ body {
 							<input onkeydown="javascript:update(event)" id="searchTerm"
 								type="text" class="span2"
 								style="height: 30px; margin-bottom: 0px;">
-							<button onclick="javascript:doSearch()" class="btn btn-primary"
+							<button onclick="javascript:doSearch('${meta.getDatasetName()}')" class="btn btn-primary"
 								value="Get Results">
 								<i class="icon-search icon-white"></i>Search
 							</button>

@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import org.restlet.data.Reference;
 import org.restlet.ext.rdf.Graph;
@@ -25,6 +26,12 @@ import uk.ac.ids.vocabulary.WRAPPER;
  * 
  */
 public class DataSetMetadata {
+	// Logger instance
+	protected static final Logger logger = Logger.getLogger(DataSetMetadata.class.getName());
+	
+	// The name of the data set
+	private final String datasetName;
+	
 	private String label = "";
 	private String description = "";
 	private String apiURL = "";
@@ -32,6 +39,13 @@ public class DataSetMetadata {
 	private Map<String, String> examples = new HashMap<String, String>();
 	private SearchTool search = null;
 	
+	/**
+	 * @param datasetName
+	 */
+	public DataSetMetadata(String datasetName) {
+		this.datasetName = datasetName;
+	}
+
 	/**
 	 * @param entity
 	 * @throws IOException
@@ -93,6 +107,7 @@ public class DataSetMetadata {
 							resultFormat = l2.getTargetAsLiteral().getValue();
 					}
 				}
+				logger.info("Found search " + searchPattern);
 				search = new SearchTool(searchPattern, searchResultPattern, resultFormat);
 			}
 		}
@@ -144,6 +159,10 @@ public class DataSetMetadata {
 	 * @return
 	 */
 	public boolean hasSearch() {
-		return search != null;
+		return (search != null);
+	}
+
+	public String getDatasetName() {
+		return datasetName;
 	}
 }

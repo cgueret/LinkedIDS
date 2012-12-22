@@ -32,7 +32,7 @@
 	];
 	api2lod:search [
 		api2lod:pattern "http://oipa.openaidsearch.org/api/v2/activities/?format=json&query={word}";
-		api2lod:resultPattern "resource/Activities/{iati_identifier}";
+		api2lod:resultPattern "resource/Activity/{iati_identifier}";
 		rdfs:label "[Activity] ({iati_identifier})";
 	].
 	
