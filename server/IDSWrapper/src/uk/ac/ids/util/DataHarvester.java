@@ -89,9 +89,19 @@ public class DataHarvester {
 
 		else if (element.isJsonArray()) {
 			JsonArray array = element.getAsJsonArray();
+
+			// Look if there is any complex element in the array
+			boolean complex = false;
+			for (int i = 0; i < array.size(); i++)
+				if (!array.get(i).isJsonPrimitive())
+					complex = true;
+
 			for (int i = 0; i < array.size(); i++) {
 				JsonElement v = array.get(i);
 				String newRoot = root + i + ".";
+				if (!complex) {
+					newRoot = root;
+				}
 				parseElement(newRoot, v, results);
 			}
 		}
