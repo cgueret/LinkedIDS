@@ -29,7 +29,7 @@
 		rdf:predicate owl:sameAs . 
 	];
 	api2lod:matcher [
-		api2lod:matcherName "uk.ac.ids.linker.impl.IATI";
+		api2lod:matcherName "uk.ac.ids.linker.impl.IATISector";
 		api2lod:parameter [
 			api2lod:parameterKey "title";
 			api2lod:parameterValue "#title";

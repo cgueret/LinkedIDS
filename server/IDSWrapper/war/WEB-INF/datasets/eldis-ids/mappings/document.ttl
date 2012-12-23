@@ -28,12 +28,6 @@
 	rdfs:label "Region of the document" ;
 	rdfs:subPropertyOf dcterms:coverage.
 	
-:category_theme_ids
-	a rdf:Property ;
-	rdfs:domain :Document ;
-	rdfs:range :Theme ;
-	rdfs:label "Theme of the document" ;
-	rdfs:subPropertyOf dcterms:subject.
 	
 :category_theme_objects
 	a :IgnoredProperty .

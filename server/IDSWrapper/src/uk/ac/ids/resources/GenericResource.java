@@ -27,7 +27,7 @@ import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.data.Parameters;
 import uk.ac.ids.linker.LinkerParameters;
 import uk.ac.ids.linker.impl.Lexvo;
-import uk.ac.ids.linker.impl.ThemeChildren;
+import uk.ac.ids.linker.impl.ELDISThemeChildren;
 import uk.ac.ids.util.DataHarvester;
 import uk.ac.ids.vocabulary.RDFS;
 
@@ -211,11 +211,11 @@ public class GenericResource extends ServerResource {
 		// Link to Theme's children
 		// TODO move that configuration in a ttl file, fix OWL sameas
 		if (resourceType.equals("theme")) {
-			ThemeChildren ch = new ThemeChildren(getRequest().getOriginalRef()
+			ELDISThemeChildren ch = new ELDISThemeChildren(getRequest().getOriginalRef()
 					.getHostIdentifier());
 			String children_url = keyValuePairs.get("#children_url").get(0);
 			LinkerParameters params = new LinkerParameters();
-			params.put(ThemeChildren.CHILDREN_URL, children_url);
+			params.put(ELDISThemeChildren.CHILDREN_URL, children_url);
 			List<Reference> target = ch.getResource(params);
 			Reference predicate = new Reference("#child");
 			predicate.setBaseRef(vocabNS);
