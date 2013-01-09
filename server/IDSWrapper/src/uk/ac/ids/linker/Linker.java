@@ -65,7 +65,7 @@ public abstract class Linker {
 	 */
 	@SuppressWarnings("deprecation")
 	private List<Reference> getFromCache(LinkerParameters parameters)
-			throws EntityNotFoundException {
+			throws EntityNotFoundException, NullPointerException{
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 
