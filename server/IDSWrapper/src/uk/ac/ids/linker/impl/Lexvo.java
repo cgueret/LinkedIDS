@@ -43,7 +43,7 @@ public class Lexvo extends Linker {
 	 * uk.ac.ids.linker.Linker#getFromService(uk.ac.ids.linker.LinkerParameters)
 	 */
 	@Override
-	protected List<Reference> getFromService(LinkerParameters parameters) {
+	public List<Reference> getFromService(LinkerParameters parameters) {
 		// Get the main page of the language
 		String targetStr = LexvoIdentifiersAPI.getTermURI(parameters.get(LANG_NAME), parameters.get(LANG_NAME_LOCALE));
 		Reference target = new Reference(targetStr);
