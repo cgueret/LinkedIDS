@@ -215,7 +215,14 @@ public class RdfXmlWriter extends GraphHandler {
 
     @Override
     public void startGraph() throws IOException {
-        this.writer.setPrefix(RDF_SYNTAX, "rdf");
+        // this.writer.setPrefix(RDF_SYNTAX, "rdf");
+        // TODO Improve that and push upstream
+        this.writer.setPrefix("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf");
+        this.writer.setPrefix("http://www.w3.org/2000/01/rdf-schema#", "rdfs");
+        this.writer.setPrefix("http://www.w3.org/2002/07/owl#", "owl");
+        this.writer.setPrefix("http://purl.org/dc/elements/1.1/", "dc");
+        this.writer.setPrefix("http://www.w3.org/2001/XMLSchema#", "xsd");
+
         this.writer.setPrefix(RdfConstants.XML_SCHEMA.toString(true, true),
                 "type");
         writer.setDataFormat(true);

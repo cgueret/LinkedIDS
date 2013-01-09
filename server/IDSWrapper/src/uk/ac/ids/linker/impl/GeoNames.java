@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,11 +22,6 @@ import org.xml.sax.InputSource;
 
 import uk.ac.ids.linker.Linker;
 import uk.ac.ids.linker.LinkerParameters;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 /**
  * @author Christophe Gueret <christophe.gueret@gmail.com>
@@ -104,7 +98,8 @@ public class GeoNames extends Linker {
 					if (results.item(i).getTextContent() != null) {
 						String uri = results.item(i).getTextContent();
 
-						res.add(new Reference("http://sws.geonames.org/" + uri));
+						res.add(new Reference("http://sws.geonames.org/" + uri
+								+ "/"));
 					}
 
 				}

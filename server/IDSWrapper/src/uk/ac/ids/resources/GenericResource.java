@@ -328,6 +328,7 @@ public class GenericResource extends ServerResource {
 	 */
 	@Get("rdf")
 	public Representation toRDFXML() {
+		
 		return graph.getRdfXmlRepresentation();
 	}
 
