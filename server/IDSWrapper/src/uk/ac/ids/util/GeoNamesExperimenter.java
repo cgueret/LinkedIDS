@@ -28,17 +28,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import uk.ac.ids.data.Parameters;
-import uk.ac.ids.linker.Linker;
-import uk.ac.ids.linker.LinkerParameters;
-import uk.ac.ids.linker.impl.DBpedia;
-import uk.ac.ids.linker.impl.IATI;
-import uk.ac.ids.vocabulary.OWL;
 
 public class GeoNamesExperimenter {
 	

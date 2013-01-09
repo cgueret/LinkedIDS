@@ -31,7 +31,6 @@ import uk.ac.ids.data.Parameters;
 import uk.ac.ids.linker.Linker;
 import uk.ac.ids.linker.LinkerParameters;
 import uk.ac.ids.linker.impl.DBpedia;
-import uk.ac.ids.linker.impl.IATI;
 import uk.ac.ids.vocabulary.OWL;
 
 public class IATIExperimenter {
