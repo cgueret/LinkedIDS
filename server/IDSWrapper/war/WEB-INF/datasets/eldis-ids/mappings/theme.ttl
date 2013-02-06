@@ -20,33 +20,39 @@
 	a rdfs:Class;
 	api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/get/themes/{id}/full";
 	api2lod:resultRoot "results";
-	api2lod:matcher [
-		api2lod:matcherName "uk.ac.ids.linker.impl.DBpedia";
-		api2lod:parameter [
-			api2lod:parameterKey "title";
-			api2lod:parameterValue "#title";
-		];
-		rdf:predicate owl:sameAs . 
-	];
-	api2lod:matcher [
-		api2lod:matcherName "uk.ac.ids.linker.impl.IATISector";
-		api2lod:parameter [
-			api2lod:parameterKey "title";
-			api2lod:parameterValue "#title";
-		];
-		rdf:predicate owl:sameAs . 
-	];
-	api2lod:matcher [
-		api2lod:matcherName "uk.ac.ids.linker.impl.ELDISThemeChildren";
-		api2lod:parameter [
-			api2lod:parameterKey "children_url";
-			api2lod:parameterValue "#children_url";
-		];
-		rdf:predicate skos:narrower . 
-	];
+	api2lod:matcher :themeDBpedia;
+	api2lod:matcher :themeIATI;
+	api2lod:matcher :themeELDIS;
 	rdfs:subClassOf skos:Concept;
 	rdfs:label "Theme".
 
+:themeDBpedia
+	api2lod:matcherName "uk.ac.ids.linker.impl.DBpedia";
+	api2lod:parameter :themeDBpediaTitle;
+	rdf:predicate owl:sameAs . 
+
+:themeDBpediaTitle
+	api2lod:parameterKey "dbpedia_title";
+	api2lod:parameterValue "#title".
+
+:themeIATI
+	api2lod:matcherName "uk.ac.ids.linker.impl.IATISector";
+	api2lod:parameter :themeIATITitle;
+	rdf:predicate owl:sameAs . 
+
+:themeIATITitle
+	api2lod:parameterKey "title";
+	api2lod:parameterValue "#title".
+
+:themeELDIS
+	api2lod:matcherName "uk.ac.ids.linker.impl.ELDISThemeChildren";
+	api2lod:parameter :themeELDISUrl;
+	rdf:predicate skos:narrower . 
+	
+:themeELDISUrl
+	api2lod:parameterKey "children_url";
+	api2lod:parameterValue "#children_url".
+	
 :cat_parent
 	a rdf:Property ; 
 	rdfs:range :Theme ;

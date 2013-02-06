@@ -48,16 +48,16 @@ public class GeoNames extends Linker {
 	 */
 	@Override
 	protected List<Reference> getFromService(LinkerParameters parameters) {
+		List<Reference> res = new ArrayList<Reference>();
+		
 		if (!parameters.containsKey(COUNTRY_NAME)
 				|| !parameters.containsKey(COUNTRY_CODE))
-			return null;
+			return res;
 
 		String countryName = parameters.get(COUNTRY_NAME);
 		String countryCode = parameters.get(COUNTRY_CODE);
 
 		try {
-			List<Reference> res = new ArrayList<Reference>();
-
 			StringBuffer urlString = new StringBuffer(API);
 
 			urlString.append("name_equals=").append(

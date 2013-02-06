@@ -21,19 +21,22 @@
 	rdfs:label "Country" ;
 	api2lod:pattern "http://api.ids.ac.uk/openapi/eldis/get/countries/{id}/full";
 	api2lod:resultRoot "results";
-	api2lod:matcher [
-		api2lod:matcherName "uk.ac.ids.linker.impl.GeoNames";
-		api2lod:parameter [
-			api2lod:parameterKey "countryName";
-			api2lod:parameterValue "#country_name";
-		];
-		api2lod:parameter [
-			api2lod:parameterKey "countryCode";
-			api2lod:parameterValue "#iso_two_letter_code";
-		];
-		rdf:predicate owl:sameAs . 
-	];
+	api2lod:matcher :countryGeonames;
 	rdfs:subClassOf ontology:Feature.	#VIC: maybe make this equiv.class
+	
+:countryGeonames
+	api2lod:matcherName "uk.ac.ids.linker.impl.GeoNames";
+	api2lod:parameter :countryGeonamesName;
+	api2lod:parameter :countryGeonamesCode;
+	rdf:predicate owl:sameAs . 
+
+:countryGeonamesName
+	api2lod:parameterKey "countryName";
+	api2lod:parameterValue "#country_name".
+	
+:countryGeonamesCode
+	api2lod:parameterKey "countryCode";
+	api2lod:parameterValue "#iso_two_letter_code".
 	
 :alternative_name
 	a rdf:Property ;

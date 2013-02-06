@@ -36,9 +36,9 @@ public class DBpedia extends Linker {
 	protected static final Logger logger = Logger.getLogger(DBpedia.class.getName());
 
 	// Parameters
-	public static final String THEME_TITLE = "title";
+	public static final String THEME_TITLE = "dbpedia_title";
 
-	// API to query geoname
+	// API to query DBpedia
 	private final static String API = "http://dbpedia.org/sparql?";
 
 	/*
@@ -51,10 +51,13 @@ public class DBpedia extends Linker {
 	protected List<Reference> getFromService(LinkerParameters parameters) {
 		List<Reference> res = new ArrayList<Reference>();
 		
+		System.out.println("fsdfsgsg");
+		
 		if (!parameters.containsKey(THEME_TITLE))
-			return null;
+			return res;
 
 		String themeTitle = parameters.get(THEME_TITLE);
+		System.out.println(themeTitle);
 
 		// Build the sparql query: limit to 5 (could be one)
 		String sparqlQuery = "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>";
@@ -63,7 +66,8 @@ public class DBpedia extends Linker {
 		sparqlQuery += "select distinct ?Concept where  {?Concept rdfs:label \"";
 		sparqlQuery += themeTitle;
 		sparqlQuery += "\"@en .}  LIMIT 5";
-
+		System.out.println(sparqlQuery);
+		
 		// ?Concept rdf:type skos:Concept.
 
 		try {

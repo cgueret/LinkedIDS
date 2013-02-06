@@ -36,9 +36,11 @@ public class IATISector extends Linker {
 	 */
 	@Override
 	protected List<Reference> getFromService(LinkerParameters parameters) {
+		List<Reference> res = new ArrayList<Reference>();
+
 		// Get the parameter
 		if (!parameters.containsKey(TITLE))
-			return null;
+			return res;
 		String title = parameters.get(TITLE);
 
 		try {
@@ -53,7 +55,6 @@ public class IATISector extends Linker {
 			// Return the code
 			if (codeMap.containsKey(title)) {
 				String root = parameters.get("API2LOD");
-				List<Reference> res = new ArrayList<Reference>();
 				Reference r = new Reference(root + "/oipa/resource/Sector/"
 						+ codeMap.get(title));
 				res.add(r);
@@ -61,9 +62,10 @@ public class IATISector extends Linker {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return res;
 		}
-		return null;
+		
+		return res;
 	}
 
 	/**

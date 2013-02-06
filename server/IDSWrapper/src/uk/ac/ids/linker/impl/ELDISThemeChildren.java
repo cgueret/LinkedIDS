@@ -63,14 +63,12 @@ public class ELDISThemeChildren extends Linker {
 			}
 			reader.close();
 			String r = response.toString();
-			System.out.println(r);
 			
 			// Parse the response
 			JsonParser parser = new JsonParser();
 			JsonElement e = parser.parse(r);
 
 			JsonElement results = ((JsonObject) e).get("results");
-			System.out.println(results);
 			
 			if (results.isJsonArray()) {
 				for (JsonElement elt : (JsonArray) results) {

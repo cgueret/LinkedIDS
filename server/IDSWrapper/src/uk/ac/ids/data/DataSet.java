@@ -40,13 +40,12 @@ public class DataSet implements Iterable<Link> {
 
 	// The name of the data set
 	private final String datasetName;
-	
+
 	// The metadata for this data set
 	private final DataSetMetadata metadata;
-	
+
 	// The RDF graph that stores all the mappings
 	private Graph graph = new Graph();
-
 
 	/**
 	 * 
@@ -57,10 +56,10 @@ public class DataSet implements Iterable<Link> {
 
 		// Save the dataSet name
 		this.datasetName = datasetName;
-		
+
 		// The metadata for this data set
 		this.metadata = new DataSetMetadata(this.datasetName);
-		
+
 		// Get the internal client
 		Restlet client = context.getClientDispatcher();
 
@@ -198,75 +197,94 @@ public class DataSet implements Iterable<Link> {
 	public void applyLinkers(String hostIdentifier, Graph targetGraph,
 			Reference resource, Reference resourceType,
 			Map<String, ArrayList<String>> keyValuePairs, Reference ns) {
+
+		// First, find the matchers
+		List<Reference> linkers = new ArrayList<Reference>();
 		for (Link l : graph) {
 			if (l.getTypeRef().equals(WRAPPER.MATCHER)
 					&& l.getSource().toString().equals("#" + resourceType)) {
-				logger.info(l.getTarget().toString());
 				Reference matcherBNode = l.getTargetAsReference();
+				linkers.add(matcherBNode);
+			}
+		}
+
+		// Go through the matchers
+		for (Reference matcher : linkers) {
+			// Get the BNodes for the parameters
+			List<Reference> paramNodes = new ArrayList<Reference>();
+			for (Link l : graph) {
+				if (l.getSource().equals(matcher)
+						&& l.getTypeRef().equals(WRAPPER.PARAMETER))
+					paramNodes.add(l.getTargetAsReference());
+			}
+			
+			// Find the parameters
+			LinkerParameters params = new LinkerParameters();
+			for (Reference paramNode : paramNodes) {
+				String paramKey = null;
+				String paramValueKey = null;
+				for (Link l : graph) {
+					if (l.getSource().equals(paramNode)) {
+						if (l.getTypeRef().equals(WRAPPER.PARAMETER_KEY))
+							paramKey = l.getTargetAsLiteral().getValue();
+						
+						if (l.getTypeRef().equals(WRAPPER.PARAMETER_VALUE))
+							paramValueKey = l.getTargetAsLiteral().getValue();
+					}
+				}
+				if (paramValueKey.startsWith("#")) {
+					ArrayList<String> values = keyValuePairs
+							.get(paramValueKey);
+					if (values != null)
+						params.put(paramKey, values.get(0));
+				} else {
+					params.put(paramKey, paramValueKey);
+				}
+			}
+			
+			// Find the linker class
+			String linkerClass = null;
+			for (Link l : graph)
+				if (l.getSource().equals(matcher)
+						&& l.getTypeRef().equals(WRAPPER.MATCHER_NAME))
+					linkerClass = l.getTargetAsLiteral().getValue();
+
+			// Find the linker predicate
+			Reference linkerPredicate = null;
+			for (Link l : graph)
+				if (l.getSource().equals(matcher)
+						&& l.getTypeRef().equals(RDF.PREDICATE))
+					linkerPredicate = l.getTargetAsReference();
+			System.out.println("Predicate " + linkerPredicate.toString());
+
+			// Get the results
+			try {
+				// Instanciate the linker
 				logger.info("Found linker for " + resourceType + " | "
-						+ matcherBNode);
-				String linkerClass = null;
-				Reference linkerPredicate = null;
-				LinkerParameters params = new LinkerParameters();
-				for (Link l2 : graph) {
-					if (l2.getSource().equals(matcherBNode)) {
-						if (l2.getTypeRef().equals(WRAPPER.MATCHER_NAME))
-							linkerClass = l2.getTargetAsLiteral().getValue();
-						if (l2.getTypeRef().equals(RDF.PREDICATE))
-							linkerPredicate = l2.getTargetAsReference();
-						if (l2.getTypeRef().equals(WRAPPER.PARAMETER)) {
-							Reference parameterBNode = l2
-									.getTargetAsReference();
-							String paramKey = null;
-							String paramValueKey = null;
-							for (Link l3 : graph) {
-								if (l3.getSource().equals(parameterBNode)) {
-									if (l3.getTypeRef().equals(
-											WRAPPER.PARAMETER_KEY))
-										paramKey = l3.getTargetAsLiteral()
-												.getValue();
-									if (l3.getTypeRef().equals(
-											WRAPPER.PARAMETER_VALUE))
-										paramValueKey = l3.getTargetAsLiteral()
-												.getValue();
-								}
-							}
-							if (paramValueKey.startsWith("#")) {
-								ArrayList<String> values = keyValuePairs
-										.get(paramValueKey);
-								if (values != null)
-									params.put(paramKey, values.get(0));
-							} else {
-								params.put(paramKey, paramValueKey);
-							}
+						+ linkerClass);
+				Linker linker = (Linker) Class.forName(linkerClass)
+						.newInstance();
+
+				// Add the host identifier to the parameters
+				params.put("API2LOD", hostIdentifier);
+				// Add the linker name too
+				params.put("LINKER", linkerClass);
+
+				if (linkerPredicate.isRelative())
+					linkerPredicate.setBaseRef(ns);
+				if (linker != null) {
+					for (Reference ref : linker.getResource(params)) {
+						if (ref.isRelative()) {
+							logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+									+ ref);
+							ref = new Reference(ns + "/" + ref);
 						}
+						targetGraph.add(resource, linkerPredicate, ref);
 					}
 				}
-
-				try {
-					// Instanciate the linker
-					logger.info(linkerClass);
-					Linker linker = (Linker) Class.forName(linkerClass)
-							.newInstance();
-
-					// Add the host identifier to the parameters
-					params.put("API2LOD", hostIdentifier);
-
-					if (linkerPredicate.isRelative())
-						linkerPredicate.setBaseRef(ns);
-					if (linker != null) {
-						for (Reference ref : linker.getResource(params)) {
-							if (ref.isRelative()) {
-								logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + ref);
-								ref = new Reference(ns + "/" + ref);
-							}
-							targetGraph.add(resource, linkerPredicate, ref);
-						}
-					}
-				} catch (Exception e) {
-					logger.warning("Exception in DataSet");
+			} catch (Exception e) {
+				logger.warning("Exception in DataSet");
 				e.printStackTrace();
-				}
 			}
 		}
 	}
