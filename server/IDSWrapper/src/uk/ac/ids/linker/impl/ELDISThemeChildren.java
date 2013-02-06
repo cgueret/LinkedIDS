@@ -33,16 +33,6 @@ public class ELDISThemeChildren extends Linker {
 	// Parameters
 	public static final String CHILDREN_URL = "children_url";
 
-	// The host identifier
-	private final String hostIdentifier;
-
-	/**
-	 * @param hostIdentifier
-	 */
-	public ELDISThemeChildren(String hostIdentifier) {
-		this.hostIdentifier = hostIdentifier;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -72,19 +62,23 @@ public class ELDISThemeChildren extends Linker {
 				response.append(line);
 			}
 			reader.close();
-
+			String r = response.toString();
+			System.out.println(r);
+			
 			// Parse the response
 			JsonParser parser = new JsonParser();
-			JsonElement e = parser.parse(response.toString());
+			JsonElement e = parser.parse(r);
 
 			JsonElement results = ((JsonObject) e).get("results");
+			System.out.println(results);
+			
 			if (results.isJsonArray()) {
 				for (JsonElement elt : (JsonArray) results) {
 					if (elt.isJsonObject()) {
 						JsonObject obj = (JsonObject) elt;
 						String obj_id = obj.get("object_id").getAsString().toString();
 						if (obj_id.length() > 0) {
-							Reference child = new Reference(hostIdentifier + "/eldis/resource/theme/" + obj_id);
+							Reference child = new Reference(parameters.get("API2LOD") + "/eldis-ids/resource/Theme/" + obj_id);
 							res.add(child);
 						}
 					}
@@ -100,5 +94,4 @@ public class ELDISThemeChildren extends Linker {
 		return res;
 
 	}
-
 }

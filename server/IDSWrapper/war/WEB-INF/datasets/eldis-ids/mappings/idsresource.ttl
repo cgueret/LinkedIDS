@@ -44,8 +44,8 @@
 	
 :object_type
 	a rdf:Property ;
-	rdfs:domain :IDSResource ; 
-	rdfs:range :IDSClass;
+	rdfs:domain :IDSResource; 
+	rdfs:range rdfs:Resource;
 	rdfs:label "Object type" ; 
 	rdfs:subPropertyOf rdf:type;
 	rdfs:comment "type of the Resource (IDS-generic)".

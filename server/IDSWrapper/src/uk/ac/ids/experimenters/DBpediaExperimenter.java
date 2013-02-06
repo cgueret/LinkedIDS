@@ -1,9 +1,7 @@
-package uk.ac.ids.util;
+package uk.ac.ids.experimenters;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -13,8 +11,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,13 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import uk.ac.ids.data.Parameters;
-import uk.ac.ids.linker.Linker;
-import uk.ac.ids.linker.LinkerParameters;
-import uk.ac.ids.linker.impl.DBpedia;
-import uk.ac.ids.vocabulary.OWL;
-
-public class IATIExperimenter {
+public class DBpediaExperimenter {
 	
 		private final static String API = "http://dbpedia.org/sparql?";
 
@@ -120,7 +110,7 @@ public class IATIExperimenter {
 		
 		
 		public static void main(String[] args) throws IOException {
-        	IATIExperimenter d = new IATIExperimenter();
+        	DBpediaExperimenter d = new DBpediaExperimenter();
         	System.out.println("\n\n\nNEW EXPERIMENT\n\n\n");
         	String file_loc = "C:\\Users\\victor\\IDS project\\eldis_themes.xml";
 				  

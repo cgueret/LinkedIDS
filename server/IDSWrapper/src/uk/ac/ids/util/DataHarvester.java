@@ -101,8 +101,10 @@ public class DataHarvester {
 				String newRoot = root + i + ".";
 				if (!complex) {
 					newRoot = root;
+					parseElement(newRoot, v, results);
 				}
-				parseElement(newRoot, v, results);
+				//FIXME Disabled generating predicates with numbers in them
+				//parseElement(newRoot, v, results);
 			}
 		}
 

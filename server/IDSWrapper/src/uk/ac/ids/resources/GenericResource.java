@@ -27,7 +27,6 @@ import uk.ac.ids.data.Namespaces;
 import uk.ac.ids.data.Parameters;
 import uk.ac.ids.linker.LinkerParameters;
 import uk.ac.ids.linker.impl.Lexvo;
-import uk.ac.ids.linker.impl.ELDISThemeChildren;
 import uk.ac.ids.util.DataHarvester;
 import uk.ac.ids.vocabulary.RDFS;
 
@@ -158,6 +157,9 @@ public class GenericResource extends ServerResource {
 						Reference object = new Reference(value);
 						if (object.isRelative())
 							object.setBaseRef(vocabNS);
+						if (keyValuePair.getKey().equals("#object_type")) {
+							object = new Reference(vocabNS.toString() + type.toString());
+						}
 						graph.add(resource, predicate, object);
 					}
 
@@ -175,8 +177,8 @@ public class GenericResource extends ServerResource {
 						graph.add(resource, predicate, target);
 					}
 
-					// Otherwise, add a plain literal
 					else {
+						// Otherwise, add a plain literal
 						Literal object = new Literal(value);
 						graph.add(resource, predicate, object);
 					}
@@ -192,40 +194,7 @@ public class GenericResource extends ServerResource {
 		getApplication().getDataSet(datasetName).applyLinkers(
 				getRequest().getOriginalRef().getHostIdentifier(), graph,
 				resource, resourceType, keyValuePairs, vocabNS);
-
-		// Link Theme to IATI
-		/*
-		if (resourceType.equals("theme")) {
-			IATI iati = new IATI();
-			String children_url = keyValuePairs.get("#title").get(0);
-			LinkerParameters params = new LinkerParameters();
-			params.put(IATI.TITLE, children_url);
-			List<Reference> target = iati.getResource(params);
-			if (target != null)
-				for (Reference r : target) {
-					graph.add(resource, OWL.SAME_AS, r);
-				}
-		}
-*/
 		
-		// Link to Theme's children
-		// TODO move that configuration in a ttl file, fix OWL sameas
-		if (resourceType.equals("theme")) {
-			ELDISThemeChildren ch = new ELDISThemeChildren(getRequest().getOriginalRef()
-					.getHostIdentifier());
-			String children_url = keyValuePairs.get("#children_url").get(0);
-			LinkerParameters params = new LinkerParameters();
-			params.put(ELDISThemeChildren.CHILDREN_URL, children_url);
-			List<Reference> target = ch.getResource(params);
-			Reference predicate = new Reference("#child");
-			predicate.setBaseRef(vocabNS);
-			if (target != null) {
-				for (Reference r : target) {
-					graph.add(resource, predicate, r);
-				}
-			}
-		}
-
 	}
 
 	/*
@@ -237,53 +206,6 @@ public class GenericResource extends ServerResource {
 	public Main getApplication() {
 		return (Main) super.getApplication();
 	}
-
-	/*
-	 * private void loadKeyValuePairs() { try { // Compose the URL String query
-	 * = getApplication().getDataSet(datasetName) .getPatternFor(resourceType);
-	 * URL url = new URL(query.replace("{id}", resourceID));
-	 * logger.info("Query " + url);
-	 * 
-	 * // Get the API key String api_key =
-	 * Parameters.getInstance().get(Parameters.API_KEY);
-	 * 
-	 * // Issue the API request StringBuffer response = new StringBuffer();
-	 * HttpURLConnection connection = (HttpURLConnection) url .openConnection();
-	 * connection.setRequestProperty("Token-Guid", api_key); BufferedReader
-	 * reader = new BufferedReader(new InputStreamReader(
-	 * connection.getInputStream())); String line; while ((line =
-	 * reader.readLine()) != null) { response.append(line); } reader.close();
-	 * logger.info("Response " + response.toString());
-	 * 
-	 * // Parse the response JsonParser parser = new JsonParser(); JsonElement
-	 * element = parser.parse(response.toString()); if (!element.isJsonObject())
-	 * return; logger.info("a:" + element.toString());
-	 * 
-	 * // Check if there is a specific root to use String root =
-	 * getApplication().getDataSet(datasetName) .getResultRoot(resourceType);
-	 * logger.info("Get root " + root);
-	 * 
-	 * if (root != null) element = ((JsonObject) element).get(root); if
-	 * (!element.isJsonObject()) return; logger.info("b:" + element.toString());
-	 * 
-	 * for (Entry<String, JsonElement> entry : ((JsonObject) element)
-	 * .entrySet()) { logger.info(entry.toString());
-	 * 
-	 * // Ignore the objects if (entry.getValue().isJsonObject()) continue;
-	 * 
-	 * // Prepare the list of values ArrayList<String> values = new
-	 * ArrayList<String>();
-	 * 
-	 * // Store all the entries of the array if (entry.getValue().isJsonArray())
-	 * for (JsonElement v : (JsonArray) entry.getValue()) if
-	 * (v.isJsonPrimitive()) values.add(v.getAsString());
-	 * 
-	 * // Store the single value if (entry.getValue().isJsonPrimitive())
-	 * values.add(entry.getValue().getAsString());
-	 * 
-	 * // Store the keyValuePairs.put("#" + entry.getKey(), values); } } catch
-	 * (Exception e) { e.printStackTrace(); } }
-	 */
 
 	/**
 	 * Returns an HTML representation of the resource
@@ -328,7 +250,6 @@ public class GenericResource extends ServerResource {
 	 */
 	@Get("rdf")
 	public Representation toRDFXML() {
-		
 		return graph.getRdfXmlRepresentation();
 	}
 

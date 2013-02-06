@@ -29,6 +29,7 @@ public class Namespaces {
 			put("http://www.w3.org/2002/07/owl#", "owl:");
 			put("http://dbpedia.org/ontology/", "dbpedia-owl:");
 			put("http://purl.org/dc/terms/", "dcterms:");
+			put("http://www.w3.org/2004/02/skos/core#", "skos:");
 		}
 	};
 

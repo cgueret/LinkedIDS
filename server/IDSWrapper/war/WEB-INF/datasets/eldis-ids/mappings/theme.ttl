@@ -36,6 +36,14 @@
 		];
 		rdf:predicate owl:sameAs . 
 	];
+	api2lod:matcher [
+		api2lod:matcherName "uk.ac.ids.linker.impl.ELDISThemeChildren";
+		api2lod:parameter [
+			api2lod:parameterKey "children_url";
+			api2lod:parameterValue "#children_url";
+		];
+		rdf:predicate skos:narrower . 
+	];
 	rdfs:subClassOf skos:Concept;
 	rdfs:label "Theme".
 
@@ -84,11 +92,12 @@
 	rdfs:label "category path" .
 
 :children_url
-	a rdf:Property ; 
-	rdfs:range :Theme ;
-	rdfs:domain :Theme ;
-	#rdfs:subPropertyOf skos:narrower;
-	rdfs:label "children" .
+	a api2lod:IgnoredProperty .
+#	a rdf:Property ; 
+#	rdfs:range :Theme ;
+#	rdfs:domain :Theme ;
+#	rdfs:subPropertyOf skos:narrower;
+#	rdfs:label "children" .
 	
 	
 :child

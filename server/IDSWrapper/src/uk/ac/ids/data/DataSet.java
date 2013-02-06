@@ -150,7 +150,7 @@ public class DataSet implements Iterable<Link> {
 	 * @param type
 	 * @return
 	 */
-	public String getPatternFor(Reference type) {
+	public String getPatternFor(final Reference type) {
 		for (Link l : graph) {
 			if (l.getSource().toString().equals("#" + type)) {
 				if (l.getTypeRef().equals(WRAPPER.PATTERN)) {
@@ -165,7 +165,7 @@ public class DataSet implements Iterable<Link> {
 	 * @param type
 	 * @return
 	 */
-	public String getResultRoot(Reference type) {
+	public String getResultRoot(final Reference type) {
 		for (Link l : graph) {
 			if (l.getSource().toString().equals("#" + type)) {
 				if (l.getTypeRef().equals(WRAPPER.RESULT_ROOT)) {
@@ -265,6 +265,7 @@ public class DataSet implements Iterable<Link> {
 					}
 				} catch (Exception e) {
 					logger.warning("Exception in DataSet");
+				e.printStackTrace();
 				}
 			}
 		}

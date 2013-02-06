@@ -39,6 +39,10 @@
 		rdfs:label "[Theme] Higher education (includes a link to IATI)";
 	];
 	api2lod:example [
+		api2lod:link "resource/Theme/C252";
+		rdfs:label "[Theme] Education (with links to narrower themes)";
+	];
+	api2lod:example [
 		api2lod:link "resource/Organisation/A60210";
 		rdfs:label "[Organisation] Care Climate Change Information Centre";
 	];
